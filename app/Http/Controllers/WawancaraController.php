@@ -8,8 +8,9 @@ use App\Models\User;
 use App\Models\Posisi;
 use Illuminate\Http\Request;
 
+
 use DateTime;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
 
 class WawancaraController extends Controller
@@ -160,9 +161,9 @@ class WawancaraController extends Controller
                 'nama' => '',
                 'project' => $sipanNotif['subtitle'],
                 'halo' => $wawancara->nama->name,
-                ], function ($message) use ($email) {
+            ], function ($message) use ($email) {
                 $message->to($email)
-                        ->subject('Wawancara');
+                    ->subject('Wawancara');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -186,7 +187,7 @@ class WawancaraController extends Controller
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $wawancara->nama->id;
         $sipanNotif['title']        = "Wawancara";
-        $sipanNotif['subtitle']     = 'Maaf Wawancara Anda Ditolak.'.' Alasan Ditolak : '.$wawancara->catatan_tolak_wawancara;
+        $sipanNotif['subtitle']     = 'Maaf Wawancara Anda Ditolak.' . ' Alasan Ditolak : ' . $wawancara->catatan_tolak_wawancara;
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
@@ -198,9 +199,9 @@ class WawancaraController extends Controller
                 'nama' => '',
                 'project' => $sipanNotif['subtitle'],
                 'halo' => $wawancara->nama->name,
-                ], function ($message) use ($email) {
+            ], function ($message) use ($email) {
                 $message->to($email)
-                        ->subject('Wawancara');
+                    ->subject('Wawancara');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());

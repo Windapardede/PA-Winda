@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+
+
 class ProfileUserController extends Controller
 {
     // Tampilkan halaman profil user
@@ -32,7 +34,7 @@ class ProfileUserController extends Controller
         //     'position' => 'Frontend Developer',
         // ];
 
-        $user               = auth()->user();
+        $user               = auth::user();
 
         return view('pages.user.have_acc.profile.index', compact('user'));
     }
@@ -92,9 +94,9 @@ class ProfileUserController extends Controller
 
         $jurusanOptions     = Jurusan::all();
         $institusiOptions   = Instansi::all();
-        $user               = auth()->user();
+        $user               = auth::user();
 
-        return view('pages.user.have_acc.profile.edit', compact('user', 'jurusanOptions' ,'institusiOptions'));
+        return view('pages.user.have_acc.profile.edit', compact('user', 'jurusanOptions', 'institusiOptions'));
     }
 
     // Simpan update profil
@@ -105,44 +107,46 @@ class ProfileUserController extends Controller
             $simpan             = array();
             $photo              = $request->file('photo');
             $extension          = $photo->getClientOriginalExtension();
-            $fileName           = date('Ymdhis').rand(11111,99999).'.'.$extension;
+            $fileName           = date('Ymdhis') . rand(11111, 99999) . '.' . $extension;
             $path               = $photo->storeAs('public/photo', $fileName);
             $simpan['image']    = str_replace('public/', '', $path);
-            $user->where('id', auth()->user()->id)->update($simpan);
+            $user->where('id', auth::user()->id)->update($simpan);
         }
 
         if (!empty($request->file('cv'))) {
             $simpan         = array();
             $photo          = $request->file('cv');
             $extension      = $photo->getClientOriginalExtension();
-            $fileName       = date('Ymdhis').rand(11111,99999).'.'.$extension;
-            $path           = $photo->storeAs('public/cv', 'cv-'.$fileName);
+            $fileName       = date('Ymdhis') . rand(11111, 99999) . '.' . $extension;
+            $path           = $photo->storeAs('public/cv', 'cv-' . $fileName);
             $simpan['cv']   = str_replace('public/', '', $path);
-            $user->where('id', auth()->user()->id)->update($simpan);
+            $user->where('id', auth::user()->id)->update($simpan);
         }
 
         if (!empty($request->file('surat'))) {
             $simpan             = array();
             $photo              = $request->file('surat');
             $extension          = $photo->getClientOriginalExtension();
-            $fileName           = date('Ymdhis').rand(11111,99999).'.'.$extension;
-            $path               = $photo->storeAs('public/surat', 'surat-'.$fileName);
+            $fileName           = date('Ymdhis') . rand(11111, 99999) . '.' . $extension;
+            $path               = $photo->storeAs('public/surat', 'surat-' . $fileName);
             $simpan['surat']    = str_replace('public/', '', $path);
-            $user->where('id', auth()->user()->id)->update($simpan);
+            $user->where('id', auth::user()->id)->update($simpan);
         }
 
-        $user->where('id', auth()->user()->id)->update($request->except(['_token', '_method' ,'photo', 'cv', 'surat']));
+        $user->where('id', auth::user()->id)->update($request->except(['_token', '_method', 'photo', 'cv', 'surat']));
 
         // Karena dummy, kita tidak simpan ke DB, cukup redirect dengan pesan sukses
         return redirect()->route('profileuser.index')->with('success', 'Profile berhasil diperbarui!');
     }
 
-    public function changepassword(){
+    public function changepassword()
+    {
 
         return view('pages.user.have_acc.gantikatasandi');
     }
 
-    public function updatepassword(Request $request){
+    public function updatepassword(Request $request)
+    {
 
         $request->validate([
             'current_password' => 'required',
@@ -159,6 +163,5 @@ class ProfileUserController extends Controller
         $user->save();
 
         return redirect()->back()->with('status', 'Kata sandi berhasil diperbarui.');
-
     }
 }

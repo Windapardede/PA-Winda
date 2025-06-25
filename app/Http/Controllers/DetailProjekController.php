@@ -8,8 +8,9 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 use DateTime;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Auth;
 
 class DetailProjekController extends Controller
 {
@@ -59,14 +60,14 @@ class DetailProjekController extends Controller
 
                 //simpan notif mentor
                 $sipanNotif                 = array();
-                $sipanNotif['user_id']      = \Auth::user()->id;
+                $sipanNotif['user_id'] = Auth::user()->id;
                 $sipanNotif['title']        = "Project Selesai";
                 $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->deskripsi . ', Segera berikan nilai untuk pekerjaan ini.';
                 $sipanNotif['is_viewed']    = 0;
 
                 Notifikasi::create($sipanNotif);
 
-                $email = \Auth::user()->email;
+                $email = Auth::user()->email;
 
                 try {
                     Mail::send('email.project-selesai', [

@@ -9,7 +9,8 @@
     <title>@yield('title', 'Smart Internship')</title> {{-- Menggunakan @yield untuk judul dinamis --}}
 
     {{-- Bootstrap CSS (PENTING: Pastikan versi ini konsisten dengan JS di bawah) --}}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     {{-- Font Awesome untuk ikon --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
@@ -57,7 +58,10 @@
 </head>
 
 <?php
-    $cekNotifikasi =\DB::table('notification')->where('user_id', Auth::user()->id)->where('is_viewed', 0)->get();
+$cekNotifikasi = \DB::table('notification')
+    ->where('user_id', Auth::user()->id)
+    ->where('is_viewed', 0)
+    ->get();
 
 ?>
 
@@ -92,7 +96,8 @@
                     <li class="nav-item notification-item">
                         <a href="{{ route('notifikasiuser.index') }}" class="nav-link text-dark position-relative">
                             <i class="bi bi-bell fs-5"></i>
-                            <span class="position-absolute badge rounded-pill bg-danger badge-notif d-none d-lg-block">{{ $cekNotifikasi->count() }}</span>
+                            <span
+                                class="position-absolute badge rounded-pill bg-danger badge-notif d-none d-lg-block">{{ $cekNotifikasi->count() }}</span>
                             <span class="position-absolute badge rounded-pill bg-danger badge-notif d-lg-none">1</span>
                         </a>
                     </li>
@@ -101,9 +106,11 @@
                 {{-- Dropdown untuk Profil Pengguna dan Navigasi Mobile --}}
                 <div class="dropdown profile-mp-button-container">
                     <a class="user-badge d-flex align-items-center text-white text-decoration-none dropdown-toggle"
-                        href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown"
+                        aria-expanded="false">
                         <div class="mp-circle">
-                            <span class="fw-bold">{{ collect(explode(' ', Auth::user()->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->implode('') }}</span>
+                            <span
+                                class="fw-bold">{{ collect(explode(' ', Auth::user()->name))->map(fn($word) => strtoupper(substr($word, 0, 1)))->implode('') }}</span>
                         </div>
                         {{-- Ikon list ini hanya akan tampil di mobile (d-lg-none) --}}
                         <i class="bi bi-list fs-5 d-lg-none"></i>
@@ -127,13 +134,16 @@
                             <hr class="dropdown-divider">
                         </li>
 
-                        <li><a class="dropdown-item" href="{{ route('profileuser.index') }}"><i class="fas fa-user me-2 text-secondary"></i>Profile</a></li>
-                        <li><a class="dropdown-item" href="{{ url('change-password') }}"><i class="fas fa-key me-2 text-secondary"></i>Ganti Kata Sandi</a></li>
+                        <li><a class="dropdown-item" href="{{ route('profileuser.index') }}"><i
+                                    class="fas fa-user me-2 text-secondary"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ url('change-password') }}"><i
+                                    class="fas fa-key me-2 text-secondary"></i>Ganti Kata Sandi</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
                         <li>
-                            <a class="dropdown-item text-danger" href="" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
+                            <a class="dropdown-item text-danger" href=""
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit()">
                                 <i class="fas fa-sign-out-alt me-2"></i>Keluar
                             </a>
                             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -150,7 +160,9 @@
 
     {{-- Bootstrap JavaScript Bundle (Termasuk Popper.js, penting untuk dropdown) --}}
     {{-- Ini HARUS dimuat sekali dan sebelum tag penutup </body> --}}
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 
     {{-- Hapus jQuery jika tidak ada skrip kustom yang memerlukannya, karena Bootstrap 5 tidak bergantung pada jQuery --}}
     {{-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> --}}

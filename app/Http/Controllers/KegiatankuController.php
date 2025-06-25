@@ -17,7 +17,7 @@ use App\Models\Penilaian;
 use App\Models\Testimoni;
 
 use DateTime;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
 
 class KegiatankuController extends Controller
@@ -54,7 +54,7 @@ class KegiatankuController extends Controller
                 break;
             }
         }
-        $user               = auth()->user();
+        $user               = auth::user();
         $statusOpen         = array();
         if ($kegiatanAktif == 'true') {
             $statusOpen['kegitan']       = "active";
@@ -161,7 +161,7 @@ class KegiatankuController extends Controller
             $fileName       = date('Ymdhis') . rand(11111, 99999) . '.' . $extension;
             $path           = $photo->storeAs('public/jawaban', 'jawaban-' . $fileName);
             $simpan['jawaban_tes_kemampuan']   = str_replace('public/', '', $path);
-            Pengajuan::where('user_id', auth()->user()->id)->where('status_administrasi', 'diterima')->update($simpan);
+            Pengajuan::where('user_id', auth::user()->id)->where('status_administrasi', 'diterima')->update($simpan);
         }
 
         return redirect('kegiatanku')->with('success', 'Jawaban Anda berhasil diunggah!');
@@ -196,7 +196,7 @@ class KegiatankuController extends Controller
                 break;
             }
         }
-        $user               = auth()->user();
+        $user               = auth::user();
         $statusOpen         = array();
         if ($kegiatanAktif == 'true') {
             $statusOpen['kegitan']       = "active";
@@ -226,12 +226,12 @@ class KegiatankuController extends Controller
         $detailProject->save();
 
         //simpan notif mente
-        $userMentor                 = User::where('mentor_id', \Auth::user()->mentor_id)->where('role', 'mentor')->first();
+        $userMentor                 = User::where('mentor_id', Auth::user()->mentor_id)->where('role', 'mentor')->first();
 
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $userMentor->id;
         $sipanNotif['title']        = "Review Project";
-        $sipanNotif['subtitle']     = \Auth::user()->name . ' Telah Menambahkan progres project : ' . $request->deskripsi . ', Segera review untuk pekerjaan ini.';
+        $sipanNotif['subtitle']     = Auth::user()->name . ' Telah Menambahkan progres project : ' . $request->deskripsi . ', Segera review untuk pekerjaan ini.';
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
@@ -240,7 +240,7 @@ class KegiatankuController extends Controller
 
         try {
             Mail::send('email.review-project', [
-                'nama' => \Auth::user()->name,
+                'nama' => Auth::user()->name,
                 'project' => $request->deskripsi,
                 'halo' => 'Mentor',
             ], function ($message) use ($email) {
@@ -277,7 +277,7 @@ class KegiatankuController extends Controller
 
 
         // Simpan testimoni ke database
-        $user               = auth()->user();
+        $user               = auth::user();
         Testimoni::create([
             'user_id'   => Auth::id(),
             'mentor_id' => $user->mentor_id,
