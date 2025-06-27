@@ -58,7 +58,10 @@
 </head>
 
 <?php
-    $cekNotifikasi =\DB::table('notification')->where('user_id', Auth::user()->id)->where('is_viewed', 0)->get();
+$cekNotifikasi = \DB::table('notification')
+    ->where('user_id', Auth::user()->id)
+    ->where('is_viewed', 0)
+    ->get();
 
 ?>
 

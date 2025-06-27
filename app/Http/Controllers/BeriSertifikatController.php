@@ -15,7 +15,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Settings;
-
+use App\Models\KriteriaPenilaian;
+use Illuminate\Support\Facades\Auth;
 use setasign\Fpdi\Fpdi;
 
 
@@ -39,11 +40,11 @@ class BeriSertifikatController extends Controller
             ->get();
 
         foreach ($beri as $item) {
-                $cekBeri = Sertifikat::where('pengajuan_id', $item->id)->first();
+            $cekBeri = Sertifikat::where('pengajuan_id', $item->id)->first();
             if (!empty($cekBeri->location)) {
-                    $item->beri = 'true';
-                }
+                $item->beri = 'true';
             }
+        }
 
         return view('pages.mentor.berisertifikat.index', compact('beri'));
     }
@@ -87,8 +88,8 @@ class BeriSertifikatController extends Controller
 
 
                 $personalComponents = Penilaian::where('pengajuan_id', $request->item_id)
-                ->select('evaluation_name as komponen', 'value')
-                ->where('evaluation_type', 'personal')->get();
+                    ->select('evaluation_name as komponen', 'value')
+                    ->where('evaluation_type', 'personal')->get();
 
                 if ($personalComponents->count() > 0) {
                     foreach ($personalComponents as $kc) {
@@ -158,8 +159,8 @@ class BeriSertifikatController extends Controller
         $pengajuan = Pengajuan::where('pengajuan.id', $id)->first();
 
         $personalComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'personal')->get();
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'personal')->get();
         if ($personalComponents->count() > 0) {
             foreach ($personalComponents as $kc) {
                 $kc->nilai = intval($kc->value);
@@ -172,8 +173,8 @@ class BeriSertifikatController extends Controller
         }
 
         $kompetensiComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'competence')->get();
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'competence')->get();
         if ($kompetensiComponents->count() > 0) {
             foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = intval($kc->value);

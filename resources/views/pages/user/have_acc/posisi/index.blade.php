@@ -434,197 +434,206 @@
 
 @section('content')
 
-{{-- Bagian Judul dan Peringatan --}}
-<div class="container page-header">
-    <h1>Posisi Magang</h1>
-    <div class="alert-warning-custom">
-        <i class="bi bi-exclamation-triangle-fill"></i>
-        Anda hanya bisa mendaftar 1 kali untuk posisi magang. Pastikan pilihan Anda sudah tepat!
-    </div>
-</div>
-
-<section class="container-p">
-    {{-- Loop untuk menampilkan setiap posisi dari data yang diambil dari database --}}
-    @foreach ($posisiaktif as $posisi) {{-- Menggunakan $posisiaktif sesuai dengan compact di controller method posisiaktif() --}}
-    <div class="magang-card">
-        <div class="card-body">
-            <h5 class="card-title">
-                {{ $posisi->nama }}
-                <span class="kuota">Kuota: {{ $posisi->kuota_tersedia }}</span>
-            </h5>
-            <p class="card-text">
-                {{ Str::limit($posisi->deskripsi, 150) }}
-            </p>
-            <div class="btn-wrapper">
-                {{-- Tombol untuk menampilkan modal dengan data dinamis dari database --}}
-                <a href="#" class="lihat-link btn-selengkapnya" data-bs-toggle="modal" data-bs-target="#detailPosisiModal"
-                    data-nama="{{ $posisi->nama }}"
-                    data-kuota="{{ $posisi->kuota_tersedia }}"
-                    data-deskripsi="{{ $posisi->deskripsi }}"
-                    data-persyaratan="{{ $posisi->persyaratan }}"
-                    data-tahapan="{{ $posisi->tahapan_seleksi }}"> {{-- Pastikan kolom tahapan_seleksi ada di tabel `posisi` Anda --}}
-                    Lihat Selengkapnya
-                </a>
-                {{-- Kondisi untuk tombol Ajukan --}}
-                @if(!empty(auth()->user()->nim) && $status == true)
-                <button class="btn-ajukan" data-bs-toggle="modal" data-bs-target="#confirmAjukanModal" data-posisi-id="{{ $posisi->id }}" data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
-                @else
-                {{-- Tombol Ajukan dinonaktifkan jika NIM kosong atau status tidak memungkinkan --}}
-                <button class="btn-ajukan" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="Anda belum melengkapi profile, silahkan lengkapi profile terlebih dahulu." data-posisi-id="{{ $posisi->id }}" data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
-                @endif
-
-            </div>
+    {{-- Bagian Judul dan Peringatan --}}
+    <div class="container page-header">
+        <h1>Posisi Magang</h1>
+        <div class="alert-warning-custom">
+            <i class="bi bi-exclamation-triangle-fill"></i>
+            Anda hanya bisa mendaftar 1 kali untuk posisi magang. Pastikan pilihan Anda sudah tepat!
         </div>
     </div>
-    @endforeach
 
-</section>
+    <section class="container-p">
+        {{-- Loop untuk menampilkan setiap posisi dari data yang diambil dari database --}}
+        @foreach ($posisiaktif as $posisi)
+            {{-- Menggunakan $posisiaktif sesuai dengan compact di controller method posisiaktif() --}}
+            <div class="magang-card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ $posisi->nama }}
+                        <span class="kuota">Kuota: {{ $posisi->kuota_tersedia }}</span>
+                    </h5>
+                    <p class="card-text">
+                        {{ Str::limit($posisi->deskripsi, 150) }}
+                    </p>
+                    <div class="btn-wrapper">
+                        {{-- Tombol untuk menampilkan modal dengan data dinamis dari database --}}
+                        <a href="#" class="lihat-link btn-selengkapnya" data-bs-toggle="modal"
+                            data-bs-target="#detailPosisiModal" data-nama="{{ $posisi->nama }}"
+                            data-kuota="{{ $posisi->kuota_tersedia }}" data-deskripsi="{{ $posisi->deskripsi }}"
+                            data-persyaratan="{{ $posisi->persyaratan }}" data-tahapan="{{ $posisi->tahapan_seleksi }}">
+                            {{-- Pastikan kolom tahapan_seleksi ada di tabel `posisi` Anda --}}
+                            Lihat Selengkapnya
+                        </a>
+                        {{-- Kondisi untuk tombol Ajukan --}}
+                        @if (!empty(auth()->user()->nim) && $status == true)
+                            <button class="btn-ajukan" data-bs-toggle="modal" data-bs-target="#confirmAjukanModal"
+                                data-posisi-id="{{ $posisi->id }}" data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
+                        @else
+                            {{-- Tombol Ajukan dinonaktifkan jika NIM kosong atau status tidak memungkinkan --}}
+                            <button class="btn-ajukan" disabled data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="Anda belum melengkapi profile, silahkan lengkapi profile terlebih dahulu."
+                                data-posisi-id="{{ $posisi->id }}"
+                                data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
+                        @endif
 
-{{-- MODAL DINAMIS UNTUK DETAIL POSISI (akan diisi oleh JavaScript) --}}
-<div class="modal fade" id="detailPosisiModal" tabindex="-1" aria-labelledby="detailPosisiModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header modal-header-custom">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body modal-body-custom">
-                <div class="modal-body-content">
-                    <div class="left-section">
-                        <h2 id="modalPosisiTitle"></h2>
-                        <p class="kuota-info" id="modalPosisiKuota"></p>
-                        <img src="{{ asset('user/assets/icons/posisi.png') }}" alt="Ilustrasi Posisi">
-                    </div>
-                    <div class="right-section">
-                        <h4>Gambaran Pekerjaan :</h4>
-                        <p id="modalPosisiDeskripsi">
-
-                        </p>
-                        <h5>Persyaratan:</h5>
-                        <ul id="modalPosisiPersyaratan">
-
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="stages-section-modal">
-                    <h4>Tahapan Seleksi</h4>
-                    <div class="stage-flow">
-                        <div class="stage-item-modal">
-                            <div class="number">1</div>
-                            <div class="text">Seleksi Administrasi</div>
-                        </div>
-                        <div class="arrow-modal">→</div>
-                        <div class="stage-item-modal">
-                            <div class="number">2</div>
-                            <div class="text">Seleksi Kemampuan</div>
-                        </div>
-                        <div class="arrow-modal">→</div>
-                        <div class="stage-item-modal">
-                            <div class="number">3</div>
-                            <div class="text">Wawancara</div>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
+        @endforeach
 
-{{-- MODAL KONFIRMASI PENGAJUAN --}}
-<div class="modal fade" id="confirmAjukanModal" tabindex="-1" aria-labelledby="confirmAjukanModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <i class="bi bi-exclamation-circle-fill modal-icon"></i> {{-- Ikon Bootstrap --}}
-                <h5 class="modal-title" id="confirmAjukanModalLabel">Konfirmasi Pengajuan</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin mengajukan permohonan magang untuk posisi <strong><span id="posisiNamaConfirm"></span></strong>?
-                <p class="mt-2 text-muted small">Anda hanya dapat mengajukan 1 posisi magang.</p>
-            </div>
-            <div class="modal-footer">
-                <div class="btn-group">
-                    <form id="ajukanForm" style="width:100%" method="POST" action=""> {{-- Action akan diisi JavaScript --}}
-                        @csrf
-                        <input type="hidden" name="posisi_id" id="posisiIdInput">
-                        <button type="button" class="btn btn-secondary" style="width: 120px;" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-danger" style="width: 120px;">Ya, Ajukan</button>
-                    </form>
+    </section>
+
+    {{-- MODAL DINAMIS UNTUK DETAIL POSISI (akan diisi oleh JavaScript) --}}
+    <div class="modal fade" id="detailPosisiModal" tabindex="-1" aria-labelledby="detailPosisiModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content modal-content-custom">
+                <div class="modal-header modal-header-custom">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body modal-body-custom">
+                    <div class="modal-body-content">
+                        <div class="left-section">
+                            <h2 id="modalPosisiTitle"></h2>
+                            <p class="kuota-info" id="modalPosisiKuota"></p>
+                            <img src="{{ asset('user/assets/icons/posisi.png') }}" alt="Ilustrasi Posisi">
+                        </div>
+                        <div class="right-section">
+                            <h4>Gambaran Pekerjaan :</h4>
+                            <p id="modalPosisiDeskripsi">
+
+                            </p>
+                            <h5>Persyaratan:</h5>
+                            <ul id="modalPosisiPersyaratan">
+
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="stages-section-modal">
+                        <h4>Tahapan Seleksi</h4>
+                        <div class="stage-flow">
+                            <div class="stage-item-modal">
+                                <div class="number">1</div>
+                                <div class="text">Seleksi Administrasi</div>
+                            </div>
+                            <div class="arrow-modal">→</div>
+                            <div class="stage-item-modal">
+                                <div class="number">2</div>
+                                <div class="text">Seleksi Kemampuan</div>
+                            </div>
+                            <div class="arrow-modal">→</div>
+                            <div class="stage-item-modal">
+                                <div class="number">3</div>
+                                <div class="text">Wawancara</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+
+    {{-- MODAL KONFIRMASI PENGAJUAN --}}
+    <div class="modal fade" id="confirmAjukanModal" tabindex="-1" aria-labelledby="confirmAjukanModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <i class="bi bi-exclamation-circle-fill modal-icon"></i> {{-- Ikon Bootstrap --}}
+                    <h5 class="modal-title" id="confirmAjukanModalLabel">Konfirmasi Pengajuan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin mengajukan permohonan magang untuk posisi <strong><span
+                            id="posisiNamaConfirm"></span></strong>?
+                    <p class="mt-2 text-muted small">Anda hanya dapat mengajukan 1 posisi magang.</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="btn-group">
+                        <form id="ajukanForm" style="width:100%" method="POST" action=""> {{-- Action akan diisi JavaScript --}}
+                            @csrf
+                            <input type="hidden" name="posisi_id" id="posisiIdInput">
+                            <button type="button" class="btn btn-secondary" style="width: 120px;"
+                                data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-danger" style="width: 120px;">Ya, Ajukan</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const detailPosisiModal = document.getElementById('detailPosisiModal');
-        if (detailPosisiModal) {
-            detailPosisiModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const detailPosisiModal = document.getElementById('detailPosisiModal');
+            if (detailPosisiModal) {
+                detailPosisiModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
 
-                const nama = button.getAttribute('data-nama');
-                const kuota = button.getAttribute('data-kuota');
-                const deskripsi = button.getAttribute('data-deskripsi');
-                const persyaratan = button.getAttribute('data-persyaratan');
-                // const tahapan = button.getAttribute('data-tahapan'); // Tahapan sudah statis di modal, tidak perlu diupdate dinamis jika selalu sama
+                    const nama = button.getAttribute('data-nama');
+                    const kuota = button.getAttribute('data-kuota');
+                    const deskripsi = button.getAttribute('data-deskripsi');
+                    const persyaratan = button.getAttribute('data-persyaratan');
+                    // const tahapan = button.getAttribute('data-tahapan'); // Tahapan sudah statis di modal, tidak perlu diupdate dinamis jika selalu sama
 
-                const modalTitle = detailPosisiModal.querySelector('#modalPosisiTitle');
-                const modalKuota = detailPosisiModal.querySelector('#modalPosisiKuota');
-                const modalDeskripsi = detailPosisiModal.querySelector('#modalPosisiDeskripsi');
-                const modalPersyaratan = detailPosisiModal.querySelector('#modalPosisiPersyaratan');
+                    const modalTitle = detailPosisiModal.querySelector('#modalPosisiTitle');
+                    const modalKuota = detailPosisiModal.querySelector('#modalPosisiKuota');
+                    const modalDeskripsi = detailPosisiModal.querySelector('#modalPosisiDeskripsi');
+                    const modalPersyaratan = detailPosisiModal.querySelector('#modalPosisiPersyaratan');
 
-                modalTitle.textContent = nama;
-                modalKuota.textContent = `Kuota Tersedia: ${kuota}`;
-                modalDeskripsi.textContent = deskripsi;
+                    modalTitle.textContent = nama;
+                    modalKuota.textContent = `Kuota Tersedia: ${kuota}`;
+                    modalDeskripsi.textContent = deskripsi;
 
-                // Clear previous list items
-                modalPersyaratan.innerHTML = '';
-                // Split persyaratan by new line and create list items
-                if (persyaratan) {
-                    persyaratan.split('\n').forEach(item => {
-                        if (item.trim() !== '') {
-                            const li = document.createElement('li');
-                            li.textContent = item.trim();
-                            modalPersyaratan.appendChild(li);
-                        }
-                    });
-                }
+                    // Clear previous list items
+                    modalPersyaratan.innerHTML = '';
+                    // Split persyaratan by new line and create list items
+                    if (persyaratan) {
+                        persyaratan.split('\n').forEach(item => {
+                            if (item.trim() !== '') {
+                                const li = document.createElement('li');
+                                li.textContent = item.trim();
+                                modalPersyaratan.appendChild(li);
+                            }
+                        });
+                    }
+                });
+            }
+
+
+            // JavaScript untuk Modal Konfirmasi Ajukan
+            const confirmAjukanModal = document.getElementById('confirmAjukanModal');
+            if (confirmAjukanModal) {
+                confirmAjukanModal.addEventListener('show.bs.modal', function(event) {
+                    const button = event.relatedTarget;
+                    const posisiId = button.getAttribute('data-posisi-id');
+                    const posisiNama = button.getAttribute('data-posisi-nama');
+
+                    const modalPosisiNama = confirmAjukanModal.querySelector('#posisiNamaConfirm');
+                    const inputPosisiId = confirmAjukanModal.querySelector('#posisiIdInput');
+                    const ajukanForm = confirmAjukanModal.querySelector('#ajukanForm');
+
+                    modalPosisiNama.textContent = posisiNama;
+                    inputPosisiId.value = posisiId;
+                    // Set action URL untuk form pengajuan
+                    ajukanForm.action =
+                        `/user/ajukan-magang/${posisiId}`; // Sesuaikan dengan route pengajuan Anda
+                });
+            }
+
+            // Inisialisasi tooltip untuk tombol Ajukan yang disabled
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
             });
-        }
-
-
-        // JavaScript untuk Modal Konfirmasi Ajukan
-        const confirmAjukanModal = document.getElementById('confirmAjukanModal');
-        if (confirmAjukanModal) {
-            confirmAjukanModal.addEventListener('show.bs.modal', function(event) {
-                const button = event.relatedTarget;
-                const posisiId = button.getAttribute('data-posisi-id');
-                const posisiNama = button.getAttribute('data-posisi-nama');
-
-                const modalPosisiNama = confirmAjukanModal.querySelector('#posisiNamaConfirm');
-                const inputPosisiId = confirmAjukanModal.querySelector('#posisiIdInput');
-                const ajukanForm = confirmAjukanModal.querySelector('#ajukanForm');
-
-                modalPosisiNama.textContent = posisiNama;
-                inputPosisiId.value = posisiId;
-                // Set action URL untuk form pengajuan
-                ajukanForm.action = `/user/ajukan-magang/${posisiId}`; // Sesuaikan dengan route pengajuan Anda
-            });
-        }
-
-        // Inisialisasi tooltip untuk tombol Ajukan yang disabled
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl)
         });
-    });
-</script>
+    </script>
 
 
-@include('components.user.footer')
+    @include('components.user.footer')
 @endsection

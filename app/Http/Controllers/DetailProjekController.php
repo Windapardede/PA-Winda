@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\DetailProject;
@@ -48,9 +49,9 @@ class DetailProjekController extends Controller
                             'nama' => $detailmonitoring->project->nama->name,
                             'project' => $detailmonitoring->deskripsi,
                             'halo' => 'Admin',
-                            ], function ($message) use ($email) {
+                        ], function ($message) use ($email) {
                             $message->to($email)
-                                    ->subject('Project Selesai');
+                                ->subject('Project Selesai');
                         });
                     } catch (\Exception $e) {
                         dd($e->getMessage());
@@ -73,9 +74,9 @@ class DetailProjekController extends Controller
                         'nama' => $detailmonitoring->project->nama->name,
                         'project' => $detailmonitoring->deskripsi,
                         'halo' => 'Mentor',
-                        ], function ($message) use ($email) {
+                    ], function ($message) use ($email) {
                         $message->to($email)
-                                ->subject('Project Selesai');
+                            ->subject('Project Selesai');
                     });
                 } catch (\Exception $e) {
                     dd($e->getMessage());
@@ -99,9 +100,9 @@ class DetailProjekController extends Controller
                 'nama' => '',
                 'project' => $detailmonitoring->deskripsi,
                 'halo' => $detailmonitoring->project->nama->name,
-                ], function ($message) use ($email) {
+            ], function ($message) use ($email) {
                 $message->to($email)
-                        ->subject('Review Mentor');
+                    ->subject('Review Mentor');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());

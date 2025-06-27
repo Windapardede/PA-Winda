@@ -243,9 +243,9 @@ class KegiatankuController extends Controller
                 'nama' => Auth::user()->name,
                 'project' => $request->deskripsi,
                 'halo' => 'Mentor',
-                ], function ($message) use ($email) {
+            ], function ($message) use ($email) {
                 $message->to($email)
-                        ->subject('Review Project');
+                    ->subject('Review Project');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());
