@@ -9,8 +9,6 @@ use App\Models\Posisi;
 use App\Models\Instansi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-
 
 class AlumniMagangController extends Controller
 {
@@ -34,13 +32,13 @@ class AlumniMagangController extends Controller
             ->whereHas('user', function ($q) use ($tanggalSekarang) {
                 $q->where('role', 'user');
 
-                if (Auth::check() && Auth::user()->role === 'mentor') {
-                    $q->where('mentor_id', Auth::user()->mentor_id);
+                if (\Auth::check() && \Auth::user()->role === 'mentor') {
+                    $q->where('mentor_id', \Auth::user()->mentor_id);
                 }
             })
             ->whereHas('projects.detailProjects', function ($q) {
                 $q->where('persentasi', 100)
-                    ->where('status', 'diterima');
+                ->where('status', 'diterima');
             });
 
         // Filter berdasarkan posisi jika ada
@@ -76,7 +74,7 @@ class AlumniMagangController extends Controller
         if ($startDate && $endDate) {
             $query->whereHas('nama', function ($q) use ($startDate, $endDate) {
                 $q->whereDate('mulai_magang', '>=', $startDate)
-                    ->whereDate('selesai_magang', '<=', $endDate);
+                ->whereDate('selesai_magang', '<=', $endDate);
             });
         }
 

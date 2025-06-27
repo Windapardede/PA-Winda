@@ -257,6 +257,10 @@
                         <input type="text" class="form-control-plaintext" id="nama_lengkap" name="name" value="{{ $user->name }}" readonly>
                     </div>
 
+                    <div class="profile-info-group">
+                        <label for="posisi">Posisi</label>
+                        <input type="text" class="form-control-plaintext" id="posisi" name="posisi" value="{{ $user->position }}" readonly>
+                    </div>
 
                     <div class="profile-info-group">
                         <label for="email">Email</label>

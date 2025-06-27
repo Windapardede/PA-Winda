@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Navbar Example</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         /* Styling untuk navbar */
         .navbar {
@@ -23,13 +22,6 @@
         .navbar .dropdown-menu {
             border-radius: 5px;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-            /* Pastikan dropdown menu selalu terlihat */
-            display: block !important; /* Paksa display block */
-            position: absolute; /* Pastikan posisi absolut untuk tata letak yang benar */
-            top: 100%; /* Posisi di bawah trigger */
-            right: 0.75rem; /* Sesuaikan posisi kanan */
-            left: auto; /* Pastikan tidak ada konflik left */
-            margin-top: 0.5rem; /* Jarak dari trigger */
         }
 
         .navbar .nav-link {
@@ -94,17 +86,20 @@
 
         /* Topbar Dropdown Notifikasi */
         .topbar .dropdown {
-            position: relative; /* Ini sudah benar untuk posisi absolute children */
+            position: static;
         }
 
         .topbar .dropdown .dropdown-menu {
             width: 20rem;
+            /* Lebar tetap */
+            right: 0.75rem;
             border: none;
             padding: 0;
             overflow: hidden;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
             background-color: #fff;
+            /* Background putih */
         }
 
         .topbar .dropdown-list {
@@ -121,6 +116,7 @@
             color: #5a5c69;
             text-decoration: none;
             background-color: #fff;
+            /* Pastikan item putih */
         }
 
         .topbar .dropdown-item:last-child {
@@ -129,6 +125,7 @@
 
         .topbar .dropdown-item:hover {
             background-color: #f8f9fc;
+            /* Hover abu muda */
         }
 
         .topbar .dropdown-item .icon-circle {
@@ -140,19 +137,23 @@
             flex-shrink: 0;
             margin-right: 1rem;
             color: #fff;
+            /* Icon text putih */
         }
 
         /* Icon Circle Colors */
         .topbar .icon-circle.bg-primary {
             background-color: #4e73df;
+            /* Biru */
         }
 
         .topbar .icon-circle.bg-success {
             background-color: #1cc88a;
+            /* Hijau */
         }
 
         .topbar .icon-circle.bg-warning {
             background-color: #f6c23e;
+            /* Kuning */
         }
 
         .topbar .dropdown-item .icon-circle i {
@@ -174,6 +175,7 @@
 
         .topbar .dropdown-header {
             background-color: #4e73df;
+            /* Header biru */
             color: white;
             padding: 0.75rem 1rem;
             font-size: 0.875rem;
@@ -196,6 +198,29 @@
             color: #5a5c69;
         }
 
+        .topbar .dropdown {
+            position: relative;
+            /* supaya dropdown-menu bisa posisi absolute */
+        }
+
+        .topbar .dropdown-menu {
+            right: 0;
+            left: auto;
+            top: 100%;
+            margin-top: 0.5rem;
+            display: none;
+            /* Awalnya hidden */
+        }
+
+        .topbar .dropdown.show .dropdown-menu {
+            display: block;
+            /* Muncul saat diklik */
+        }
+
+
+
+
+
         /* Responsive Navbar */
         @media (max-width: 768px) {
             .navbar .navbar-nav {
@@ -206,35 +231,39 @@
 </head>
 
 <body>
+    <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
         <div id="content">
+            <!-- Topbar -->
             <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
+                <!-- Sidebar Toggle Button for Mobile -->
                 <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                     <i class="fa fa-bars"></i>
                 </button>
 
+                                <!-- Navbar Right Items -->
                 <ul class="navbar-nav ml-auto">
 
+                    <!-- Alerts Dropdown -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link" href="#" id="alertsDropdown" aria-haspopup="true" aria-expanded="true">
+                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
                             <div class="icon-bell-wrapper">
                                 <i class="fas fa-bell icon-bell"></i>
                                 <span class="badge-counter">{{ $cekNotifikasi->count() }}</span>
                             </div>
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in show" aria-labelledby="alertsDropdown">
-                            <h6 class="dropdown-header">
-                                Alerts Center
-                            </h6>
-                            @foreach($notif as $item)
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
+                             @foreach($notif as $item)
+                                <!-- Notifikasi 3 -->
                                 <a class="dropdown-item d-flex align-items-start" href="#">
                                     <div class="icon-circle bg-warning">
-                                        <i class="fas fa-exclamation-triangle"></i>
+                                    <i class="fas fa-exclamation-triangle"></i>
                                     </div>
                                     <div>
-                                        <div class="small text-gray-500">{{ date('d M Y', strtotime($item->created_at)) }} , {{ date('H:i', strtotime($item->created_at)) }}</div>
+                                    <div class="small">{{ date('d M Y', strtotime($item->created_at)) }} , {{ date('H:i', strtotime($item->created_at)) }}</div>
                                         {{$item->subtitle}}
                                     </div>
                                 </a>
@@ -248,12 +277,14 @@
 
 
                     <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link" href="#" id="userDropdown" aria-haspopup="true" aria-expanded="true">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name ?? 'Guest' }}</span>
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
                             <img class="img-profile rounded-circle" src="img/profile.svg" alt="Profile" />
                         </a>
 
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in show" aria-labelledby="userDropdown">
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
 
                             <a class="dropdown-item d-flex align-items-center" href="{{ route('profilehrd.index') }}">
                                 <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-600"></i>
@@ -279,11 +310,14 @@
 
                         </div>
                     </li>
+
+
                 </ul>
             </nav>
         </div>
     </div>
 
+    <!-- Bootstrap JS dan jQuery (wajib kalau pakai data-toggle) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 

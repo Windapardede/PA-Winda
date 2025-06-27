@@ -17,7 +17,7 @@ use App\Models\Penilaian;
 use App\Models\Testimoni;
 
 use DateTime;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use App\Models\Notifikasi;
 
 class KegiatankuController extends Controller
@@ -38,51 +38,53 @@ class KegiatankuController extends Controller
             $cekDetail          = DetailProject::where('project_id', $item->id)->orderBy('id', 'DESC')->first();
             $item->persentase  = $cekDetail->persentasi ?? 0;
 
-            if ($item->persentase >= 100 && $cekDetail->status == 'diterima') {
+            if($item->persentase >= 100 && $cekDetail->status == 'diterima'){
                 $item->status = 'diterima';
-            } else {
+            }else{
                 $item->status = 'proses';
             }
+
         }
         $pengajuan      = Pengajuan::where('user_id', Auth::id())->get();
         $status         = false;
         $pengajuanAktif = array();
         foreach ($pengajuan as $key => $value) {
-            if ($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima') {
+            if($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima'){
                 $status = true;
                 $pengajuanAktif = $value;
                 break;
             }
         }
-        $user               = auth::user();
+        $user               = auth()->user();
         $statusOpen         = array();
-        if ($kegiatanAktif == 'true') {
+        if($kegiatanAktif == 'true'){
             $statusOpen['kegitan']       = "active";
             $statusOpen['kegitanselect'] = "show active";
         } else {
             $statusOpen['pendaftaran']       = "active";
             $statusOpen['pendaftaranselect'] = 'show active';
+
         }
 
         $ceknilai = Penilaian::where('pengajuan_id', @$pengajuanAktif->id)->get();
         $testimoni = false;
-        if ($ceknilai->count() > 0) {
+        if($ceknilai->count() > 0){
             $testimoni      = true;
         }
 
         $cekteti = Testimoni::where('user_id', Auth::id())->get();
         $sertifikat = false;
-        if ($cekteti->count() > 0) {
+        if($cekteti->count() > 0){
             $sertifikat = true;
         }
 
         $ceksertifikat = Sertifikat::where('pengajuan_id', @$pengajuanAktif->id)->first();
         $berisertifikat = false;
-        if (!empty($ceksertifikat->pengajuan_id)) {
+        if(!empty($ceksertifikat->pengajuan_id)){
             $berisertifikat = true;
         }
 
-        return view('pages.user.have_acc.kegiatanku.index', compact('instansi', 'projects', 'pengajuan', 'status', 'pengajuanAktif', 'user', 'kegiatanAktif', 'statusOpen', 'testimoni', 'sertifikat', 'berisertifikat', 'ceksertifikat'));
+        return view('pages.user.have_acc.kegiatanku.index', compact('instansi', 'projects', 'pengajuan', 'status','pengajuanAktif','user', 'kegiatanAktif', 'statusOpen', 'testimoni', 'sertifikat', 'berisertifikat','ceksertifikat'));
     }
 
     public function store(Request $request)
@@ -91,7 +93,7 @@ class KegiatankuController extends Controller
         $pengajuan      = Pengajuan::where('user_id', Auth::id())->get();
         $pengajuanid    = 0;
         foreach ($pengajuan as $key => $value) {
-            if ($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima') {
+            if($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima'){
                 $pengajuanid = $value->id;
                 break;
             }
@@ -158,10 +160,10 @@ class KegiatankuController extends Controller
             $simpan         = array();
             $photo          = $request->file('file_jawaban');
             $extension      = $photo->getClientOriginalExtension();
-            $fileName       = date('Ymdhis') . rand(11111, 99999) . '.' . $extension;
-            $path           = $photo->storeAs('public/jawaban', 'jawaban-' . $fileName);
+            $fileName       = date('Ymdhis').rand(11111,99999).'.'.$extension;
+            $path           = $photo->storeAs('public/jawaban', 'jawaban-'.$fileName);
             $simpan['jawaban_tes_kemampuan']   = str_replace('public/', '', $path);
-            Pengajuan::where('user_id', auth::user()->id)->where('status_administrasi', 'diterima')->update($simpan);
+            Pengajuan::where('user_id', auth()->user()->id)->where('status_administrasi', 'diterima')->update($simpan);
         }
 
         return redirect('kegiatanku')->with('success', 'Jawaban Anda berhasil diunggah!');
@@ -190,27 +192,29 @@ class KegiatankuController extends Controller
         $status         = false;
         $pengajuanAktif = array();
         foreach ($pengajuan as $key => $value) {
-            if ($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima') {
+            if($value->status == 'diterima' && $value->status_wawancara == 'diterima' && $value->status_tes_kemampuan == 'diterima' && $value->status_administrasi == 'diterima'){
                 $status = true;
                 $pengajuanAktif = $value;
                 break;
             }
         }
-        $user               = auth::user();
+        $user               = auth()->user();
         $statusOpen         = array();
-        if ($kegiatanAktif == 'true') {
+        if($kegiatanAktif == 'true'){
             $statusOpen['kegitan']       = "active";
             $statusOpen['kegitanselect'] = "show active";
         } else {
             $statusOpen['pendaftaran']       = "active";
             $statusOpen['pendaftaranselect'] = 'show active';
+
         }
 
         if (!$projects) {
             return redirect()->route('kegiatanku.index')->with('error', 'Project not found.');
         }
 
-        $detailProject = DetailProject::where('project_id', $id)->orderBy('id', 'desc')->get();
+        $detailProject = DetailProject::where('project_id', $id)->get();
+
         return view('pages.user.have_acc.kegiatanku.detail', compact('projects', 'id', 'pengajuanAktif', 'user', 'detailProject'));
     }
 
@@ -226,26 +230,26 @@ class KegiatankuController extends Controller
         $detailProject->save();
 
         //simpan notif mente
-        $userMentor                 = User::where('mentor_id', Auth::user()->mentor_id)->where('role', 'mentor')->first();
+        $userMentor                 = User::where('mentor_id', \Auth::user()->mentor_id)->where('role', 'mentor')->first();
 
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $userMentor->id;
         $sipanNotif['title']        = "Review Project";
-        $sipanNotif['subtitle']     = Auth::user()->name . ' Telah Menambahkan progres project : ' . $request->deskripsi . ', Segera review untuk pekerjaan ini.';
+        $sipanNotif['subtitle']     = \Auth::user()->name.' Telah Menambahkan progres project : '.$request->deskripsi.', Segera review untuk pekerjaan ini.';
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
 
-        $email = $userMentor->email;
+        $email = \Auth::user()->email;
 
         try {
             Mail::send('email.review-project', [
-                'nama' => Auth::user()->name,
+                'nama' => \Auth::user()->name,
                 'project' => $request->deskripsi,
                 'halo' => 'Mentor',
-            ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                 $message->to($email)
-                    ->subject('Review Project');
+                        ->subject('Review Project');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -263,7 +267,7 @@ class KegiatankuController extends Controller
         $detailProject->deskripsi   = $request->deskripsi;
         $detailProject->persentasi  = $request->persentase;
 
-        if (!empty($request->revisi)) {
+        if(!empty($request->revisi)){
             $detailProject->status   = 'proses';
         }
 
@@ -277,7 +281,7 @@ class KegiatankuController extends Controller
 
 
         // Simpan testimoni ke database
-        $user               = auth::user();
+        $user               = auth()->user();
         Testimoni::create([
             'user_id'   => Auth::id(),
             'mentor_id' => $user->mentor_id,

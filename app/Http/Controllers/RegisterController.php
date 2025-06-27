@@ -7,9 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
-
+use Mail;
 class RegisterController extends Controller
 {
     public function store(Request $request)
@@ -43,7 +41,7 @@ class RegisterController extends Controller
                 'time' => $time,
             ], function ($message) use ($request) {
                 $message->to($request->email)
-                    ->subject('OTP');
+                        ->subject('OTP');
             });
         } catch (\Exception $e) {
             Log::error('Email gagal dikirim: ' . $e->getMessage());
@@ -69,7 +67,7 @@ class RegisterController extends Controller
                 'time' => $time,
             ], function ($message) use ($email) {
                 $message->to($email)
-                    ->subject('OTP');
+                        ->subject('OTP');
             });
         } catch (\Exception $e) {
             Log::error('Email gagal dikirim: ' . $e->getMessage());
@@ -86,16 +84,17 @@ class RegisterController extends Controller
             $kode .= $value;
         }
         $user = User::where('email', $request->email)
-            ->where('otp', $kode)
-            ->where('status_otp', 1)
-            ->first();
+        ->where('otp', $kode)
+        ->where('status_otp', 1)
+        ->first();
         if (!$user) {
             return redirect()->back()->with('error', 'Kode OTP salah atau sudah digunakan!');
-        } else {
+        }else {
             User::where('email', $request->email)->where('otp', $kode)->update(['status_otp' => 2]);
 
             Auth::login($user);
             return redirect()->route('berhasildaftar.index')->with('success', 'Login berhasil!');
         }
+
     }
 }

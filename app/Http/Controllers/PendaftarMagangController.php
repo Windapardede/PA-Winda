@@ -10,8 +10,7 @@ use App\Models\Instansi;
 use App\Models\Notifikasi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
+use Mail;
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -34,12 +33,11 @@ class PendaftarMagangController extends Controller
         return view('pages.laporan.pendaftarmagang.index', compact('pendaftarmagang', 'uniquePositions', 'uniqueInstansi', 'limit'));
     }
 
-    public function pendaftar()
-    {
+    public function pendaftar(){
         $subQuery = Pengajuan::selectRaw('MAX(id) as id')
-            ->whereHas('nama', function ($q) {
-                $q->where('role', '=', 'user');
-            })->groupBy('user_id');
+        ->whereHas('nama', function ($q) {
+            $q->where('role', '=', 'user');
+        })->groupBy('user_id');
 
         $query      = Pengajuan::whereIn('id', $subQuery);
 
@@ -57,6 +55,7 @@ class PendaftarMagangController extends Controller
 
         $perPage = request('show', 10);
         return $query->paginate($perPage)->appends(request()->query());
+
     }
 
 
@@ -73,9 +72,9 @@ class PendaftarMagangController extends Controller
 
 
         $subQuery = Pengajuan::selectRaw('MAX(id) as id')
-            ->whereHas('nama', function ($q) {
-                $q->where('role', '=', 'user');
-            })->groupBy('user_id');
+        ->whereHas('nama', function ($q) {
+            $q->where('role', '=', 'user');
+        })->groupBy('user_id');
 
 
         $query = Pengajuan::whereIn('id', $subQuery);
@@ -84,7 +83,7 @@ class PendaftarMagangController extends Controller
         if ($startDate && $endDate) {
             $query->whereHas('nama', function ($q) use ($startDate, $endDate) {
                 $q->whereDate('mulai_magang', '=', $startDate)
-                    ->whereDate('selesai_magang', '=', $endDate);
+                ->whereDate('selesai_magang', '=', $endDate);
             });
         }
 
@@ -102,8 +101,8 @@ class PendaftarMagangController extends Controller
 
 
         $magangaktif = $query->with(['nama.instansi'])
-            ->orderBy('created_at', $sortOrder)
-            ->get();
+                            ->orderBy('created_at', $sortOrder)
+                            ->get();
 
         $pdf = Pdf::loadView('pdf.pendaftarmagang', compact('magangaktif'))
             ->setPaper('A4', 'landscape');
@@ -112,14 +111,13 @@ class PendaftarMagangController extends Controller
     }
 
 
-    public function pengajuan(Request $request, $id)
-    {
+    public function pengajuan(Request $request, $id){
         $simpan = array();
-        $simpan['user_id']      = auth::user()->id;
+        $simpan['user_id']      = auth()->user()->id;
         $simpan['posisi_id']    = $id;
 
         $simpanPeriode          = Periode::create([
-            'user_id'           => auth::user()->id,
+            'user_id'           => auth()->user()->id,
             'tanggal_pengajuan' => now(),
             'tanggal_selesai'   => now()->addDays(90),
             'is_active'         => true,
@@ -132,13 +130,13 @@ class PendaftarMagangController extends Controller
             'posisi_id' => $id
         ];
 
-        User::where('id', auth::user()->id)->update($update);
+        User::where('id', auth()->user()->id)->update($update);
 
-        foreach (User::whereIn('role', ['admin', 'hrd'])->get() as $item) {
+        foreach(User::whereIn('role', ['admin', 'hrd'])->get() as $item){
             $sipanNotif                 = array();
             $sipanNotif['user_id']      = $item->id;
             $sipanNotif['title']        = "Pendaftaran";
-            $sipanNotif['subtitle']     = auth::user()->name . ' Baru saja melakukan pendaftaran';
+            $sipanNotif['subtitle']     = auth()->user()->name.' Baru saja melakukan pendaftaran';
             $sipanNotif['is_viewed']    = 0;
 
             Notifikasi::create($sipanNotif);
@@ -147,10 +145,10 @@ class PendaftarMagangController extends Controller
 
             try {
                 Mail::send('email.pendafataran', [
-                    'nama' => auth::user()->name,
-                ], function ($message) use ($email) {
+                    'nama' => auth()->user()->name,
+                    ], function ($message) use ($email) {
                     $message->to($email)
-                        ->subject('OTP');
+                            ->subject('OTP');
                 });
             } catch (\Exception $e) {
                 dd($e->getMessage());

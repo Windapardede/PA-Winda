@@ -5,7 +5,7 @@
 @push('style')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css">
 {{-- Memperbaiki atribut xintegrity menjadi integrity --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQmQa7TBcVRBuKjXo/w1QkguhIyyLK4yrQX0Yv5i7k/tVElnXoltgFNnMqEzlnJwjnDHkz1NW0xPEaBwvsuJVksPdodPIFnFgzomxhJlY9lGqlTgfgcwKSjy23z4lwh9+nHm0Pdu7Z35wg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" xintegrity="sha512-1ycn6IcaQQmQa7TBcVRBuKjXo/w1QkguhIyyLK4yrQX0Yv5i7k/tVElnXoltgFNnMqEzlnJwjnDHkz1NW0xPEaBwvsuJVksPdodPIFnFgzomxhJlY9lGqlTgfgcwKSjy23z4lwh9+nHm0Pdu7Z35wg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
 <style>
@@ -432,7 +432,13 @@
                     <div class="form-group">
                         <label for="posisi">Posisi</label>
                         <input type="text" class="form-control" id="posisi" name="posisi" required>
-                        </div>
+                        <!-- <select class="form-control" id="posisi" name="posisi" required>
+                            <option value="">Pilih Posisi</option>
+                            @foreach($posisi as $value)
+                                <option value="{{$value->id}}">{{$value->nama}}</option>
+                            @endforeach
+                        </select> -->
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -483,42 +489,6 @@
             <div class="modal-footer modal-buttons-custom">
                 <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Batal</button>
                 <button type="submit" class="btn btn-secondary btn-secondary-custom" form="hapusFormMentorGlobal">Hapus</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Modal Konfirmasi Berhasil Ditambahkan --}}
-<div class="modal fade" id="modalSuksesTambah" tabindex="-1" role="dialog" aria-labelledby="modalSuksesTambahLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-icon bg-success text-white">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h5 class="modal-title modal-title-custom" id="modalSuksesTambahLabel">Berhasil!</h5>
-            <div class="modal-body modal-message-custom">
-                Mentor baru berhasil ditambahkan!
-            </div>
-            <div class="modal-footer modal-buttons-custom">
-                <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Modal Konfirmasi Berhasil Dihapus (BARU DITAMBAHKAN) --}}
-<div class="modal fade" id="modalSuksesHapus" tabindex="-1" role="dialog" aria-labelledby="modalSuksesHapusLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-icon bg-success text-white">
-                <i class="fas fa-check-circle"></i>
-            </div>
-            <h5 class="modal-title modal-title-custom" id="modalSuksesHapusLabel">Berhasil!</h5>
-            <div class="modal-body modal-message-custom">
-                Mentor berhasil dihapus.
-            </div>
-            <div class="modal-footer modal-buttons-custom">
-                <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>
             </div>
         </div>
     </div>
@@ -604,7 +574,7 @@
             // Activate/Deactivate button functionality
             $('.btn-aktif-nonaktif').off('click').on('click', function() {
                 var id = $(this).data('id');
-                var statusSaatIni = $(this).data('status') === 0 ? 'aktif' : 'tidak aktif';
+                var statusSaatIni = $(this).data('status') ===  0 ? 'aktif' : 'tidak aktif';
                 var nama = $(this).closest('tr').find('td:nth-child(2)').text();
                 var statusBaru = statusSaatIni === 'aktif' ? 'tidak aktif' : 'aktif';
                 var teksKonfirmasi = statusSaatIni === 'aktif' ? 'aktifkan' : 'non-aktifkan';
@@ -651,7 +621,7 @@
                     if (mentorIndex !== -1) {
 
                         $.ajax({
-                            url: '/kelolamentor/' + id,
+                            url: '/kelolamentor/'+id,
                             method: 'PUT',
                             data: {
                                 status: statusBaru,
@@ -660,22 +630,13 @@
                                 dummyMentors[mentorIndex].is_active = (statusBaru === 'aktif' ? 1 : 0);
                                 dummyMentors[mentorIndex].status = statusBaru;
                                 renderTable(); // Re-render table to reflect changes
-                                // Show success modal instead of alert
+                                alert(`Status mentor ${dummyMentors[mentorIndex].nama} berhasil diubah menjadi ${statusBaru.toUpperCase()}.`);
                                 $('#modalKonfirmasiAksi').modal('hide');
-                                $('#modalSuksesTambah .modal-body.modal-message-custom').text(`Status mentor ${dummyMentors[mentorIndex].nama} berhasil diubah menjadi ${statusBaru.toUpperCase()}.`);
-                                $('#modalSuksesTambah').modal('show');
                             },
                             error: function(xhr, status, error) {
                                 // Tangani error jika terjadi
                                 console.error(xhr.responseText);
-                                // Use a modal for error as well
-                                $('#modalKonfirmasiAksi').modal('hide');
-                                $('#modalKonfirmasiAksi .modal-icon').removeClass('bg-success bg-warning').addClass('bg-danger');
-                                $('#modalKonfirmasiAksi .modal-icon i').removeClass('fa-exclamation-triangle fa-check-circle').addClass('fas fa-times-circle');
-                                $('#modalKonfirmasiAksi .modal-title-custom').text('Terjadi Kesalahan!');
-                                $('#modalKonfirmasiAksi .modal-body.modal-message-custom').text('Gagal mengubah status mentor: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan.'));
-                                $('#modalKonfirmasiAksi .modal-footer.modal-buttons-custom').html('<button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>');
-                                $('#modalKonfirmasiAksi').modal('show');
+                                alert('Gagal menambahkan mentor: ' + xhr.responseJSON?.message || 'Terjadi kesalahan.');
                             }
                         });
 
@@ -696,13 +657,7 @@
                 const konfirmasi_password = $('#konfirmasi_password').val();
 
                 if(password !== konfirmasi_password){
-                    // Use a modal for password mismatch
-                    $('#modalKonfirmasiAksi .modal-icon').removeClass('bg-success bg-warning').addClass('bg-danger');
-                    $('#modalKonfirmasiAksi .modal-icon i').removeClass('fa-exclamation-triangle fa-check-circle').addClass('fas fa-times-circle');
-                    $('#modalKonfirmasiAksi .modal-title-custom').text('Validasi Gagal!');
-                    $('#modalKonfirmasiAksi .modal-body.modal-message-custom').text('Password dan Konfirmasi Password tidak sama.');
-                    $('#modalKonfirmasiAksi .modal-footer.modal-buttons-custom').html('<button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>');
-                    $('#modalKonfirmasiAksi').modal('show');
+                    alert('Password Dan Konfirmasi Password Tidak Sama');
                     return false;
                 }
 
@@ -720,54 +675,16 @@
                         renderTable();
                         $('#modalTambahMentor').modal('hide');
                         $('#formTambahMentor')[0].reset();
-                        // Show success modal instead of alert
-                        $('#modalSuksesTambah').modal('show');
+                        alert('Mentor baru berhasil ditambahkan!');
                     },
                     error: function(xhr, status, error) {
                         // Tangani error jika terjadi
                         console.error(xhr.responseText);
-                        // Use a modal for error
-                        $('#modalTambahMentor').modal('hide');
-                        $('#modalKonfirmasiAksi .modal-icon').removeClass('bg-success bg-warning').addClass('bg-danger');
-                        $('#modalKonfirmasiAksi .modal-icon i').removeClass('fa-exclamation-triangle fa-check-circle').addClass('fas fa-times-circle');
-                        $('#modalKonfirmasiAksi .modal-title-custom').text('Terjadi Kesalahan!');
-                        $('#modalKonfirmasiAksi .modal-body.modal-message-custom').text('Gagal menambahkan mentor: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan.'));
-                        $('#modalKonfirmasiAksi .modal-footer.modal-buttons-custom').html('<button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>');
-                        $('#modalKonfirmasiAksi').modal('show');
+                        alert('Gagal menambahkan mentor: ' + xhr.responseJSON?.message || 'Terjadi kesalahan.');
                     }
                 });
             });
 
-            // Handle "Hapus" form submission
-            $('#hapusFormMentorGlobal').off('submit').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                const actionUrl = form.attr('action');
-
-                $.ajax({
-                    url: actionUrl,
-                    method: 'POST', // Menggunakan POST karena @method('DELETE') akan menanganinya
-                    data: form.serialize(), // Kirim data form (termasuk token CSRF dan _method)
-                    success: function(response) {
-                        // Filter dummyMentors untuk menghapus mentor yang sudah dihapus
-                        const idToDelete = parseInt(actionUrl.split('/').pop()); // Mendapatkan ID dari URL
-                        dummyMentors = dummyMentors.filter(mentor => mentor.id !== idToDelete);
-                        renderTable(); // Re-render tabel
-                        $('#modalKonfirmasiHapusGlobal').modal('hide'); // Sembunyikan modal konfirmasi hapus
-                        $('#modalSuksesHapus').modal('show'); // Tampilkan modal sukses hapus
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        $('#modalKonfirmasiHapusGlobal').modal('hide');
-                        $('#modalKonfirmasiAksi .modal-icon').removeClass('bg-success bg-warning').addClass('bg-danger');
-                        $('#modalKonfirmasiAksi .modal-icon i').removeClass('fa-exclamation-triangle fa-check-circle').addClass('fas fa-times-circle');
-                        $('#modalKonfirmasiAksi .modal-title-custom').text('Terjadi Kesalahan!');
-                        $('#modalKonfirmasiAksi .modal-body.modal-message-custom').text('Gagal menghapus mentor: ' + (xhr.responseJSON?.message || 'Terjadi kesalahan.'));
-                        $('#modalKonfirmasiAksi .modal-footer.modal-buttons-custom').html('<button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Oke</button>');
-                        $('#modalKonfirmasiAksi').modal('show');
-                    }
-                });
-            });
         }
 
         // Initial render of the table

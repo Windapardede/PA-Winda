@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\DetailProject;
@@ -8,16 +7,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 use DateTime;
-use Illuminate\Support\Facades\Mail;
+use Mail;
 use App\Models\Notifikasi;
-use Illuminate\Support\Facades\Auth;
 
 class DetailProjekController extends Controller
 {
 
     public function show($id)
     {
-        $detailmonitoring = DetailProject::where('project_id', $id)->orderBy('id', 'desc')->get();
+        $detailmonitoring = DetailProject::where('project_id', $id)->get();
         return view('pages.mentor.monitoring.detail', compact('detailmonitoring'));
     }
 
@@ -25,19 +23,19 @@ class DetailProjekController extends Controller
     {
         // dd($request->all());
         $detailmonitoring = DetailProject::findOrFail($request->detail_id);
-        if ($request->jenis == 'revisi') {
+        if($request->jenis == 'revisi'){
             $detailmonitoring->status = 'revisi';
             $detailmonitoring->revisi = $request->catatan_revisi;
-        } else {
+        }else{
             $detailmonitoring->status = 'diterima';
             $detailmonitoring->revisi = null;
 
-            if ($detailmonitoring->persentasi >= 100) {
-                foreach (User::where('role', 'admin')->get() as $itemUser) {
+            if($detailmonitoring->persentasi >= 100){
+                foreach(User::where('role', 'admin')->get() as $itemUser){
                     $sipanNotif                 = array();
                     $sipanNotif['user_id']      = $itemUser->id;
                     $sipanNotif['title']        = "Project Selesai";
-                    $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->deskripsi . ', Segera berikan nilai untuk pekerjaan ini.';
+                    $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name.' Telah Menyelesaikan Project : '.$detailmonitoring->deskripsi.', Segera berikan nilai untuk pekerjaan ini.';
                     $sipanNotif['is_viewed']    = 0;
 
                     Notifikasi::create($sipanNotif);
@@ -49,9 +47,9 @@ class DetailProjekController extends Controller
                             'nama' => $detailmonitoring->project->nama->name,
                             'project' => $detailmonitoring->deskripsi,
                             'halo' => 'Admin',
-                        ], function ($message) use ($email) {
+                            ], function ($message) use ($email) {
                             $message->to($email)
-                                ->subject('Project Selesai');
+                                    ->subject('Project Selesai');
                         });
                     } catch (\Exception $e) {
                         dd($e->getMessage());
@@ -60,35 +58,36 @@ class DetailProjekController extends Controller
 
                 //simpan notif mentor
                 $sipanNotif                 = array();
-                $sipanNotif['user_id'] = Auth::user()->id;
+                $sipanNotif['user_id']      = \Auth::user()->id;
                 $sipanNotif['title']        = "Project Selesai";
-                $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->deskripsi . ', Segera berikan nilai untuk pekerjaan ini.';
+                $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name.' Telah Menyelesaikan Project : '.$detailmonitoring->deskripsi.', Segera berikan nilai untuk pekerjaan ini.';
                 $sipanNotif['is_viewed']    = 0;
 
                 Notifikasi::create($sipanNotif);
 
-                $email = Auth::user()->email;
+                $email = \Auth::user()->email;
 
                 try {
                     Mail::send('email.project-selesai', [
                         'nama' => $detailmonitoring->project->nama->name,
                         'project' => $detailmonitoring->deskripsi,
                         'halo' => 'Mentor',
-                    ], function ($message) use ($email) {
+                        ], function ($message) use ($email) {
                         $message->to($email)
-                            ->subject('Project Selesai');
+                                ->subject('Project Selesai');
                     });
                 } catch (\Exception $e) {
                     dd($e->getMessage());
                 }
             }
+
         }
 
         //simpan notif mentee
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $detailmonitoring->project->nama->id;
         $sipanNotif['title']        = "Review Mentor";
-        $sipanNotif['subtitle']     = 'Mentor telah mereview project : ' . $detailmonitoring->deskripsi . ', Segera cek hasil review.';
+        $sipanNotif['subtitle']     = 'Mentor telah mereview project : '.$detailmonitoring->deskripsi.', Segera cek hasil review.';
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
@@ -100,9 +99,9 @@ class DetailProjekController extends Controller
                 'nama' => '',
                 'project' => $detailmonitoring->deskripsi,
                 'halo' => $detailmonitoring->project->nama->name,
-            ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                 $message->to($email)
-                    ->subject('Review Mentor');
+                        ->subject('Review Mentor');
             });
         } catch (\Exception $e) {
             dd($e->getMessage());
@@ -111,5 +110,8 @@ class DetailProjekController extends Controller
         $detailmonitoring->save();
 
         return true;
+
+
     }
+
 }

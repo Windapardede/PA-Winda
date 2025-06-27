@@ -255,11 +255,10 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1 class="section-title">Project Mentee</h1>
+            <h1 class="section-title">Monitoring</h1>
             <div class="section-header-breadcrumb">
                 <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
-                <div class="breadcrumb-item"><a href="{{ route('monitoring.index') }}">Monitoring</a></div>
-                <div class="breadcrumb-item">Project Mentee</div>
+                <div class="breadcrumb-item">Monitoring</div>
             </div>
         </div>
 

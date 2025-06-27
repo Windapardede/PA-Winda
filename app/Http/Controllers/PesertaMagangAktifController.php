@@ -8,14 +8,11 @@ use App\Models\Posisi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\HomeController;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
-
 
 class PesertaMagangAktifController extends Controller
 {
 
-    public function index()
-    {
+    public function index(){
         $magangaktif        = $this->magangAktif();
         $uniquePositions    = Posisi::all();
         $uniqueInstansi     = Instansi::all();
@@ -34,10 +31,10 @@ class PesertaMagangAktifController extends Controller
             ->where('status_wawancara', 'diterima')
             ->whereHas('user', function ($q) use ($tanggalSekarang) {
                 $q->whereDate('mulai_magang', '<=', $tanggalSekarang)
-                    ->whereDate('selesai_magang', '>=', $tanggalSekarang);
+                ->whereDate('selesai_magang', '>=', $tanggalSekarang);
 
-                if (Auth::check() && Auth::user()->role === 'mentor') {
-                    $q->where('mentor_id', Auth::user()->mentor_id);
+                if (\Auth::check() && \Auth::user()->role === 'mentor') {
+                    $q->where('mentor_id', \Auth::user()->mentor_id);
                 }
             })
             ->whereHas('projects.detailProjects', function ($q) {
@@ -48,7 +45,7 @@ class PesertaMagangAktifController extends Controller
             })
             ->whereDoesntHave('projects.detailProjects', function ($q) {
                 $q->where('persentasi', 100)
-                    ->where('status', 'diterima');
+                ->where('status', 'diterima');
             });
 
         // Filter berdasarkan posisi jika ada
@@ -69,8 +66,7 @@ class PesertaMagangAktifController extends Controller
 
 
 
-    public function exportPdf()
-    {
+    public function exportPdf(){
         $startDate  = request('start_date') ? Carbon::createFromFormat('d/m/Y', request('start_date'))->format('Y-m-d') : null;
         $endDate    = request('end_date') ? Carbon::createFromFormat('d/m/Y', request('end_date'))->format('Y-m-d') : null;
         $position   = request('position');
@@ -84,7 +80,7 @@ class PesertaMagangAktifController extends Controller
         if ($startDate && $endDate) {
             $query->whereHas('nama', function ($q) use ($startDate, $endDate) {
                 $q->whereDate('mulai_magang', '>=', $startDate)
-                    ->whereDate('selesai_magang', '<=', $endDate);
+                ->whereDate('selesai_magang', '<=', $endDate);
             });
         }
 

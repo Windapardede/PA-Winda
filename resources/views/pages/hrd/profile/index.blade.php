@@ -258,6 +258,11 @@
                     </div>
 
                     <div class="profile-info-group">
+                        <label for="posisi">Posisi</label>
+                        <input type="text" class="form-control-plaintext" id="posisi" name="position" value="{{ $user->position }}" readonly>
+                    </div>
+
+                    <div class="profile-info-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control-plaintext" id="email" name="email" value="{{ $user->email }}" readonly>
                     </div>

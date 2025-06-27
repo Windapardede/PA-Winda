@@ -5,7 +5,7 @@
 @push('style')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    integrity="sha512-1ycn6IcaQQmQa7TBcVRBuKjXo/w1QkguhIyyLK4yrQX0Yv5i7k/tVElnXoltgFNnMqEzlnJwjnDHkz1NW0xPEaBwvsuJVksPdodPIFnFgzomxhJlY9lGqlTgfgcwKSjy23z4lwh9+nHm0Pdu7Z35wg=="
+    xintegrity="sha512-1ycn6IcaQQmQa7TBcVRBuKjXo/w1QkguhIyyLK4yrQX0Yv5i7k/tVElnXoltgFNnMqEzlnJwjnDHkz1NW0xPEaBwvsuJVksPdodPIFnFgzomxhJlY9lGqlTgfgcwKSjy23z4lwh9+nHm0Pdu7Z35wg=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
     .badge-status {
@@ -136,7 +136,7 @@
 
     .modal-backdrop {
         background-color: rgba(0, 0, 0, 0.2);
-        /* Lebih transparan */
+        background-color: transparent !important;
     }
 
     .modal-dialog-centered {
@@ -211,7 +211,6 @@
         font-weight: 700;
         /* Lebih tebal */
         color: #333;
-        margin-top: 10px;
         margin-bottom: 0;
         /* Hapus margin bawah */
     }
@@ -299,33 +298,6 @@
         background-color: #EB2027;
         color: #fff;
     }
-
-    /* CSS tambahan untuk modal konfirmasi "Terima" */
-    .modal-icon {
-        font-size: 60px;
-        color: #f0ad4e; /* Warna peringatan */
-        margin-bottom: 20px;
-        line-height: 1;
-        font-weight: bold;
-    }
-    .modal-message-custom {
-        font-size: 18px;
-        color: #555;
-        margin-bottom: 30px;
-        text-align: center;
-    }
-    .modal-buttons-custom {
-        justify-content: center; /* Tombol di tengah */
-        margin-top: 0;
-    }
-
-    /* CSS untuk Modal Sukses */
-    .modal-success .modal-icon {
-        color: #28a745; /* Warna hijau untuk sukses */
-    }
-    .modal-success .modal-title-custom {
-        color: #28a745;
-    }
 </style>
 @endpush
 
@@ -368,7 +340,9 @@
                                     <span class="badge bg-success text-white">{{$item->status}}</span>
                                 @elseif($item->status == 'revisi')
                                     <span class="badge bg-danger text-white">{{$item->status}}</span>
+
                                 @endif
+
                             </td>
                             <td class="text-center">
                                 <div class="dropdown">
@@ -382,7 +356,7 @@
                                         <a class="dropdown-item terima-btn" href="#" data-id="{{ $item->id }}" data-nama="{{ $item->deskripsi }}">
                                             <i class="fas fa-check"></i> Diterima
                                         </a>
-                                        <a class="dropdown-item revisi-btn" href="#"
+                                        <a class="dropdown-item tolak-btn" href="#"
                                             data-detail-id="{{ $item->id }}" data-detail-catatan="{{ $item->revisi }}">
                                             <i class="fas fa-times"></i> Revisi
                                         </a>
@@ -426,14 +400,13 @@
 <div class="modal fade" id="terimaModal" tabindex="-1" role="dialog" aria-labelledby="terimaModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content modal-content-custom">
-<div class="modal-success modal-icon">
-    <i class="fas fa-question-circle" style="font-size: 64px; margin-top: 30px;"></i>
-</div>
-
-            <h5 class="modal-title modal-title-custom" id="terimaModalLabel">Konfirmasi Terima Project</h5>
+            <div class="modal-icon">
+                !
+            </div>
+            <h5 class="modal-title modal-title-custom" id="terimaModalLabel">Terima Project?</h5>
             <div class="modal-body modal-message-custom">
                 <input type="hidden" id="terimaId" name="terimaid">
-                Apakah Anda yakin ingin menerima Detail project "<span id="namadetail"></span>" ini?
+                Apakah Anda yakin ingin menerima Detail project <label id="namadetail"></label> ini?
             </div>
             <div class="modal-footer modal-buttons-custom">
                 <button type="button" class="btn btn-secondary btn-secondary-custom" data-dismiss="modal">Batal</button>
@@ -442,29 +415,6 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-success" role="document">
-        <div class="modal-content modal-content-custom">
-            <div class="modal-header-custom">
-                <h5 class="modal-title-custom" id="successModalLabel">Berhasil!</h5>
-                <button type="button" class="close-button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body modal-message-custom">
-                <div class="modal-icon">
-                     <i class="fas fa-check-circle" style="font-size: 64px;"></i>
-                </div>
-                <p id="successMessage"></p> {{-- Pesan sukses akan diisi di sini --}}
-            </div>
-            <div class="modal-footer modal-buttons-custom">
-                <button type="button" class="btn btn-primary-custom" data-dismiss="modal" onclick="location.reload()">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @endsection
 
 @push('scripts')
@@ -472,56 +422,50 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const revisiLinks = document.querySelectorAll('.revisi-btn');
-        const revisiModalElement = $('#revisiModal');
-        const revisiDetailIdInput = document.getElementById('revisiDetailId');
+        // Mendapatkan semua tombol revisi di dropdown
+        const revisiLinks = document.querySelectorAll('.tolak-btn');
+
+        // Mendapatkan elemen modal dan input
+        const revisiModalElement = $('#revisiModal'); // Menggunakan jQuery untuk modal Bootstrap 4
+        const revisiDetailIdInput = document.getElementById('revisiDetailId'); // Mengubah ID input
         const catatanRevisiTextarea = document.getElementById('catatanRevisi');
         const simpanRevisiBtn = document.getElementById('simpanRevisiBtn');
+        const simpanTerimaBtn = document.getElementById('confirmTerimaBtn');
 
-        const terimaLinks = document.querySelectorAll('.terima-btn');
-        const terimaModalElement = $('#terimaModal');
-        const terimaIdInput = document.getElementById('terimaId');
-        const namaDetailSpan = document.getElementById('namadetail');
-        const confirmTerimaBtn = document.getElementById('confirmTerimaBtn');
-
-        // Referensi ke modal sukses
-        const successModalElement = $('#successModal');
-        const successMessageParagraph = document.getElementById('successMessage');
-
-        // Event listener untuk tombol "Revisi"
         revisiLinks.forEach(link => {
             link.addEventListener('click', function() {
                 const detailId = this.dataset.detailId;
-                const catatanExisting = this.dataset.detailCatatan;
                 revisiDetailIdInput.value = detailId;
-                catatanRevisiTextarea.value = catatanExisting !== 'null' ? catatanExisting : '';
-                revisiModalElement.modal('show');
+                catatanRevisiTextarea.value = this.dataset.detailCatatan; // Kosongkan textarea setiap kali modal dibuka
+                revisiModalElement.modal('show'); // Tampilkan modal menggunakan jQuery
             });
         });
 
-        // Event listener untuk tombol "Diterima"
+        const terimaLinks = document.querySelectorAll('.terima-btn');
         terimaLinks.forEach(link => {
             link.addEventListener('click', function() {
+                console.log(this.dataset.nama);
+                const modal = $('#terimaModal');
                 const detailId = this.dataset.id;
-                const detailNama = this.dataset.nama;
-                terimaIdInput.value = detailId;
-                namaDetailSpan.textContent = detailNama;
-                terimaModalElement.modal('show');
+                document.getElementById('terimaId').value = detailId;
+                document.getElementById('namadetail').value = this.dataset.nama;
+                modal.modal('show');
             });
         });
 
-        // Event listener untuk tombol "Simpan" di modal revisi
         simpanRevisiBtn.addEventListener('click', function() {
             const detailId = revisiDetailIdInput.value;
             const catatanRevisi = catatanRevisiTextarea.value;
 
-            if (catatanRevisi.trim() === '') {
-                alert('Catatan revisi tidak boleh kosong.');
-                return;
-            }
+            // Di sini Anda akan mengirim data catatan revisi ke backend
+            // Anda bisa menggunakan Fetch API atau Axios untuk mengirim data
+            console.log('Mengirim catatan revisi untuk Detail ID:', detailId);
+            console.log('Catatan Revisi:', catatanRevisi);
 
-            fetch('/detailproject', {
-                method: 'POST',
+            // Contoh penggunaan Fetch API (Anda perlu menyesuaikan URL dan method)
+
+            fetch('/detailproject', { // Sesuaikan URL API Anda
+                method: 'POST', // Atau PUT, tergantung API Anda
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -535,56 +479,53 @@
             .then(response => response.json())
             .then(data => {
                 revisiModalElement.modal('hide');
-                // Tampilkan modal sukses untuk revisi juga jika diinginkan
-                successMessageParagraph.textContent = 'Catatan revisi berhasil disimpan!';
-                successModalElement.modal('show');
-                // location.reload() akan dipanggil dari tombol OK di modal sukses
+                alert('Catatan revisi berhasil disimpan (simulasi)!');
+                location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menyimpan catatan revisi.');
+                // Tampilkan pesan error kepada pengguna
             });
+
+
+
         });
 
-        // Event listener untuk tombol "Terima" di modal konfirmasi terima
-        confirmTerimaBtn.addEventListener('click', function() {
-            const detailId = terimaIdInput.value;
-            const detailNama = namaDetailSpan.textContent; // Ambil nama detail untuk pesan sukses
+        simpanTerimaBtn.addEventListener('click', function() {
+            const detailId = document.getElementById('terimaId').value;
 
-            fetch('/detailproject', {
-                method: 'POST',
+            // Di sini Anda akan mengirim data catatan revisi ke backend
+            // Anda bisa menggunakan Fetch API atau Axios untuk mengirim data
+            console.log('Mengirim catatan revisi untuk Detail ID:', detailId);
+            console.log('Catatan Revisi:', catatanRevisi);
+
+            // Contoh penggunaan Fetch API (Anda perlu menyesuaikan URL dan method)
+
+            fetch('/detailproject', { // Sesuaikan URL API Anda
+                method: 'POST', // Atau PUT, tergantung API Anda
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
                     detail_id: detailId,
-                    jenis: 'diterima'
+                    jenis: 'terima'
                 })
             })
             .then(response => response.json())
             .then(data => {
-                terimaModalElement.modal('hide'); // Sembunyikan modal konfirmasi terima
-
-                // Tampilkan modal sukses
-                successMessageParagraph.textContent = `Detail project "${detailNama}" berhasil diterima!`;
-                successModalElement.modal('show');
-
-                // Reload halaman akan dilakukan setelah pengguna mengklik OK di modal sukses
+                revisiModalElement.modal('hide');
+                alert('Project berhasil diterima!');
+                location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);
-                alert('Terjadi kesalahan saat menerima project.');
+                // Tampilkan pesan error kepada pengguna
             });
-        });
 
-        // Opsional: Jika Anda ingin modal sukses otomatis tertutup dan reload setelah beberapa detik
-        // successModalElement.on('shown.bs.modal', function () {
-        //     setTimeout(function() {
-        //         successModalElement.modal('hide');
-        //         location.reload();
-        //     }, 2000); // Tutup dan reload setelah 2 detik
-        // });
+
+
+        });
     });
 </script>
 @endpush

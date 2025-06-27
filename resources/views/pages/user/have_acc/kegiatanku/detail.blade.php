@@ -160,7 +160,7 @@
                                                     <td style="overflow: visible;">
                                                         {{-- Tombol langsung memicu modal Revisi --}}
                                                         <button
-                                                            {{ $item->status == 'diterima' || $item->status == 'proses' ? 'disabled' : '' }}
+                                                            {{ $item->status == 'diterima' ? 'disabled' : '' }}
                                                             class="btn btn-sm btn-outline-secondary btn-revisi-laporan"
                                                             type="button"
                                                             data-bs-toggle="modal"
@@ -297,6 +297,7 @@
     </div>
 </div>
 
+<!-- Loading Overlay -->
 <div id="loadingOverlay" style="
     position: fixed;
     top: 0; left: 0;
