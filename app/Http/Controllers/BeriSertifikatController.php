@@ -31,16 +31,16 @@ class BeriSertifikatController extends Controller
             ->join('mentor', 'users.mentor_id', '=', 'mentor.id')
             ->join('posisi', 'pengajuan.posisi_id', '=', 'posisi.id')
             ->join('penilaian', 'penilaian.pengajuan_id', '=', 'pengajuan.id')
-            ->select('pengajuan.*', 'users.name as user_name', 'users.email', 'posisi.nama as nama_posisi','mentor.nama','posisi.nama as nama_posisi')
-            ->where('users.mentor_id', auth()->user()->mentor_id)
+            ->select('pengajuan.*', 'users.name as user_name', 'users.email', 'posisi.nama as nama_posisi', 'mentor.nama', 'posisi.nama as nama_posisi')
+            ->where('users.mentor_id', Auth::user()->mentor_id)
             ->where('pengajuan.status', '!=', 'ditolak')
             ->orderBy('pengajuan.created_at', 'desc')
             ->groupBy('pengajuan.user_id')
             ->get();
 
-            foreach($beri as $item){
+        foreach ($beri as $item) {
                 $cekBeri = Sertifikat::where('pengajuan_id', $item->id)->first();
-                if(!empty($cekBeri->location)){
+            if (!empty($cekBeri->location)) {
                     $item->beri = 'true';
                 }
             }
@@ -48,10 +48,11 @@ class BeriSertifikatController extends Controller
         return view('pages.mentor.berisertifikat.index', compact('beri'));
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
         $cekTemplate = TemplateSertifikat::all();
-        if($cekTemplate->count()>0){
-            foreach($cekTemplate as $item){
+        if ($cekTemplate->count() > 0) {
+            foreach ($cekTemplate as $item) {
 
 
                 Sertifikat::where('pengajuan_id', $request->item_id)->delete();
@@ -75,8 +76,14 @@ class BeriSertifikatController extends Controller
                 $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
                 $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
 
-                $command = 'soffice --headless --convert-to pdf --outdir ' . dirname($pdfPath) . ' ' . $docxPath;
-                exec($command);
+                $sofficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
+                $command = $sofficePath . ' --headless --convert-to pdf --outdir "' . dirname($pdfPath) . '" "' . $docxPath . '"';
+                exec($command, $output, $return_var);
+
+                if ($return_var !== 0) {
+                    dd("❌ Gagal convert", $command, $output, $return_var);
+                }
+
 
 
                 $personalComponents = Penilaian::where('pengajuan_id', $request->item_id)
@@ -141,25 +148,25 @@ class BeriSertifikatController extends Controller
                 ]);
 
                 return true;
-
             }
         }
     }
 
-    public function generateNilai($id){
+    public function generateNilai($id)
+    {
 
         $pengajuan = Pengajuan::where('pengajuan.id', $id)->first();
 
         $personalComponents = Penilaian::where('pengajuan_id', $id)
         ->select('evaluation_name as komponen', 'value')
         ->where('evaluation_type', 'personal')->get();
-        if($personalComponents->count() > 0){
-            foreach($personalComponents as $kc){
+        if ($personalComponents->count() > 0) {
+            foreach ($personalComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $personalComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'personal')->get();
-            foreach($personalComponents as $pc){
+            foreach ($personalComponents as $pc) {
                 $pc->nilai = null;
             }
         }
@@ -167,13 +174,13 @@ class BeriSertifikatController extends Controller
         $kompetensiComponents = Penilaian::where('pengajuan_id', $id)
         ->select('evaluation_name as komponen', 'value')
         ->where('evaluation_type', 'competence')->get();
-        if($kompetensiComponents->count() > 0){
-            foreach($kompetensiComponents as $kc){
+        if ($kompetensiComponents->count() > 0) {
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $kompetensiComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'competence')->get();
-            foreach($kompetensiComponents as $kc){
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = null;
             }
         }
@@ -181,6 +188,4 @@ class BeriSertifikatController extends Controller
         $pdf = Pdf::loadView('pdf.nilai', compact('personalComponents', 'kompetensiComponents', 'pengajuan', 'id'))->setPaper('A4', 'landscape');
         return $pdf->stream('nilai.pdf');
     }
-
-
 }

@@ -8,7 +8,8 @@
 {{-- Bootstrap Icons --}}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css">
 {{-- Font Awesome for icons --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
     /* CSS Umum dari Testimoni (disederhanakan untuk relevansi) */
     .main-content {
@@ -244,7 +245,8 @@
 
                     <div class="profile-photo-wrapper">
                         {{-- Gunakan ID unik untuk gambar agar mudah diakses di JS --}}
-                        <img src="{{ asset($user->profile_photo_path ?? 'images/profile_placeholder.jpg') }}" alt="Foto Profil" class="profile-photo" id="profilePhoto">
+                            <img src="{{ asset($user->profile_photo_path ?? 'images/profile_placeholder.jpg') }}"
+                                alt="Foto Profil" class="profile-photo" id="profilePhoto">
                         <span class="profile-photo-camera-icon" id="cameraIcon">
                             <i class="fas fa-camera"></i>
                         </span>
@@ -254,17 +256,14 @@
 
                     <div class="profile-info-group">
                         <label for="nama_lengkap">Nama Lengkap</label>
-                        <input type="text" class="form-control-plaintext" id="nama_lengkap" name="name" value="{{ $user->name }}" readonly>
-                    </div>
-
-                    <div class="profile-info-group">
-                        <label for="posisi">Posisi</label>
-                        <input type="text" class="form-control-plaintext" id="posisi" name="position" value="{{ $user->position }}" readonly>
+                            <input type="text" class="form-control-plaintext" id="nama_lengkap" name="name"
+                                value="{{ $user->name }}" readonly>
                     </div>
 
                     <div class="profile-info-group">
                         <label for="email">Email</label>
-                        <input type="email" class="form-control-plaintext" id="email" name="email" value="{{ $user->email }}" readonly>
+                            <input type="email" class="form-control-plaintext" id="email" name="email"
+                                value="{{ $user->email }}" readonly>
                     </div>
 
                     <div class="profile-actions">
