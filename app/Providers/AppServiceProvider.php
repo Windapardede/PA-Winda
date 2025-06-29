@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrapFive();
 
         // Force all asset() URLs to use HTTPS
-        URL::forceScheme("https");
+        // URL::forceScheme("https");
         // if ($this->app->environment("production")) {
         // }
     }
