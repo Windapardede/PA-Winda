@@ -19,39 +19,6 @@ class KelolaMentorController extends Controller
      */
     public function index()
     {
-        // Dummy data for Mentors (reduced to 3 entries)
-        // In a real application, this data would be fetched from a database,
-        // for example: $mentors = Mentor::all();
-        // $mentors = [
-        //     (object)[ // Ubah array asosiatif menjadi objek untuk konsistensi
-        //         'id' => 1,
-        //         'nama' => 'Budi Santoso',
-        //         'email' => 'budi.santoso@example.com',
-        //         'posisi_mentor' => 'Frontend Developer',
-        //         'total_mentee' => 3,
-        //         'is_active' => '1', // '1' for active, '0' for inactive
-        //         'status' => 'aktif' // 'aktif' or 'tidak aktif'
-        //     ],
-        //     (object)[
-        //         'id' => 2,
-        //         'nama' => 'Siti Aminah',
-        //         'email' => 'siti.aminah@example.com',
-        //         'posisi_mentor' => 'UI/UX Designer',
-        //         'total_mentee' => 5,
-        //         'is_active' => '0',
-        //         'status' => 'tidak aktif'
-        //     ],
-        //     (object)[
-        //         'id' => 3,
-        //         'nama' => 'Joko Susilo',
-        //         'email' => 'joko.susilo@example.com',
-        //         'posisi_mentor' => 'Backend Developer',
-        //         'total_mentee' => 2,
-        //         'is_active' => '1',
-        //         'status' => 'aktif'
-        //     ],
-        // ];
-
         // $mentors = Mentor::select('mentor.*','posisi.nama as nama_mentor')->join('posisi', 'posisi.id','=','mentor.posisi_id')->get();
         $mentors = Mentor::all();
         foreach ($mentors as $items) {
@@ -160,25 +127,37 @@ class KelolaMentorController extends Controller
      */
     public function show($id)
     {
+        // Data mentor saat ini
+        $currentMentor = Mentor::findOrFail($id);
 
-        $Mentees            = User::where('mentor_id', $id)->where('users.role', 'user')->get();
-        $currentMentor      = Mentor::select('mentor.*')->where('mentor.id', $id)->first();
+        // Daftar mentee yang sudah dimiliki oleh mentor ini
+        $assignedMentees = User::where('mentor_id', $id)->where('role', 'user')->get();
 
-        $availableMentees   = $this->magangAktif();
+        // Ambil daftar pengajuan yang aktif dari method magangAktif()
+        $pengajuanAktif = $this->magangAktif();
 
-        return view('pages.kelolaakun.kelolamentor.show_mentee', compact('currentMentor', 'availableMentees', 'Mentees'));
+        // Ubah koleksi Pengajuan menjadi koleksi User yang sebenarnya
+        // Kita asumsikan relasi 'nama' di model Pengajuan menunjuk ke User
+        $availableMentees = $pengajuanAktif->map(function ($pengajuan) {
+            return $pengajuan->nama; // Ambil objek User dari relasi 'nama'
+        });
+
+        // Kirim data yang sudah benar ke view
+        return view('pages.kelolaakun.kelolamentor.show_mentee', compact(
+            'currentMentor',
+            'assignedMentees', // Ganti nama variabel agar lebih jelas
+            'availableMentees'
+        ));
     }
 
     public function magangAktif()
     {
-
-        $tanggalSekarang    = date('Y-m-d');
-        $query              = Pengajuan::where('status_administrasi', 'diterima')
+        $tanggalSekarang = date('Y-m-d');
+        $query = Pengajuan::where('status_administrasi', 'diterima')
             ->where('status_tes_kemampuan', 'diterima')
             ->where('status_wawancara', 'diterima')
             ->whereHas('nama', function ($q) use ($tanggalSekarang) {
-                $q->whereDate('mulai_magang', '<=', $tanggalSekarang)
-                    ->whereDate('selesai_magang', '>=', $tanggalSekarang)
+                $q->whereDate('selesai_magang', '>=', $tanggalSekarang)
                     ->whereNull('mentor_id');
             })->get();
 

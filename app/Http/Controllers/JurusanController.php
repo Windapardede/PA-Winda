@@ -15,9 +15,11 @@ class JurusanController extends Controller
      */
     public function index()
     {
-        $jurusan = Jurusan::all(); // Atau bisa menggunakan pagination: Jurusan::paginate(10);
+        $jurusan = Jurusan::orderBy('id', 'desc')->get(); // alternatif jika created_at tidak berfungsi
         return view('pages.masteradmin.jurusan.index', compact('jurusan'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.

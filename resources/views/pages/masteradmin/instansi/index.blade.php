@@ -3,11 +3,14 @@
 @section('title', 'Mitra')
 
 @push('style')
-    {{-- Gaya CSS Anda yang sudah ada --}}
+    {{-- CSS Libraries --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
         integrity="sha512-1ycn6IcaQQmQa7TBcVRBuKjXo/w1QkguhIyyLK4yrQX0Yv5i7k/tVElnXoltgFNnMqEzlnJwjnDHkz1NW0xPEaBwvsuJVksPdodPIFnFgzomxhJlY9lGqlTgfgcwKSjy23z4lwh9+nHm0Pdu7Z35wg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    {{-- Custom Styles --}}
     <style>
         .badge-status {
             display: inline-block;
@@ -32,23 +35,17 @@
             height: 40px;
             background: #f1f5f9;
             border: none;
-            position: relative;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            margin: 0 5px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
         }
 
         .icon-button i {
             font-size: 18px;
             color: #64748b;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
         }
 
         .icon-button:hover {
@@ -56,21 +53,10 @@
         }
 
         .table thead th {
-            background-color: #3c4b64;
+            background-color: #3c4b64 !important;
+            /* !important to ensure style is applied */
             color: #ffffff !important;
             font-weight: bold;
-            text-align: left;
-        }
-
-        .table thead {
-            background-color: #3c4b64;
-            color: white;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            justify-content: center;
         }
 
         .main-content {
@@ -133,132 +119,9 @@
             display: none !important;
         }
 
-        .modal-backdrop {
-            background-color: rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-dialog-centered {
-            display: flex;
-            align-items: center;
-            min-height: calc(100% - (0.5rem * 2));
-            width: auto;
-            max-width: 90%;
-            margin: 0.5rem auto;
-        }
-
-        @media (min-width: 576px) {
-            .modal-dialog-centered {
-                min-height: calc(100% - (1.75rem * 2));
-                max-width: 450px;
-                margin: 1.75rem auto;
-            }
-        }
-
-        .modal-content-custom {
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px 30px;
-            text-align: center;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .modal-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: #ffe0b2;
-            color: #f57c00;
-            /* Warna default ikon */
-            display: flex;
-            /* Memastikan konten di dalamnya bisa di-center */
-            justify-content: center;
-            /* Center horizontal */
-            align-items: center;
-            /* Center vertical */
-            margin: 0 auto 15px;
-            /* Line-height dihapus dari sini, karena centering oleh flexbox dan pengaturan font-size pada <i> langsung lebih efektif */
-        }
-
-        /* === BARU / MODIFIKASI: Mengatur ukuran dan centering ikon di dalam .modal-icon === */
-        .modal-icon i {
-            font-size: 50px;
-            /* Sesuaikan ukuran font ikon ini agar pas di dalam lingkaran */
-            line-height: 1;
-            /* Penting untuk icon fonts agar tidak ada spasi ekstra vertikal */
-            display: block;
-            /* Memastikan <i> mengambil ruang penuhnya untuk centering flexbox */
-            /* Pastikan tidak ada properti position, top, left, transform di sini, karena parent sudah menggunakan flexbox untuk centering */
-        }
-
-        .modal-icon.bg-success {
-            background-color: #c3e6cb !important;
-            color: #155724 !important;
-            /* Warna ikon hijau */
-        }
-
-        .modal-icon.bg-warning {
-            background-color: #ffeeba !important;
-            color: #85640a !important;
-            /* Warna ikon kuning */
-        }
-
-        .modal-icon.bg-danger {
-            background-color: #f8d7da !important;
-            color: #721c24 !important;
-            /* Warna ikon merah */
-        }
-
-        .modal-title-custom {
-            font-size: 25px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .modal-message-custom {
-            color: #555;
-            margin-bottom: 0px;
-            font-size: 15px;
-        }
-
-        .modal-buttons-custom {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 0px;
-            flex-direction: row-reverse;
-        }
-
-        .btn-primary-custom {
-            background-color: #1758B9;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-
-        .btn-secondary-custom {
-            background-color: #EB2027;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 20px;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out;
-        }
-
-        .btn-primary-custom:hover {
-            background-color: #134a96;
-        }
-
-        .btn-secondary-custom:hover {
-            background-color: #b8181e;
-            color: #fff;
+        /* Mengatur agar background modal form tidak terlalu gelap */
+        .modal-backdrop.show {
+            opacity: .25;
         }
     </style>
 @endpush
@@ -279,6 +142,7 @@
 
                 <div class="row mb-4">
                     <div class="col-md-12">
+                        {{-- Tombol ini membuka modal Bootstrap untuk Tambah Data --}}
                         <button class="btn btn-primary" data-toggle="modal" data-target="#tambahInstansiModal">
                             <i class="bi bi-plus-lg"></i> Tambah Mitra
                         </button>
@@ -291,10 +155,10 @@
                             <tr>
                                 <th>No</th>
                                 <th>Nama Mitra</th>
-                                <th class="text-center align-middle">Kuota</th>
-                                <th class="text-center align-middle">Kuota Tersedia</th>
-                                <th class="text-center align-middle">Status</th>
-                                <th class="text-center align-middle">Aksi</th>
+                                <th class="text-center">Kuota</th>
+                                <th class="text-center">Tersedia</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -315,31 +179,37 @@
                                         <div class="dropdown">
                                             <button class="icon-button dropdown-toggle" type="button"
                                                 id="aksiDropdownInstansi{{ $instansiItem['id'] }}" data-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"
-                                                aria-label="Tampilkan opsi aksi untuk {{ $instansiItem['nama'] }}">
+                                                aria-haspopup="true" aria-expanded="false">
                                                 <i class="fas fa-align-justify"></i>
                                             </button>
                                             <div class="dropdown-menu dropdown-menu-right"
                                                 aria-labelledby="aksiDropdownInstansi{{ $instansiItem['id'] }}">
-                                                <a class="dropdown-item aktifnonaktif-btn-instansi" href="#"
-                                                    data-id="{{ $instansiItem['id'] }}" data-nama="{{ $instansiItem['nama'] }}"
-                                                    data-status="{{ $instansiItem['is_active'] ? 'active' : 'blacklisted' }}">
+                                                {{-- Tombol ini memicu SweetAlert2 untuk konfirmasi status --}}
+                                                <a class="dropdown-item status-btn-instansi" href="#"
+                                                    data-id="{{ $instansiItem['id'] }}"
+                                                    data-nama="{{ $instansiItem['nama'] }}"
+                                                    data-status="{{ $instansiItem['is_active'] }}">
                                                     @if ($instansiItem['is_active'])
-                                                        <i class="fas fa-ban"></i> Non Aktif
+                                                        <i class="fas fa-ban"></i> Non Aktifkan
                                                     @else
-                                                        <i class="fas fa-check"></i> Aktif
+                                                        <i class="fas fa-check"></i> Aktifkan
                                                     @endif
                                                 </a>
                                                 <div class="dropdown-divider"></div>
+                                                {{-- Tombol ini membuka modal Bootstrap untuk Edit Data --}}
                                                 <a class="dropdown-item edit-btn-instansi" href="#"
-                                                    data-id="{{ $instansiItem['id'] }}" data-nama="{{ $instansiItem['nama'] }}"
+                                                    data-id="{{ $instansiItem['id'] }}"
+                                                    data-nama="{{ $instansiItem['nama'] }}"
                                                     data-kuota="{{ $instansiItem['kuota'] }}"
-                                                    data-kuota_tersedia="{{ $instansiItem['kuota_tersedia'] }}">
+                                                    data-kuota_tersedia="{{ $instansiItem['kuota_tersedia'] }}"
+                                                    data-toggle="modal" data-target="#editInstansiModal">
                                                     <i class="bi bi-pencil"></i> Edit
                                                 </a>
                                                 <div class="dropdown-divider"></div>
+                                                {{-- Tombol ini memicu SweetAlert2 untuk konfirmasi hapus --}}
                                                 <a class="dropdown-item delete-btn-instansi" href="#"
-                                                    data-id="{{ $instansiItem['id'] }}" data-nama="{{ $instansiItem['nama'] }}">
+                                                    data-id="{{ $instansiItem['id'] }}"
+                                                    data-nama="{{ $instansiItem['nama'] }}">
                                                     <i class="bi bi-trash"></i> Hapus
                                                 </a>
                                             </div>
@@ -355,19 +225,19 @@
         </section>
     </div>
 
-    {{-- MODAL TAMBAH MITRA --}}
-    <div class="modal fade" id="tambahInstansiModal" tabindex="-1" role="dialog" aria-labelledby="tambahInstansiModal"
-        aria-hidden="true">
+    {{-- MODAL BOOTSTRAP UNTUK TAMBAH MITRA (FORM) --}}
+    <div class="modal fade" id="tambahInstansiModal" tabindex="-1" role="dialog"
+        aria-labelledby="tambahInstansiModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="tambahInstansiModal">Tambah Mitra</h5>
+                    <h5 class="modal-title" id="tambahInstansiModalLabel">Tambah Mitra</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="formTambahInstansi" method="POST" action="{{ route('instansi.store') }}">
+                <form id="formTambahInstansi" method="POST" action="{{ route('instansi.store') }}">
+                    <div class="modal-body">
                         @csrf
                         <div class="form-group">
                             <label for="nama">Nama Mitra</label>
@@ -375,28 +245,29 @@
                         </div>
                         <div class="form-group">
                             <label for="kuota">Total Kuota</label>
-                            <input type="number" class="form-control" id="kuota" name="kuota" min="0" required>
-                            <div id="totalKuotaError" class="text-danger small"></div> {{-- Tambahkan ini --}}
+                            <input type="number" class="form-control" id="kuota" name="kuota" min="0"
+                                required>
+                            <div id="totalKuotaError" class="text-danger small"></div>
                         </div>
                         <div class="form-group">
                             <label for="kuota_tersedia">Kuota Tersedia</label>
-                            <input type="number" class="form-control" id="kuota_tersedia" name="kuota_tersedia" min="0"
-                                required>
-                            <div id="kuotaTersediaError" class="text-danger small"></div> {{-- Tambahkan ini --}}
+                            <input type="number" class="form-control" id="kuota_tersedia" name="kuota_tersedia"
+                                min="0" required>
+                            <div id="kuotaTersediaError" class="text-danger small"></div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    {{-- MODAL EDIT MITRA --}}
-    <div class="modal fade" id="editInstansiModal" tabindex="-1" role="dialog" aria-labelledby="editInstansiModalLabel"
-        aria-hidden="true">
+    {{-- MODAL BOOTSTRAP UNTUK EDIT MITRA (FORM) --}}
+    <div class="modal fade" id="editInstansiModal" tabindex="-1" role="dialog"
+        aria-labelledby="editInstansiModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -405,8 +276,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="editInstansiForm" method="POST" action="">
+                <form id="editInstansiForm" method="POST" action="">
+                    <div class="modal-body">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="id" id="edit_instansi_id">
@@ -416,132 +287,72 @@
                         </div>
                         <div class="form-group">
                             <label for="edit_kuota_instansi">Total Kuota</label>
-                            <input type="number" class="form-control" id="edit_kuota_instansi" name="kuota" min="0"
-                                required>
-                            <div id="editTotalKuotaError" class="text-danger small"></div> {{-- Tambahkan ini --}}
+                            <input type="number" class="form-control" id="edit_kuota_instansi" name="kuota"
+                                min="0" required>
+                            <div id="editTotalKuotaError" class="text-danger small"></div>
                         </div>
                         <div class="form-group">
                             <label for="edit_kuota_tersedia_instansi">Kuota Tersedia</label>
                             <input type="number" class="form-control" id="edit_kuota_tersedia_instansi"
                                 name="kuota_tersedia" min="0" required>
-                            <div id="editKuotaTersediaError" class="text-danger small"></div> {{-- Tambahkan ini --}}
+                            <div id="editKuotaTersediaError" class="text-danger small"></div>
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Update</button>
-                        </div>
-                    </form>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-    {{-- MODAL KONFIRMASI BLACKLIST/UNBLACKLIST --}}
-    <div class="modal fade" id="blacklistUnblacklistConfirmationModal" tabindex="-1" role="dialog"
-        aria-labelledby="blacklistUnblacklistConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-icon" id="blacklistUnblacklistModalIcon">
-                    {{-- Icon akan diset oleh JS di sini, contoh: <i class="fas fa-ban"></i> --}}
-                </div>
-                <h5 class="modal-title modal-title-custom" id="blacklistUnblacklistModalTitle"></h5>
-                <div class="modal-body modal-message-custom">
-                    <span id="blacklistUnblacklistModalMessage"></span>
-                    <form id="blacklistUnblacklistForm" action="{{ route('instansi.blacklistunblacklist') }}" method="POST"
-                        style="display: inline;">
-                        @csrf
-                        @method('POST')
-                        <input type="hidden" name="id" id="blacklist_unblacklist_id">
-                        <input type="hidden" name="is_active" id="blacklist_unblacklist_status">
-                    </form>
-                </div>
-                <div class="modal-footer modal-buttons-custom">
-                    <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Batal</button>
-                    <button type="submit" id="blacklistUnblacklistConfirmBtn" class="btn btn-secondary btn-secondary-custom"
-                        form="blacklistUnblacklistForm"></button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- MODAL KONFIRMASI HAPUS --}}
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog"
-        aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-icon bg-danger text-white">
-                    <i class="bi bi-trash"></i>
-                </div>
-                <h5 class="modal-title modal-title-custom" id="deleteConfirmationModalLabel">Konfirmasi Hapus</h5>
-                <div class="modal-body modal-message-custom">
-                    Apakah Anda yakin ingin menghapus instansi <strong><span id="namaInstansiDelete"></span></strong>?
-                    <form id="deleteFormInstansi" action="" method="POST" style="display: inline;">
-                        @csrf
-                        @method('DELETE')
-                    </form>
-                </div>
-                <div class="modal-footer modal-buttons-custom">
-                    <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-secondary btn-secondary-custom"
-                        form="deleteFormInstansi">Hapus</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- MODAL SUKSES (UNIVERSAL) --}}
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content modal-content-custom">
-                <div class="modal-icon bg-success text-white">
-                    <i class="fas fa-check"></i>
-                </div>
-                <h5 class="modal-title modal-title-custom" id="successModalTitle">Berhasil!</h5>
-                <div class="modal-body modal-message-custom">
-                    <p id="successModalMessage"></p>
-                </div>
-                <div class="modal-footer modal-buttons-custom">
-                    <button type="button" class="btn btn-primary btn-primary-custom" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
 @endsection
 
 @push('scripts')
+    {{-- JS Libraries --}}
     <script src="{{ asset('library/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('library/popper.js/dist/umd/popper.js') }}"></script>
     <script src="{{ asset('library/bootstrap/dist/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('library/jquery.nicescroll/dist/jquery.nicescroll.min.js') }}"></script>
-    <script src="{{ asset('library/moment/min/moment.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('js/stisla.js') }}"></script>
     <script src="{{ asset('js/scripts.js') }}"></script>
-    <script src="{{ asset('js/custom.js') }}"></script>
 
+    {{-- Custom Script --}}
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
 
-            // Function to show the universal success modal
-            function showSuccessModal(title, message) {
-                $('#successModalTitle').text(title);
-                $('#successModalMessage').text(message);
-                $('#successModal').modal('show');
+            // --- FUNGSI GLOBAL ---
+            function showSuccessAlert(message) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: message,
+                    icon: 'success',
+                    confirmButtonText: 'Oke'
+                }).then(() => {
+                    location.reload();
+                });
             }
 
-            // Function to reload table data
-            function reloadTableData() {
-                location.reload();
+            function showErrorAlert(message) {
+                Swal.fire({
+                    title: 'Gagal!',
+                    html: message,
+                    icon: 'error',
+                    confirmButtonText: 'Tutup'
+                });
             }
 
-            // --- Fungsi Validasi Kuota ---
+            function getCsrfToken() {
+                return "{{ csrf_token() }}";
+            }
+
+            // --- VALIDASI KUOTA PADA FORM MODAL ---
             function validateQuota(totalKuotaInputId, kuotaTersediaInputId, totalErrorDivId, tersediaErrorDivId) {
                 const totalKuota = parseInt($(totalKuotaInputId).val());
                 const kuotaTersedia = parseInt($(kuotaTersediaInputId).val());
                 let isValid = true;
 
-                // Clear previous errors
                 $(totalErrorDivId).text('');
                 $(tersediaErrorDivId).text('');
 
@@ -553,254 +364,148 @@
                     $(tersediaErrorDivId).text('Kuota Tersedia harus angka positif.');
                     isValid = false;
                 }
-
-                // Hanya cek relasi jika kedua input valid secara angka positif
                 if (isValid && totalKuota < kuotaTersedia) {
-                    $(totalErrorDivId).text('Total Kuota tidak boleh lebih kecil dari Kuota Tersedia.');
                     $(tersediaErrorDivId).text('Kuota Tersedia tidak boleh lebih besar dari Total Kuota.');
                     isValid = false;
                 }
-
                 return isValid;
             }
 
-            // --- Handle Tambah Mitra ---
-            $('#formTambahInstansi').on('submit', function (e) {
-                // Panggil fungsi validasi sebelum submit
-                if (!validateQuota('#kuota', '#kuota_tersedia', '#totalKuotaError', '#kuotaTersediaError')) {
-                    e.preventDefault(); // Mencegah form disubmit jika validasi gagal
+            // --- HANDLE FORM TAMBAH MITRA (MODAL BOOTSTRAP) ---
+            $('#formTambahInstansi').on('submit', function(e) {
+                e.preventDefault();
+                if (!validateQuota('#kuota', '#kuota_tersedia', '#totalKuotaError',
+                    '#kuotaTersediaError')) {
                     return;
                 }
 
-                e.preventDefault(); // Pastikan default behavior form tetap dicegah untuk AJAX
-
-                var form = $(this);
-                var url = form.attr('action');
-                var method = form.attr('method');
-                var data = form.serialize();
-
                 $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    success: function (response) {
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: (response) => {
                         $('#tambahInstansiModal').modal('hide');
-                        showSuccessModal('Berhasil!', 'Mitra berhasil ditambahkan.');
-                        $('#successModal').on('hidden.bs.modal', function () {
-                            reloadTableData();
-                        });
+                        showSuccessAlert('Mitra berhasil ditambahkan!');
                     },
-                    error: function (xhr) {
-                        var errorMessage = 'Terjadi kesalahan saat menambahkan mitra.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        } else if (xhr.status === 422) { // Laravel validation error
-                            var errors = xhr.responseJSON.errors;
-                            var errorMessages = [];
-                            for (var key in errors) {
-                                if (errors.hasOwnProperty(key)) {
-                                    errorMessages.push(errors[key][0]);
-                                }
-                            }
-                            errorMessage = errorMessages.join('<br>'); // Join multiple error messages
-                        }
-                        alert(errorMessage);
+                    error: (xhr) => {
+                        $('#tambahInstansiModal').modal('hide');
+                        showErrorAlert('Terjadi kesalahan saat menambahkan data.');
                     }
                 });
             });
 
-            // --- Handle Edit Mitra ---
-            $('.edit-btn-instansi').on('click', function () {
-                var id = $(this).data('id');
-                var nama = $(this).data('nama');
-                var kuota = $(this).data('kuota');
-                var kuota_tersedia = $(this).data('kuota_tersedia');
+            // --- PENGISIAN DATA PADA FORM EDIT (MODAL BOOTSTRAP) ---
+            $('.edit-btn-instansi').on('click', function() {
+                const id = $(this).data('id');
+                const nama = $(this).data('nama');
+                const kuota = $(this).data('kuota');
+                const kuota_tersedia = $(this).data('kuota_tersedia');
+                const updateRoute = `{{ url('instansi') }}/${id}`;
 
                 $('#edit_instansi_id').val(id);
                 $('#edit_nama_instansi').val(nama);
                 $('#edit_kuota_instansi').val(kuota);
                 $('#edit_kuota_tersedia_instansi').val(kuota_tersedia);
+                $('#editInstansiForm').attr('action', updateRoute);
 
-                // Clear previous errors when modal opens
+                // Bersihkan pesan error sebelumnya
                 $('#editTotalKuotaError').text('');
                 $('#editKuotaTersediaError').text('');
-
-
-                var form = $('#editInstansiForm');
-                var updateRoute = "{{ route('instansi.update', ':id') }}";
-                updateRoute = updateRoute.replace(':id', id);
-                form.attr('action', updateRoute);
-
-                $('#editInstansiModal').modal('show');
             });
 
-            $('#editInstansiForm').on('submit', function (e) {
-                // Panggil fungsi validasi sebelum submit
-                if (!validateQuota('#edit_kuota_instansi', '#edit_kuota_tersedia_instansi', '#editTotalKuotaError', '#editKuotaTersediaError')) {
-                    e.preventDefault(); // Mencegah form disubmit jika validasi gagal
+            // --- HANDLE FORM EDIT MITRA (MODAL BOOTSTRAP) ---
+            $('#editInstansiForm').on('submit', function(e) {
+                e.preventDefault();
+                if (!validateQuota('#edit_kuota_instansi', '#edit_kuota_tersedia_instansi',
+                        '#editTotalKuotaError', '#editKuotaTersediaError')) {
                     return;
                 }
 
-                e.preventDefault(); // Pastikan default behavior form tetap dicegah untuk AJAX
-
-                var form = $(this);
-                var url = form.attr('action');
-                var method = form.attr('method');
-                var data = form.serialize();
-
                 $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    success: function (response) {
+                    url: $(this).attr('action'),
+                    type: 'POST', // Method spoofing (_method: 'PUT') handled by blade
+                    data: $(this).serialize(),
+                    success: (response) => {
                         $('#editInstansiModal').modal('hide');
-                        showSuccessModal('Berhasil!', 'Mitra berhasil diperbarui.');
-                        $('#successModal').on('hidden.bs.modal', function () {
-                            reloadTableData();
-                        });
+                        showSuccessAlert('Mitra berhasil diperbarui!');
                     },
-                    error: function (xhr) {
-                        var errorMessage = 'Terjadi kesalahan saat mengedit mitra.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        } else if (xhr.status === 422) { // Laravel validation error
-                            var errors = xhr.responseJSON.errors;
-                            var errorMessages = [];
-                            for (var key in errors) {
-                                if (errors.hasOwnProperty(key)) {
-                                    errorMessages.push(errors[key][0]);
-                                }
-                            }
-                            errorMessage = errorMessages.join('<br>'); // Join multiple error messages
-                        }
-                        alert(errorMessage);
+                    error: (xhr) => {
+                        $('#editInstansiModal').modal('hide');
+                        showErrorAlert('Terjadi kesalahan saat memperbarui data.');
                     }
                 });
             });
 
-            // --- Handle Blacklist/Unblacklist ---
-            $('.aktifnonaktif-btn-instansi').on('click', function () {
-                var id = $(this).data('id');
-                var nama = $(this).data('nama');
-                var status = $(this).data('status');
-
-                var title, message, iconClass, btnText, newStatusValue;
-
-                if (status === 'active') {
-                    title = 'Konfirmasi Non Aktif';
-                    message = 'Apakah Anda yakin ingin <strong>Menonktifkan</strong> instansi <strong>' + nama + '</strong>?';
-                    iconClass = 'bg-warning fas fa-ban';
-                    btnText = 'NonAktif';
-                    newStatusValue = 0;
-                } else {
-                    title = 'Konfirmasi Aktif';
-                    message = 'Apakah Anda yakin ingin <strong>Mengaktifkan</strong> instansi <strong>' + nama + '</strong>?';
-                    iconClass = 'bg-success fas fa-check';
-                    btnText = 'Aktif';
-                    newStatusValue = 1;
-                }
-
-                $('#blacklistUnblacklistModalTitle').text(title);
-                $('#blacklistUnblacklistModalMessage').html(message);
-
-                const modalIconDiv = $('#blacklistUnblacklistModalIcon');
-                modalIconDiv.attr('class', 'modal-icon ' + iconClass.split(' ')[0]); // Keep only bg-color class
-
-                const existingIcon = modalIconDiv.find('i');
-                const faIconClass = iconClass.split(' ').filter(c => c.startsWith('fa')).join(' ');
-
-                if (existingIcon.length) {
-                    existingIcon.attr('class', faIconClass);
-                } else {
-                    modalIconDiv.html('<i class="' + faIconClass + '"></i>');
-                }
-
-                $('#blacklistUnblacklistConfirmBtn').text(btnText);
-
-                $('#blacklist_unblacklist_id').val(id);
-                $('#blacklist_unblacklist_status').val(newStatusValue);
-
-                $('#blacklistUnblacklistConfirmationModal').modal('show');
-            });
-
-            $('#blacklistUnblacklistForm').on('submit', function (e) {
+            // --- KONFIRMASI AKTIF/NON-AKTIF (SWEETALERT2) ---
+            $('#mitra-table').on('click', '.status-btn-instansi', function(e) {
                 e.preventDefault();
+                const id = $(this).data('id');
+                const nama = $(this).data('nama');
+                const isActive = $(this).data('status');
+                const newStatus = isActive ? 0 : 1;
+                const actionText = isActive ? 'Non Aktifkan' : 'Aktifkan';
+                const icon = isActive ? 'warning' : 'info';
 
-                var form = $(this);
-                var url = form.attr('action');
-                var method = form.attr('method');
-                var data = form.serialize();
-
-                $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    success: function (response) {
-                        $('#blacklistUnblacklistConfirmationModal').modal('hide');
-                        var statusMessage = (response.is_active_updated === 1) ? 'diaktifkan kembali' : 'di-blacklist';
-                        showSuccessModal('Berhasil!', 'Mitra berhasil ' + statusMessage + '.');
-                        $('#successModal').on('hidden.bs.modal', function () {
-                            reloadTableData();
+                Swal.fire({
+                    title: `Konfirmasi ${actionText}`,
+                    html: `Apakah Anda yakin ingin <strong>${actionText.toLowerCase()}</strong> mitra <strong>${nama}</strong>?`,
+                    icon: icon,
+                    showCancelButton: true,
+                    confirmButtonColor: isActive ? '#dc3545' : '#28a745',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: `Ya, ${actionText}!`,
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('instansi.blacklistunblacklist') }}",
+                            type: 'POST',
+                            data: {
+                                _token: getCsrfToken(),
+                                id: id,
+                                is_active: newStatus
+                            },
+                            success: (response) => showSuccessAlert(
+                                `Status mitra berhasil diubah.`),
+                            error: (xhr) => showErrorAlert(
+                                'Terjadi kesalahan saat mengubah status.')
                         });
-                    },
-                    error: function (xhr) {
-                        var errorMessage = 'Terjadi kesalahan saat mengubah status mitra.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-                        alert(errorMessage);
                     }
                 });
             });
 
-            // --- Handle Hapus Mitra ---
-            $('.delete-btn-instansi').on('click', function () {
-                var id = $(this).data('id');
-                var nama = $(this).data('nama');
-
-                $('#namaInstansiDelete').text(nama);
-                var formAction = "{{ route('instansi.destroy', ':id') }}";
-                formAction = formAction.replace(':id', id);
-                $('#deleteFormInstansi').attr('action', formAction);
-
-                $('#deleteConfirmationModal').modal('show');
-            });
-
-            $('#deleteFormInstansi').on('submit', function (e) {
+            // --- KONFIRMASI HAPUS (SWEETALERT2) ---
+            $('#mitra-table').on('click', '.delete-btn-instansi', function(e) {
                 e.preventDefault();
+                const id = $(this).data('id');
+                const nama = $(this).data('nama');
+                const deleteUrl = `{{ url('instansi') }}/${id}`;
 
-                var form = $(this);
-                var url = form.attr('action');
-                var method = form.attr('method');
-                var data = form.serialize();
-
-                $.ajax({
-                    url: url,
-                    method: method,
-                    data: data,
-                    success: function (response) {
-                        $('#deleteConfirmationModal').modal('hide');
-                        showSuccessModal('Berhasil!', 'Mitra berhasil dihapus.');
-                        $('#successModal').on('hidden.bs.modal', function () {
-                            reloadTableData();
+                Swal.fire({
+                    title: 'Konfirmasi Hapus',
+                    html: `Apakah Anda yakin ingin menghapus mitra <strong>${nama}</strong>? Tindakan ini tidak dapat dibatalkan.`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: deleteUrl,
+                            type: 'POST',
+                            data: {
+                                '_method': 'DELETE',
+                                '_token': getCsrfToken()
+                            },
+                            success: (response) => showSuccessAlert(
+                                'Mitra berhasil dihapus!'),
+                            error: (xhr) => showErrorAlert(
+                                'Terjadi kesalahan saat menghapus data.')
                         });
-                    },
-                    error: function (xhr) {
-                        var errorMessage = 'Terjadi kesalahan saat menghapus mitra.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-                        alert(errorMessage);
                     }
                 });
-            });
-
-            // Handle modal hiding logic for proper backdrop removal
-            $(document).on('hidden.bs.modal', function (e) {
-                // This ensures the backdrop is removed only if no other modals are open
-                if ($('.modal.show').length === 0) {
-                    $('.modal-backdrop').remove();
-                }
             });
         });
     </script>

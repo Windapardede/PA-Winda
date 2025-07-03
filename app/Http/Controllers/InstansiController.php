@@ -15,9 +15,11 @@ class InstansiController extends Controller
      */
     public function index()
     {
-        $instansi = Instansi::all();
-        return view('pages.masteradmin.instansi.index', compact('instansi')); // Sesuaikan nama view jika perlu
+        $instansi = Instansi::orderBy('id', 'desc')->get();
+        return view('pages.masteradmin.instansi.index', compact('instansi'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.

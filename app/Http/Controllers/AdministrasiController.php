@@ -6,7 +6,7 @@ use App\Models\Pengajuan; // Pastikan ini mengarah ke model yang benar
 use Illuminate\Http\Request;
 
 use DateTime;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
 
 class AdministrasiController extends Controller
@@ -20,9 +20,9 @@ class AdministrasiController extends Controller
     public function index(Request $request)
     {
         $query = Pengajuan::query()
-        ->whereHas('nama', function ($q) {
-            $q->where('role', '=', 'user');
-        });
+            ->whereHas('nama', function ($q) {
+                $q->where('role', '=', 'user');
+            });
 
         if ($request->has('status') && $request->input('status') != '') {
             $query->where('status_administrasi', $request->input('status'));
@@ -85,9 +85,9 @@ class AdministrasiController extends Controller
                     'nama' => '',
                     'project' => $sipanNotif['subtitle'],
                     'halo' => $administrasi->nama->name,
-                    ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                     $message->to($email)
-                            ->subject('Administrasi');
+                        ->subject('Administrasi');
                 });
             } catch (\Exception $e) {
                 dd($e->getMessage());
@@ -120,7 +120,7 @@ class AdministrasiController extends Controller
             $sipanNotif                 = array();
             $sipanNotif['user_id']      = $administrasi->nama->id;
             $sipanNotif['title']        = "Administrasi";
-            $sipanNotif['subtitle']     = 'Maaf Administrasi Anda Ditolak.'.' Alasan Ditolak : '.$administrasi->catatan_tolak_administrasi;
+            $sipanNotif['subtitle']     = 'Maaf Administrasi Anda Ditolak.' . ' Alasan Ditolak : ' . $administrasi->catatan_tolak_administrasi;
             $sipanNotif['is_viewed']    = 0;
 
             Notifikasi::create($sipanNotif);
@@ -132,9 +132,9 @@ class AdministrasiController extends Controller
                     'alasan' => '',
                     'project' => $sipanNotif['subtitle'],
                     'halo' => $administrasi->nama->name,
-                    ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                     $message->to($email)
-                            ->subject('Administrasi');
+                        ->subject('Administrasi');
                 });
             } catch (\Exception $e) {
                 dd($e->getMessage());

@@ -29,8 +29,14 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'position' => 'staff',
-            'department' => 'IT',
+            // Hapus atau komentari baris di bawah ini karena kolomnya tidak ada di database
+            // 'position' => 'staff',
+            // 'department' => 'IT',
+
+            // Tambahkan kolom lain yang ada di model dan migrasi Anda, misalnya:
+            'role' => 'user',
+            'otp' => rand(100000, 999999),
+            'status_otp' => 1,
         ];
     }
 
@@ -39,7 +45,7 @@ class UserFactory extends Factory
      */
     public function unverified(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn(array $attributes) => [
             'email_verified_at' => null,
         ]);
     }

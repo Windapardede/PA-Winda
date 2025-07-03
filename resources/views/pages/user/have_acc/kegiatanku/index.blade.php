@@ -92,9 +92,9 @@
                                             @elseif($value->status_tes_kemampuan == 'ditolak')
                                             @else
                                                 @if (!empty($value->jawaban_tes_kemampuan))
-                                                    <div class="button-wrapper"> <button
-                                                            class="btn btn-danger link-wawancara" disabled>Link Tes
-                                                            Kemampuan</button></div>
+                                                    <div class="button-wrapper"> <a href="#"
+                                                            class="btn btn-danger link-wawancara">Link Tes Kemampuan</a>
+                                                    </div>
                                                 @else
                                                     <div class="button-wrapper"> <a
                                                             href="{{ route('user.kegiatanku.soal') }}"
@@ -172,12 +172,7 @@
                                         <div class="card sidebar-custom">
                                             <img src="{{ asset('user/assets/icons/status.png') }}" alt="Programmer" />
                                             <h6 class="fw-bold mt-2">{{ $pengajuanAktif->posisi->nama }}</h6>
-
-                                            @if ($berisertifikat == true)
-                                                <span class="badge badge-accepted mb-2">Alumni</span>
-                                            @else
-                                                <span class="badge badge-accepted mb-2">Diterima</span>
-                                            @endif
+                                            <span class="badge badge-accepted mb-2">Diterima</span>
                                             <p class="small text-muted mb-1">
                                                 Pastikan Anda mengisi laporan progres proyek Anda dan
                                                 terima penghargaan berupa sertifikat setelah menyelesaikan
@@ -208,11 +203,9 @@
                                             </p>
                                             <div class="d-flex justify-content-end mb-2">
                                                 <button type="button" class="btn btn-danger btn-sm"
-                                                    data-bs-toggle="modal" data-bs-target="#tambahLaporanModal"
-                                                    @if (is_null(Auth::user()->mentor_id)) disabled @endif>
+                                                    data-bs-toggle="modal" data-bs-target="#tambahLaporanModal">
                                                     + Tambah
                                                 </button>
-
                                             </div>
                                             <div class="table-responsive" style="overflow: visible;">
                                                 <table class="table">
@@ -325,9 +318,8 @@
                                                             class="btn btn-danger rounded"
                                                             style="border-radius: 10px;">Unduh</a>
                                                     @else
-                                                        <button type="button" class="btn btn-danger rounded"
-                                                            style="border-radius: 10px;" data-bs-toggle="modal"
-                                                            data-bs-target="#mentorAdminModal">Unduh</button>
+                                                        <button onClick="alertBeluBeri()" class="btn btn-danger rounded"
+                                                            style="border-radius: 10px;">Unduh</button>
                                                     @endif
 
                                                 </div>
@@ -446,25 +438,6 @@
         </div>
     </div>
 
-    {{-- MODAL UNTUK ALERT SERTIFIKAT --}}
-    <div class="modal fade" id="mentorAdminModal" tabindex="-1" aria-labelledby="mentorAdminModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mentorAdminModalLabel">Info Sertifikat</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <p>Harap hubungi <strong>mentor</strong> untuk memberikan sertifikat Anda.</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     @include('components.user.footer')
 @endsection
 
@@ -476,17 +449,6 @@
             var successModal = new bootstrap.Modal(document.getElementById('successModal'));
             successModal.show();
         }
-
-        // Fungsi untuk menampilkan modal "Harap hubungi mentor atau admin"
-        function showAlertMentorAdminModal() {
-            var mentorAdminModal = new bootstrap.Modal(document.getElementById('mentorAdminModal'));
-            mentorAdminModal.show();
-        }
-
-        // Event listener untuk tombol "Unduh" sertifikat saat berisertifikat == false
-        document.querySelector('button[onClick="alertBeluBeri()"]').addEventListener('click', function() {
-            showAlertMentorAdminModal();
-        });
 
         // Logika untuk modal Tambah Judul
         const simpanButtonTambah = document.querySelector('#tambahLaporanModal .modal-footer .btn-danger');
@@ -634,14 +596,16 @@
                     });
                 })
                 .catch(error => {
-                    console.error('Error saat menyimpan laporan:', error);
-                    alert('Terjadi kesalahan saat menyimpan laporan: ' + error.message);
+                    console.error('Error saat menyimpan perubahan laporan:', error);
+                    alert('Terjadi kesalahan saat menyimpan perubahan laporan: ' + error.message);
                 });
         });
 
-        // Logika untuk modal Testimoni
-        const simpanTestimoniBtn = document.getElementById('simpanTestimoniBtn');
+        // --- Logika untuk modal Testimoni (BARU) ---
+
+        const testimoniModal = document.getElementById('testimoniModal');
         const testimoniTextarea = document.getElementById('testimoniTextarea');
+        const simpanTestimoniBtn = document.getElementById('simpanTestimoniBtn');
 
         simpanTestimoniBtn.addEventListener('click', function() {
             const testimoniContent = testimoniTextarea.value.trim();
@@ -651,13 +615,14 @@
                 return;
             }
 
+            console.log('Testimoni yang akan disimpan:', testimoniContent);
+
             const data = {
-                testimoni: testimoniContent,
-                _method: 'PUT' // Gunakan PUT untuk update
+                testimoni: testimoniContent, // Sesuaikan dengan nama field di backend Laravel Anda
             };
 
-            fetch('/kegiatanku/testimoni', { // Sesuaikan endpoint API untuk menyimpan testimoni
-                    method: 'POST', // Kirim sebagai POST, Laravel akan menginterpretasikan _method PUT
+            fetch('/kegiatanku/testimoni/simpan', {
+                    method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -666,6 +631,7 @@
                 })
                 .then(response => {
                     if (!response.ok) {
+                        // Coba baca pesan error dari response jika ada
                         return response.json().then(err => {
                             throw new Error(err.message || 'Gagal menyimpan testimoni');
                         });
@@ -673,14 +639,17 @@
                     return response.json();
                 })
                 .then(result => {
-                    showSuccessModal('Testimoni berhasil disimpan!');
+                    // Tampilkan modal sukses
+                    showSuccessModal('Testimoni Anda berhasil disimpan!');
                     console.log(result);
+                    // Tutup modal testimoni
                     var myModalEl = document.getElementById('testimoniModal');
                     var modal = bootstrap.Modal.getInstance(myModalEl);
                     if (modal) modal.hide();
 
+                    // Refresh halaman atau update daftar laporan setelah modal sukses ditutup
                     document.getElementById('successModal').addEventListener('hidden.bs.modal', function() {
-                        window.location.reload(); // Reload halaman setelah testimoni disimpan
+                        window.location.href = 'kegiatanku?kegitanaktif=true';
                     }, {
                         once: true
                     });
@@ -690,5 +659,36 @@
                     alert('Terjadi kesalahan saat menyimpan testimoni: ' + error.message);
                 });
         });
+
+        // --- Logika untuk menutup dropdown saat modal tampil ---
+
+        function closeAllOpenDropdowns() {
+            const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
+            openDropdowns.forEach(dropdown => {
+                const dropdownInstance = bootstrap.Dropdown.getInstance(dropdown.previousElementSibling);
+                if (dropdownInstance) {
+                    dropdownInstance.hide();
+                }
+            });
+        }
+
+        // Tambahkan event listener untuk event 'show.bs.modal' untuk semua modal
+        const allModals = [
+            document.getElementById('tambahLaporanModal'),
+            document.getElementById('editLaporanModal'),
+            document.getElementById('testimoniModal'),
+            document.getElementById('successModal') // Tambahkan modal sukses juga
+        ];
+        allModals.forEach(modal => {
+            if (modal) {
+                modal.addEventListener('show.bs.modal', function() {
+                    closeAllOpenDropdowns();
+                });
+            }
+        });
+
+        function alertBeluBeri() {
+            alert('Harap hubungi mentor atau admin untuk memberikan sertifikat');
+        }
     </script>
 @endsection

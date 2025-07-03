@@ -6,10 +6,8 @@ use App\Models\Pengajuan;
 use App\Models\Soal;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
-
 use DateTime;
-use Mail;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
 
 class KemampuanController extends Controller
@@ -41,9 +39,9 @@ class KemampuanController extends Controller
 
         foreach ($kemampuan as $key => $value) {
             $soal       = Soal::where('id', $value->soal_id)->first();
-            if(!$soal){
+            if (!$soal) {
                 $value->soal = 'tidak';
-            }else {
+            } else {
                 $value->soal = 'ada';
             }
         }
@@ -90,9 +88,9 @@ class KemampuanController extends Controller
                     'nama' => '',
                     'project' => $sipanNotif['subtitle'],
                     'halo' => $administrasi->nama->name,
-                    ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                     $message->to($email)
-                            ->subject('Tes Kemampuan');
+                        ->subject('Tes Kemampuan');
                 });
             } catch (\Exception $e) {
                 dd($e->getMessage());
@@ -120,7 +118,7 @@ class KemampuanController extends Controller
             $sipanNotif                 = array();
             $sipanNotif['user_id']      = $administrasi->nama->id;
             $sipanNotif['title']        = "Tes Kemampuan";
-            $sipanNotif['subtitle']     = 'Maaf Tes Kemampuan Anda Ditolak.'.' Alasan Ditolak : '.$administrasi->catatan_tolak_tes_kemampuan;
+            $sipanNotif['subtitle']     = 'Maaf Tes Kemampuan Anda Ditolak.' . ' Alasan Ditolak : ' . $administrasi->catatan_tolak_tes_kemampuan;
             $sipanNotif['is_viewed']    = 0;
 
             Notifikasi::create($sipanNotif);
@@ -132,9 +130,9 @@ class KemampuanController extends Controller
                     'alasan' => '',
                     'project' => $sipanNotif['subtitle'],
                     'halo' => $administrasi->nama->name,
-                    ], function ($message) use ($email) {
+                ], function ($message) use ($email) {
                     $message->to($email)
-                            ->subject('Tes Kemampuan');
+                        ->subject('Tes Kemampuan');
                 });
             } catch (\Exception $e) {
                 dd($e->getMessage());

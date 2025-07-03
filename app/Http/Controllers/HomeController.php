@@ -19,17 +19,17 @@ class HomeController extends Controller
 
         $this->notifikasi();
 
-        if(\Auth::user()->role == 'admin'){
+        if (\Auth::user()->role == 'admin') {
             return $this->homeAdmin();
-        }elseif(\Auth::user()->role == 'mentor'){
+        } elseif (\Auth::user()->role == 'mentor') {
             return $this->homeMentor();
-        }else{
+        } else {
             return $this->homeAdmin();
         }
-
     }
 
-    public function homeAdmin(){
+    public function homeAdmin()
+    {
         $data                       = array();
         $data['magang_aktif']       = $this->magangAktif()->count();
         $data['total_pendaftar']    = $this->totalPendaftar()->count();
@@ -43,23 +43,24 @@ class HomeController extends Controller
         return view('pages.dashboard', compact('type_menu', 'data'));
     }
 
-    public function grafik(){
+    public function grafik()
+    {
         $bulan = array();
-        for ($i=7; $i < 13; $i++) {
-            if($i<10){
-                $bulan[] = '0'.$i.'/'.date('Y');
-            }else{
-                $bulan[] = $i.'/'.date('Y');
+        for ($i = 7; $i < 13; $i++) {
+            if ($i < 10) {
+                $bulan[] = '0' . $i . '/' . date('Y');
+            } else {
+                $bulan[] = $i . '/' . date('Y');
             }
         }
 
-        for ($i=1; $i < 7; $i++) {
-            $bulan[] = '0'.$i.'/'.date('Y', strtotime('+0 year'));
+        for ($i = 1; $i < 7; $i++) {
+            $bulan[] = '0' . $i . '/' . date('Y', strtotime('+0 year'));
         }
 
         $dataAktif = array();
         $dataPendaftar = array();
-        foreach($bulan as $items){
+        foreach ($bulan as $items) {
             $dataAktif[]            = $this->jumlahMahangAktifBulan($items)->count();
             $dataPendaftar[]        = $this->jumlahPendaftarBulan($items)->count();
         }
@@ -69,47 +70,47 @@ class HomeController extends Controller
         $respon['dataPendaftar']    = $dataPendaftar;
 
         return $respon;
-
     }
 
-    public function jumlahMahangAktifBulan($bulan){
+    public function jumlahMahangAktifBulan($bulan)
+    {
 
-        if($bulan == date('m/Y')){
+        if ($bulan == date('m/Y')) {
             return $this->magangAktif();
-        }else{
+        } else {
             $tanggalAwal = DateTime::createFromFormat('m/Y', $bulan)->modify('first day of this month')->format('Y-m-d');
             $tanggalAkhir = DateTime::createFromFormat('m/Y', $bulan)->modify('last day of this month')->format('Y-m-d');
 
 
             $query = Pengajuan::where('status_administrasi', 'diterima')
-            ->where('status_tes_kemampuan', 'diterima')
-            ->where('status_wawancara', 'diterima')
-            // ->where(\DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
-            ->whereHas('nama', function ($q) use($tanggalAwal, $tanggalAkhir) {
-                $q->whereDate('mulai_magang', '<=', $tanggalAwal)
-                ->whereDate('selesai_magang', '>=', $tanggalAkhir);
-                $q->where('role', '=', 'user');
-            })->get();
+                ->where('status_tes_kemampuan', 'diterima')
+                ->where('status_wawancara', 'diterima')
+                // ->where(\DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
+                ->whereHas('nama', function ($q) use ($tanggalAwal, $tanggalAkhir) {
+                    $q->whereRaw("DATE_FORMAT(mulai_magang, '%Y-%m') <= ?", [date('Y-m', strtotime($tanggalAkhir))])
+                        ->whereRaw("DATE_FORMAT(selesai_magang, '%Y-%m') >= ?", [date('Y-m', strtotime($tanggalAkhir))]);
+                    $q->where('role', '=', 'user');
+                })->get();
 
             return $query;
         }
-
-
     }
 
-    public function jumlahPendaftarBulan($bulan){
+    public function jumlahPendaftarBulan($bulan)
+    {
         $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
-        ->where(\DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
-        ->whereHas('nama', function ($q) {
-            $q->where('role', '=', 'user');
-        })
-        ->groupBy('user_id')
-        ->get();
+            ->where(\DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
+            ->whereHas('nama', function ($q) {
+                $q->where('role', '=', 'user');
+            })
+            ->groupBy('user_id')
+            ->get();
 
         return $query;
     }
 
-    public function homeMentor(){
+    public function homeMentor()
+    {
         $data                       = array();
         $data['magang_aktif']       = $this->magangAktif()->count();
         $data['total_alumni']       = $this->alumniMagang()->count();
@@ -142,7 +143,7 @@ class HomeController extends Controller
 
             ->whereDoesntHave('projects.detailProjects', function ($q) {
                 $q->where('persentasi', 100)
-                ->where('status', 'diterima');
+                    ->where('status', 'diterima');
             });
 
         return $query->get();
@@ -151,24 +152,26 @@ class HomeController extends Controller
 
 
 
-    public function totalPendaftar(){
+    public function totalPendaftar()
+    {
         $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
-        ->whereHas('nama', function ($q) {
-            $q->where('role', '=', 'user');
-        })
-        ->groupBy('user_id')
-        ->get();
+            ->whereHas('nama', function ($q) {
+                $q->where('role', '=', 'user');
+            })
+            ->groupBy('user_id')
+            ->get();
         return $query;
     }
 
-    public function totalProses(){
+    public function totalProses()
+    {
         $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
-        ->where('status', 'belumDiproses')
-        ->whereHas('nama', function ($q) {
-            $q->where('role', '=', 'user');
-        })
-        ->groupBy('user_id')
-        ->get();
+            ->where('status', 'belumDiproses')
+            ->whereHas('nama', function ($q) {
+                $q->where('role', '=', 'user');
+            })
+            ->groupBy('user_id')
+            ->get();
         return $query;
     }
 
@@ -188,7 +191,7 @@ class HomeController extends Controller
             })
             ->whereHas('projects.detailProjects', function ($q) {
                 $q->where('persentasi', 100)
-                ->where('status', 'diterima');
+                    ->where('status', 'diterima');
             })
             ->get();
 
@@ -196,24 +199,26 @@ class HomeController extends Controller
     }
 
 
-    public function monitoring(){
+    public function monitoring()
+    {
         $tanggalSekarang    = date('Y-m-d');
         $project            = Project::join('users', 'project.user_id', '=', 'users.id')
-        ->select('project.*', 'users.name as user_name')
-        ->where('users.mentor_id', auth()->user()->mentor_id)
-        ->whereDate('mulai_magang', '<=', $tanggalSekarang)
-        ->whereDate('selesai_magang', '>=', $tanggalSekarang)
-        ->orderBy('project.created_at', 'desc')
-        ->groupBy('project.user_id')
-        ->get();
+            ->select('project.*', 'users.name as user_name')
+            ->where('users.mentor_id', auth()->user()->mentor_id)
+            ->whereDate('mulai_magang', '<=', $tanggalSekarang)
+            ->whereDate('selesai_magang', '>=', $tanggalSekarang)
+            ->orderBy('project.created_at', 'desc')
+            ->groupBy('project.user_id')
+            ->get();
 
         return $project;
     }
 
-    public function notifikasi(){
+    public function notifikasi()
+    {
 
 
-        foreach(Pengajuan::where('status_administrasi', 'belumDiproses')->get() as $item){
+        foreach (Pengajuan::where('status_administrasi', 'belumDiproses')->get() as $item) {
 
             $tanggalAwal    = new DateTime(date('Y-m-d', strtotime($item->created_at)));
             $tanggalAkhir   = new DateTime(date('Y-m-d'));
@@ -221,13 +226,13 @@ class HomeController extends Controller
             $selisih        = $tanggalAwal->diff($tanggalAkhir);
             $jumlahHari     = $selisih->days;
 
-            if($jumlahHari >= 7){
-                $where      = 'Kamu belum memproses pendaftaran '.$item->nama->name.' selama '.$jumlahHari.' Hari, segera lakukan proses pendaftaran';
+            if ($jumlahHari >= 7) {
+                $where      = 'Kamu belum memproses pendaftaran ' . $item->nama->name . ' selama ' . $jumlahHari . ' Hari, segera lakukan proses pendaftaran';
                 $cekNotif   = Notifikasi::where('subtitle', $where)->first();
 
-                if(empty($cekNotif->user_id)){
-                    foreach(User::whereIn('role', ['admin', 'hrd'])->get() as $itemUser){
-                        if($itemUser->role == 'hrd'){
+                if (empty($cekNotif->user_id)) {
+                    foreach (User::whereIn('role', ['admin', 'hrd'])->get() as $itemUser) {
+                        if ($itemUser->role == 'hrd') {
                             $where = str_replace("Kamu", 'Admin', $where);
                         }
 
@@ -246,34 +251,33 @@ class HomeController extends Controller
                                 'nama' => $item->nama->name,
                                 'jumlahhari' => $jumlahHari,
                                 'halo' => $item->role,
-                                ], function ($message) use ($email) {
+                            ], function ($message) use ($email) {
                                 $message->to($email)
-                                        ->subject('Proses Pendaftaran');
+                                    ->subject('Proses Pendaftaran');
                             });
                         } catch (\Exception $e) {
                             dd($e->getMessage());
                         }
                     }
                 }
-
             }
         }
 
-        foreach(Pengajuan::where('status_wawancara', 'belumDiproses')->get() as $item){
+        foreach (Pengajuan::where('status_wawancara', 'belumDiproses')->get() as $item) {
 
-            if($item->tanggal_wawancara > date('Y-m-d')){
+            if ($item->tanggal_wawancara > date('Y-m-d')) {
                 $tanggalAwal    = new DateTime(date('Y-m-d'));
                 $tanggalAkhir   = new DateTime(date('Y-m-d', strtotime($item->tanggal_wawancara)));
 
                 $selisih        = $tanggalAwal->diff($tanggalAkhir);
                 $jumlahHari     = $selisih->days;
-                if($jumlahHari == 1){
+                if ($jumlahHari == 1) {
 
-                    $where                      = 'Halo '.$item->nama->name.' kamu akan wawancara '.$jumlahHari.' Hari Lagi, pastikan melengkapi semua kebutuhan';
+                    $where                      = 'Halo ' . $item->nama->name . ' kamu akan wawancara ' . $jumlahHari . ' Hari Lagi, pastikan melengkapi semua kebutuhan';
 
                     $cekNotif                   = Notifikasi::where('subtitle', $where)->first();
 
-                    if(empty($cekNotif->user_id)){
+                    if (empty($cekNotif->user_id)) {
                         $sipanNotif                 = array();
                         $sipanNotif['user_id']      = $item->user_id;
                         $sipanNotif['title']        = "Wawancara";
@@ -287,20 +291,18 @@ class HomeController extends Controller
                         try {
                             Mail::send('email.proses-seleksi', [
                                 'nama' => '',
-                                'project' => 'kamu akan wawancara '.$jumlahHari.' Hari Lagi, pastikan melengkapi semua kebutuhan',
+                                'project' => 'kamu akan wawancara ' . $jumlahHari . ' Hari Lagi, pastikan melengkapi semua kebutuhan',
                                 'halo' => $item->nama->name,
-                                ], function ($message) use ($email) {
+                            ], function ($message) use ($email) {
                                 $message->to($email)
-                                        ->subject('Wawancara');
+                                    ->subject('Wawancara');
                             });
                         } catch (\Exception $e) {
                             dd($e->getMessage());
                         }
                     }
-
                 }
             }
         }
     }
-
 }

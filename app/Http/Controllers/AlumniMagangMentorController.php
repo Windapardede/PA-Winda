@@ -9,6 +9,8 @@ use App\Models\Posisi;
 use App\Models\Instansi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class AlumniMagangMentorController extends Controller
@@ -38,13 +40,13 @@ class AlumniMagangMentorController extends Controller
             ->where('status_wawancara', 'diterima')
             ->whereHas('user', function ($q) use ($tanggalSekarang) {
 
-                if (\Auth::check() && \Auth::user()->role === 'mentor') {
-                    $q->where('mentor_id', \Auth::user()->mentor_id);
+                if (Auth::check() && Auth::user()->role === 'mentor') {
+                    $q->where('mentor_id', Auth::user()->mentor_id);
                 }
             })
             ->whereHas('projects.detailProjects', function ($q) {
                 $q->where('persentasi', 100)
-                ->where('status', 'diterima');
+                    ->where('status', 'diterima');
             });
 
 
@@ -78,13 +80,13 @@ class AlumniMagangMentorController extends Controller
             ->where('status_wawancara', 'diterima');
 
         $query->whereHas('nama', function ($q) {
-            $q->where('mentor_id', '=', \Auth::user()->mentor_id);
+            $q->where('mentor_id', '=', Auth::user()->mentor_id);
         });
 
         if ($startDate && $endDate) {
             $query->whereHas('nama', function ($q) use ($startDate, $endDate) {
                 $q->whereDate('mulai_magang', '>=', $startDate)
-                ->whereDate('selesai_magang', '<=', $endDate);
+                    ->whereDate('selesai_magang', '<=', $endDate);
             });
         }
 

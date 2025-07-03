@@ -86,6 +86,21 @@
             </form>
         </div>
     </div>
+    <script>
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || performance.navigation.type === 2) {
+                fetch('/cek-role')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.redirect) {
+                            window.location.href = data.redirect;
+                        }
+                    });
+            }
+        });
+    </script>
+
+
 @endsection
 
 @push('scripts')

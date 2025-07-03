@@ -49,13 +49,30 @@ Route::post('/create_new_account/verifikasi', [RegisterController::class, 'verif
 // Authentication Routes
 Route::get('/', function () {
     return view('pages.auth.home');
+})->middleware('customguest');
+
+Route::get('/cek-role', function () {
+    if (!auth()->check()) {
+        return response()->json(['redirect' => '/signin']);
+    }
+
+    $role = auth()->user()->role;
+
+    if ($role === 'user') {
+        return response()->json(['redirect' => '/posisi']);
+    }
+
+    return response()->json(['redirect' => '/home']);
 });
+
+
 Route::get('/signin', function () {
     return view('pages.auth.auth-login');
-});
+})->middleware('customguest');
+
 Route::get('/register', function () {
     return view('pages.auth.register');
-});
+})->middleware('customguest');
 
 Route::get('/notifikasi', function () {
     return view('pages.notifikasi');
