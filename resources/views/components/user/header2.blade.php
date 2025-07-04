@@ -52,9 +52,7 @@
              <!-- Menu items -->
              <div class="d-flex align-items-center">
                  <a class="nav-link fw-bold text-dark mx-3" href="/">Beranda</a>
-                 @auth
                  <a class="nav-link fw-bold text-dark mx-3" href="{{ url('posisiaktf') }}">Posisi</a>
-                 @endauth
                  <a
                      class="btn btn-danger text-white fw-bold align-items-right btn-sm"
                      href="signin">

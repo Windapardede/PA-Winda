@@ -26,5 +26,8 @@ RUN composer install
 # Expose port 8000
 EXPOSE 8000
 
+# Atur batas upload file dan post size
+RUN echo "upload_max_filesize=100M\npost_max_size=100M" > /usr/local/etc/php/conf.d/uploads.ini
+
 # Jalankan Laravel development server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
