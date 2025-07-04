@@ -242,35 +242,49 @@
                     <i class="fa fa-bars"></i>
                 </button>
 
-                                <!-- Navbar Right Items -->
+                <!-- Navbar Right Items -->
                 <ul class="navbar-nav ml-auto">
 
                     <!-- Alerts Dropdown -->
                     <li class="nav-item dropdown no-arrow mx-1">
-                        <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <div class="icon-bell-wrapper">
-                                <i class="fas fa-bell icon-bell"></i>
-                                <span class="badge-counter">{{ $cekNotifikasi->count() }}</span>
-                            </div>
-                        </a>
 
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
-                             @foreach($notif as $item)
+
+                        @if ($cekNotifikasi->count() > 0)
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <div class="icon-bell-wrapper">
+                                    <i class="fas fa-bell icon-bell"></i>
+                                    <span class="badge-counter">{{ $cekNotifikasi->count() }}</span>
+                                </div>
+                            </a>
+                        @else
+                            <a class="nav-link dropdown-toggle" href="{{ url('notifikasi') }}" aria-haspopup="true"
+                                aria-expanded="false">
+                                <div class="icon-bell-wrapper">
+                                    <i class="fas fa-bell icon-bell"></i>
+                                    <span class="badge-counter">{{ $cekNotifikasi->count() }}</span>
+                                </div>
+                            </a>
+                        @endif
+
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="alertsDropdown">
+                            @foreach ($notif as $item)
                                 <!-- Notifikasi 3 -->
                                 <a class="dropdown-item d-flex align-items-start" href="#">
                                     <div class="icon-circle bg-warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
+                                        <i class="fas fa-exclamation-triangle"></i>
                                     </div>
                                     <div>
-                                    <div class="small">{{ date('d M Y', strtotime($item->created_at)) }} , {{ date('H:i', strtotime($item->created_at)) }}</div>
-                                        {{$item->subtitle}}
+                                        <div class="small">{{ date('d M Y', strtotime($item->created_at)) }} ,
+                                            {{ date('H:i', strtotime($item->created_at)) }}</div>
+                                        {{ $item->subtitle }}
                                     </div>
                                 </a>
                             @endforeach
 
-                            @if($cekNotifikasi->count() > 0)
-                            <a class="dropdown-footer" href="{{ url('notifikasi') }}">Show All Alerts</a>
+                            @if ($cekNotifikasi->count() > 0)
+                                <a class="dropdown-footer" href="{{ url('notifikasi') }}">Show All Alerts</a>
                             @endif
                         </div>
                     </li>
@@ -291,7 +305,8 @@
                                 <span>Profile</span>
                             </a>
 
-                            <a class="dropdown-item d-flex align-items-center" href="{{ route('profilehrd.password.change.form') }}">
+                            <a class="dropdown-item d-flex align-items-center"
+                                href="{{ route('profilehrd.password.change.form') }}">
                                 <i class="fas fa-key fa-sm fa-fw mr-2 text-gray-600"></i>
                                 <span>Ganti Kata Sandi</span>
                             </a>
@@ -304,7 +319,8 @@
                                 <span>Logout</span>
                             </a>
 
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                style="display: none;">
                                 @csrf
                             </form>
 

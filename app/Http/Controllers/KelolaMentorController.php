@@ -19,15 +19,17 @@ class KelolaMentorController extends Controller
      */
     public function index()
     {
-        // $mentors = Mentor::select('mentor.*','posisi.nama as nama_mentor')->join('posisi', 'posisi.id','=','mentor.posisi_id')->get();
-        $mentors = Mentor::all();
-        foreach ($mentors as $items) {
-            $mentee                 =  User::where('mentor_id', $items->id)->where('users.role', 'user')->get();
-            $items->total_mentee    = $mentee->count();
-        }
-        $posisi  = Posisi::all();
+        // Mengambil semua data mentor dan mengurutkannya dari yang paling BARU
+        $mentors = Mentor::latest()->get();
 
-        // Pass the dummy data to the view
+        // Kode lainnya tetap sama
+        foreach ($mentors as $items) {
+            $mentee = User::where('mentor_id', $items->id)->where('users.role', 'user')->get();
+            $items->total_mentee = $mentee->count();
+        }
+        $posisi = Posisi::all();
+
+        // Pass the data to the view
         return view('pages.kelolaakun.kelolamentor.index', compact('mentors', 'posisi'));
     }
 

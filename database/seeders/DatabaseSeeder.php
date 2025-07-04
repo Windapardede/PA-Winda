@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Bahri Admin',
-            'email' => 'bahri@fic16.com',
-            'password' => Hash::make('12345678'),
+            "name" => "Bahri Admin",
+            "email" => "bahri@fic16.com",
+            "password" => Hash::make("12345678"),
         ]);
 
         // // data dummy for company
@@ -34,9 +34,6 @@ class DatabaseSeeder extends Seeder
         //     'time_out' => '17:00',
         // ]);
 
-        $this->call([
-            AttendanceSeeder::class,
-            PermissionSeeder::class,
-        ]);
+        // $this->call([AttendanceSeeder::class, PermissionSeeder::class]);
     }
 }

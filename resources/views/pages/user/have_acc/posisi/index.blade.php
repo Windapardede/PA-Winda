@@ -451,7 +451,7 @@
                 <div class="card-body">
                     <h5 class="card-title">
                         {{ $posisi->nama }}
-                        <span class="kuota">Kuota: {{ $posisi->kuota_tersedia }}</span>
+                        <span class="kuota">Kuota: {{ $posisi->kuota_tersedia < 0 ? 0 : $posisi->kuota_tersedia }}</span>
                     </h5>
                     <p class="card-text">
                         {{ Str::limit($posisi->deskripsi, 150) }}
@@ -467,10 +467,17 @@
                         </a>
                         {{-- Kondisi untuk tombol Ajukan --}}
                         @if (!empty(auth()->user()->nim) && $status == true)
-                            <button class="btn-ajukan" data-bs-toggle="modal" data-bs-target="#confirmAjukanModal"
-                                data-posisi-id="{{ $posisi->id }}" data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
+                            @if ($posisi->kuota_tersedia <= 0 && $status == true)
+                                <button class="btn-ajukan" disabled data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="Anda belum melengkapi profile, silahkan lengkapi profile terlebih dahulu."
+                                    data-posisi-id="{{ $posisi->id }}"
+                                    data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
+                            @else
+                                <button class="btn-ajukan" data-bs-toggle="modal" data-bs-target="#confirmAjukanModal"
+                                    data-posisi-id="{{ $posisi->id }}"
+                                    data-posisi-nama="{{ $posisi->nama }}">Ajukan</button>
+                            @endif
                         @else
-                            {{-- Tombol Ajukan dinonaktifkan jika NIM kosong atau status tidak memungkinkan --}}
                             <button class="btn-ajukan" disabled data-bs-toggle="tooltip" data-bs-placement="top"
                                 title="Anda belum melengkapi profile, silahkan lengkapi profile terlebih dahulu."
                                 data-posisi-id="{{ $posisi->id }}"
@@ -567,7 +574,7 @@
 
 
 
-    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const detailPosisiModal = document.getElementById('detailPosisiModal');
@@ -622,7 +629,7 @@
                     inputPosisiId.value = posisiId;
                     // Set action URL untuk form pengajuan
                     ajukanForm.action =
-                        `/user/ajukan-magang/${posisiId}`; // Sesuaikan dengan route pengajuan Anda
+                    `/user/ajukan-magang/${posisiId}`; // Sesuaikan dengan route pengajuan Anda
                 });
             }
 
