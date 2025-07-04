@@ -15,16 +15,16 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Nonaktifkan pengecekan foreign key
-        Schema::disableForeignKeyConstraints();
+        // // 1. Nonaktifkan pengecekan foreign key
+        // Schema::disableForeignKeyConstraints();
 
-        // 2. Kosongkan tabel yang berelasi
-        // (Kosongkan tabel 'anak' dulu, baru tabel 'induk')
-        DB::table('attendances')->truncate();
-        User::truncate();
+        // // 2. Kosongkan tabel yang berelasi
+        // // (Kosongkan tabel 'anak' dulu, baru tabel 'induk')
+        // DB::table('attendances')->truncate();
+        // User::truncate();
 
-        // 3. Aktifkan kembali pengecekan foreign key
-        Schema::enableForeignKeyConstraints();
+        // // 3. Aktifkan kembali pengecekan foreign key
+        // Schema::enableForeignKeyConstraints();
 
         // 4. Buat data baru
         User::create([
