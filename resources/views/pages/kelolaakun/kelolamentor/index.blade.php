@@ -427,10 +427,10 @@
                     <table class="table table-striped table-rounded" id="mentor-table"> {{-- Added ID for easier targeting --}}
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Posisi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Posisi</th>
                                 <th class="text-center">Total Mentee</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Aksi</th>
@@ -664,181 +664,186 @@
 
                 // Handle "Lanjutkan" button click in confirmation modal (Aktif/Nonaktif)
                 $('#btnKonfirmasi').off('click').on('click', function() {
-                    var action = $(this).data('action');
-                    var id = $(this).data('id');
+                        var action = $(this).data('action');
+                        var id = $(this).data('id');
 
-                    if (action === 'ubah-status') {
-                        // Ambil nilai string 'status' yang sudah disimpan
-                        var newStatusString = $(this).data('status-baru'); // 'aktif' atau 'tidak aktif'
-                        // Konversi kembali ke 0 atau 1 untuk update di dummyMentors
-                        var newStatusBoolean = (newStatusString === 'aktif' ? 1 : 0);
+                        if (action === 'ubah-status') {
+                            // Ambil nilai string 'status' yang sudah disimpan
+                            var newStatusString = $(this).data('status-baru'); // 'aktif' atau 'tidak aktif'
+                            // Konversi kembali ke 0 atau 1 untuk update di dummyMentors
+                            var newStatusBoolean = (newStatusString === 'aktif' ? 1 : 0);
 
-                        $.ajax({
-                            url: '/kelolamentor/' + id,
-                            method: 'PUT',
-                            data: {
-                                // Kirim 'status' sesuai harapan backend
-                                status: newStatusString,
-                                _token: $('meta[name="csrf-token"]').attr('content')
-                            },
-                            success: function(response) {
-                                let mentorIndex = dummyMentors.findIndex(m => m.id === id);
-                                if (mentorIndex !== -1) {
-                                    // Update dummyMentors dengan nilai boolean 0 atau 1
-                                    dummyMentors[mentorIndex].is_active = newStatusBoolean;
-                                    renderTable(); // Re-render table to reflect changes
+                            $.ajax({
+                                    url: '/kelolamentor/' + id,
+                                    method: 'PUT',
+                                    data: {
+                                        // Kirim 'status' sesuai harapan backend
+                                        status: newStatusString,
+                                        _token: $('meta[name="csrf-token"]').attr('content')
+                                    },
+                                    success: function(response) {
+                                        // Tambahkan mentor baru di paling atas (assumsi response adalah 1 mentor)
+                                        response.total_mentee =
+                                        0; // Set default jika controller tidak mengirim
+                                        dummyMentors.unshift(response);
+
+                                        renderTable();
+                                        $('#modalTambahMentor').modal('hide');
+                                        $('#formTambahMentor')[0].reset();
+
+                                        Swal.fire({
+                                            icon: 'success',
+                                            title: 'Berhasil Ditambahkan!',
+                                            text: 'Mentor baru berhasil ditambahkan ke daftar.',
+                                            showConfirmButton: false,
+                                            timer: 2000
+                                        });
+                                    },
+
+                                    $('#modalKonfirmasiAksi').modal('hide');
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error(xhr.responseText);
+                                    let errorMessage =
+                                        'Terjadi kesalahan saat mengubah status mentor.';
+                                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                                        errorMessage = xhr.responseJSON.message;
+                                    }
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Gagal!',
+                                        text: errorMessage,
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    });
                                 }
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Berhasil!',
-                                    text: `Status mentor berhasil diubah menjadi ${newStatusString.toUpperCase()}.`,
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                });
-                                $('#modalKonfirmasiAksi').modal('hide');
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                                let errorMessage =
-                                    'Terjadi kesalahan saat mengubah status mentor.';
-                                if (xhr.responseJSON && xhr.responseJSON.message) {
-                                    errorMessage = xhr.responseJSON.message;
-                                }
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Gagal!',
-                                    text: errorMessage,
-                                    showConfirmButton: false,
-                                    timer: 2000
-                                });
-                            }
-                        });
+                            });
                     }
                 });
 
-                // Handle "Hapus" button click in confirmation modal (Modal Konfirmasi Hapus Global)
-                $('#hapusFormMentorGlobal').off('submit').on('submit', function(e) {
-                    e.preventDefault(); // Stop default form submission
+            // Handle "Hapus" button click in confirmation modal (Modal Konfirmasi Hapus Global)
+            $('#hapusFormMentorGlobal').off('submit').on('submit', function(e) {
+                e.preventDefault(); // Stop default form submission
 
-                    var form = $(this);
-                    var url = form.attr('action');
+                var form = $(this);
+                var url = form.attr('action');
 
-                    $.ajax({
-                        url: url,
-                        method: 'POST', // Menggunakan POST karena method DELETE disimulasikan dengan _method
-                        data: form.serialize(), // Mengirim semua data form, termasuk _method
-                        success: function(response) {
-                            // Perbarui dummyMentors setelah penghapusan
-                            var deletedId = form.attr('action').split('/')
-                                .pop(); // Get ID from URL
-                            dummyMentors = dummyMentors.filter(mentor => mentor.id !=
-                                deletedId);
-                            renderTable(); // Render ulang tabel
-                            $('#modalKonfirmasiHapusGlobal').modal(
-                                'hide'); // Tutup modal konfirmasi
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Dihapus!',
-                                text: 'Mentor berhasil dihapus dari daftar.',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText);
-                            let errorMessage = 'Terjadi kesalahan saat menghapus mentor.';
-                            if (xhr.responseJSON && xhr.responseJSON.message) {
-                                errorMessage = xhr.responseJSON.message;
-                            }
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal!',
-                                text: errorMessage,
-                            });
+                $.ajax({
+                    url: url,
+                    method: 'POST', // Menggunakan POST karena method DELETE disimulasikan dengan _method
+                    data: form.serialize(), // Mengirim semua data form, termasuk _method
+                    success: function(response) {
+                        // Perbarui dummyMentors setelah penghapusan
+                        var deletedId = form.attr('action').split('/')
+                            .pop(); // Get ID from URL
+                        dummyMentors = dummyMentors.filter(mentor => mentor.id !=
+                            deletedId);
+                        renderTable(); // Render ulang tabel
+                        $('#modalKonfirmasiHapusGlobal').modal(
+                            'hide'); // Tutup modal konfirmasi
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Dihapus!',
+                            text: 'Mentor berhasil dihapus dari daftar.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        let errorMessage = 'Terjadi kesalahan saat menghapus mentor.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
                         }
-                    });
-                });
-
-
-                // Handle "Tambah Mentor" form submission
-                $('#formTambahMentor').off('submit').on('submit', function(e) {
-                    e.preventDefault();
-
-                    const nama = $('#nama').val();
-                    const email = $('#email').val();
-                    const posisi = $('#posisi').val();
-                    const password = $('#password').val();
-                    const konfirmasi_password = $('#konfirmasi_password').val();
-
-                    if (password !== konfirmasi_password) {
                         Swal.fire({
                             icon: 'error',
-                            title: 'Oops...',
-                            text: 'Password dan Konfirmasi Password tidak sama!',
+                            title: 'Gagal!',
+                            text: errorMessage,
                         });
-                        return false;
                     }
-
-                    $.ajax({
-                        url: '/kelolamentor',
-                        method: 'POST',
-                        data: {
-                            nama: nama,
-                            email: email,
-                            posisi: posisi,
-                            password: password
-                        },
-                        success: function(response) {
-                            dummyMentors =
-                                response; // Asumsi response adalah data mentor terbaru
-                            renderTable();
-                            $('#modalTambahMentor').modal('hide');
-                            $('#formTambahMentor')[0].reset();
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Berhasil Ditambahkan!',
-                                text: 'Mentor baru berhasil ditambahkan ke daftar.',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText);
-                            let errorMessage = 'Terjadi kesalahan saat menambahkan mentor.';
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                errorMessage = '';
-                                $.each(xhr.responseJSON.errors, function(key, value) {
-                                    errorMessage += value + '\n';
-                                });
-                            } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                                errorMessage = xhr.responseJSON.message;
-                            }
-
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Gagal!',
-                                html: errorMessage.replace(/\n/g,
-                                    '<br>'), // Untuk menampilkan newline di SweetAlert
-                            });
-                        }
-                    });
                 });
-
-            }
-
-            // Initial render of the table
-            renderTable();
-
-            // Event listener for ALL Bootstrap modals when they are fully hidden
-            $(document).on('hidden.bs.modal', function(e) {
-                // Check if there are no other modals currently open.
-                if ($('.modal.show').length === 0) {
-                    // Explicitly remove modal backdrop
-                    $('.modal-backdrop').remove();
-                    // Remove modal-open class from body to restore scroll and interaction
-                    $('body').removeClass('modal-open');
-                }
             });
+
+
+            // Handle "Tambah Mentor" form submission
+            $('#formTambahMentor').off('submit').on('submit', function(e) {
+                e.preventDefault();
+
+                const nama = $('#nama').val();
+                const email = $('#email').val();
+                const posisi = $('#posisi').val();
+                const password = $('#password').val();
+                const konfirmasi_password = $('#konfirmasi_password').val();
+
+                if (password !== konfirmasi_password) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Password dan Konfirmasi Password tidak sama!',
+                    });
+                    return false;
+                }
+
+                $.ajax({
+                    url: '/kelolamentor',
+                    method: 'POST',
+                    data: {
+                        nama: nama,
+                        email: email,
+                        posisi: posisi,
+                        password: password
+                    },
+                    success: function(response) {
+                        dummyMentors =
+                            response; // Asumsi response adalah data mentor terbaru
+                        renderTable();
+                        $('#modalTambahMentor').modal('hide');
+                        $('#formTambahMentor')[0].reset();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil Ditambahkan!',
+                            text: 'Mentor baru berhasil ditambahkan ke daftar.',
+                            showConfirmButton: false,
+                            timer: 2000
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                        let errorMessage = 'Terjadi kesalahan saat menambahkan mentor.';
+                        if (xhr.responseJSON && xhr.responseJSON.errors) {
+                            errorMessage = '';
+                            $.each(xhr.responseJSON.errors, function(key, value) {
+                                errorMessage += value + '\n';
+                            });
+                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal!',
+                            html: errorMessage.replace(/\n/g,
+                                '<br>'), // Untuk menampilkan newline di SweetAlert
+                        });
+                    }
+                });
+            });
+
+        }
+
+        // Initial render of the table
+        renderTable();
+
+        // Event listener for ALL Bootstrap modals when they are fully hidden
+        $(document).on('hidden.bs.modal', function(e) {
+            // Check if there are no other modals currently open.
+            if ($('.modal.show').length === 0) {
+                // Explicitly remove modal backdrop
+                $('.modal-backdrop').remove();
+                // Remove modal-open class from body to restore scroll and interaction
+                $('body').removeClass('modal-open');
+            }
+        });
         });
     </script>
 @endpush
