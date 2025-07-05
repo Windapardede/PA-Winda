@@ -456,7 +456,7 @@
                             <label class="mb-0 ml-2">entries</label>
                         </div>
 
-                        <div style="flex-grow: 1; max-width: 730px;">
+                        <div style="flex-grow: 1; max-width: 730px; me-5">
                             <div class="position-relative">
                                 <span class="position-absolute"
                                     style="top: 50%; left: 10px; transform: translateY(-50%); color: #aaa; font-size: 13px;">
