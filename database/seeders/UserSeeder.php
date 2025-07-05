@@ -27,16 +27,31 @@ class UserSeeder extends Seeder
         // Schema::enableForeignKeyConstraints();
 
         // 4. Buat data baru
+        // User::create([
+        //     'name' => 'Admin',
+        //     'email' => 'admin@example.com',
+        //     'password' => Hash::make('admin123'),
+        //     'role' => 'admin',
+        // ]);
+
+        // User::create([
+        //     'name' => 'HRD',
+        //     'email' => 'hrd@example.com',
+        //     'password' => Hash::make('hrd123'),
+        //     'role' => 'hrd',
+        // ]);
+
+
         User::create([
             'name' => 'Admin',
-            'email' => 'admin@example.com',
+            'email' => 'winda.idch.intern@gmail.com',
             'password' => Hash::make('admin123'),
             'role' => 'admin',
         ]);
 
         User::create([
             'name' => 'HRD',
-            'email' => 'hrd@example.com',
+            'email' => 'raniasiregar50@gmail.com',
             'password' => Hash::make('hrd123'),
             'role' => 'hrd',
         ]);
