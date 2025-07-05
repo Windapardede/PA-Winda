@@ -483,7 +483,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($assignedMentees as $mentee)
+                            @forelse ($Mentees as $mentee)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $mentee->name ?? 'N/A' }}</td>
@@ -533,11 +533,10 @@
                             <label for="selectMentee">Pilih Mentee</label>
                             <select class="form-control" id="selectMentee" name="mentee_id" required>
                                 <option value="">-- Pilih Mentee --</option>
-                                {{-- Loop melalui koleksi User yang sudah benar --}}
+                                {{-- Options akan diisi via JavaScript dari data $availableMentees --}}
                                 @foreach ($availableMentees as $mentee)
-                                    <option value="{{ $mentee->id }}">{{ $mentee->name }}
-                                        ({{ @$mentee->posisi->nama }})
-                                    </option>
+                                    <option value="{{ $mentee->nama->id }}">{{ $mentee->nama->name }}
+                                        ({{ @$mentee->posisi->nama }})</option>
                                 @endforeach
                             </select>
                         </div>
@@ -577,7 +576,6 @@
 @endsection
 
 
-
 {{-- Standard Stisla JS --}}
 
 
@@ -593,7 +591,6 @@
 
 {{-- Select2 JS --}}
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 {{-- Custom JS --}}
 <script src="{{ asset('js/scripts.js') }}"></script>
@@ -643,17 +640,8 @@
                 data: formData,
                 success: function(response) {
                     $('#modalTambahMentee').modal('hide');
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: response.message || 'Mentee berhasil ditambahkan!',
-                        icon: 'success',
-                        confirmButtonColor: '#3C4B64',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload(); // Reload halaman setelah menekan OK
-                        }
-                    });
+                    alert(response.message || 'Mentee berhasil ditambahkan!');
+                    location.reload(); // Reload halaman untuk melihat perubahan
                 },
                 error: function(xhr, status, error) {
                     let errorMessage = 'Gagal menambahkan mentee.\n';
@@ -694,57 +682,78 @@
             var menteeId = $(this).data('mentee-id');
             var menteeNama = $(this).data('mentee-nama');
             var mentorId = window.location.pathname.split('/')[2];
-            var deleteUrl = `/kelolamentor/${mentorId}/mentee/${menteeId}`;
-            var form = $('#hapusFormMentee'); // Ambil referensi form
 
-            Swal.fire({
-                title: 'Anda Yakin?',
-                html: `Anda akan menghapus mentee "<strong>${menteeNama}</strong>" dari mentor ini.`, // Gunakan html untuk format bold
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#dc3545', // Warna merah untuk tombol hapus
-                cancelButtonColor: '#6c757d', // Warna abu-abu untuk tombol batal
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Jika dikonfirmasi, kirim request AJAX
-                    $.ajax({
-                        type: 'POST', // Tetap POST karena ada @method('DELETE')
-                        url: deleteUrl,
-                        data: form.serialize(), // Kirim data form (termasuk token CSRF)
-                        success: function(response) {
-                            // Tampilkan notifikasi sukses yang sudah kita buat tadi
-                            Swal.fire({
-                                title: 'Dihapus!',
-                                text: response.message ||
-                                    'Mentee berhasil dihapus.',
-                                icon: 'success',
-                                confirmButtonColor: '#3C4B64',
-                            }).then(() => {
-                                // Logika fadeOut setelah sukses
-                                $('button.btn-hapus-mentee[data-mentee-id="' +
-                                        menteeId + '"]').closest('tr')
-                                    .fadeOut(300, function() {
-                                        $(this).remove();
-                                        // ... (sisa logika pembaruan tabel) ...
-                                    });
-                            });
-                        },
-                        error: function(xhr, status, error) {
-                            // Notifikasi error jika gagal
-                            Swal.fire(
-                                'Gagal!',
-                                'Terjadi kesalahan saat menghapus data.',
-                                'error'
-                            );
-                        }
-                    });
-                }
-            })
+            if (!mentorId) {
+                alert('Error: Mentor ID tidak ditemukan di URL.');
+                return;
+            }
+
+            var deleteUrl = `/kelolamentor/${mentorId}/mentee/${menteeId}`;
+
+            $('#namaMenteeHapus').text(menteeNama);
+            $('#hapusFormMentee').attr('action', deleteUrl);
+
+            $('#modalKonfirmasiHapusMentee').modal('show');
         });
 
+        // --- Konfirmasi Hapus Mentee via AJAX ---
+        $('#modalKonfirmasiHapusMentee').on('submit', '#hapusFormMentee', function(e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var submitButton = form.find('button[type="submit"]')
 
+
+            submitButton.prop('disabled', true).text('Menghapus...');
+
+            $.ajax({
+                type: 'POST',
+                url: url, // Tetap POST karena @method('DELETE') akan mengubahnya
+                data: form.serialize(),
+                success: function(response) {
+                    $('#modalKonfirmasiHapusMentee').modal('hide');
+                    alert(response.message || 'Mentee berhasil dihapus!');
+                    const menteeIdToDelete = url.split('/').pop();
+                    $('button.btn-hapus-mentee[data-mentee-id="' + menteeIdToDelete + '"]')
+                        .closest('tr').fadeOut(300, function() {
+                            $(this).remove();
+                            // Perbarui nomor urut setelah penghapusan
+                            $('table.table-rounded tbody tr').each(function(index) {
+                                $(this).find('td:first').text(index + 1);
+                            });
+                            // Jika tidak ada baris lagi, tampilkan pesan "Belum ada mentee"
+                            if ($('table.table-rounded tbody tr').length === 0) {
+                                $('table.table-rounded tbody').append(
+                                    '<tr><td colspan="6" class="text-center">Belum ada mentee untuk mentor ini.</td></tr>'
+                                    );
+                            }
+                        });
+                },
+                error: function(xhr, status, error) {
+                    var errorMessage = 'Gagal menghapus mentee.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseText) {
+                        try {
+                            var jsonResponse = JSON.parse(xhr.responseText);
+                            if (jsonResponse.message) {
+                                errorMessage = jsonResponse.message;
+                            }
+                        } catch (e) {
+                            console.error("Could not parse error response:", xhr
+                                .responseText);
+                        }
+                    }
+                    console.error('AJAX Error:', status, error, xhr.responseText);
+                    alert(errorMessage);
+                    submitButton.prop('disabled', false).text('Hapus');
+                },
+                complete: function() {
+                    location.reload();
+                    submitButton.prop('disabled', false).text('Hapus');
+                }
+            });
+        });
 
         // Event listener untuk memastikan class `modal-open` dihapus dari body
         // ketika *semua* modal ditutup.
