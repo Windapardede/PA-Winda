@@ -1,3 +1,3 @@
 <div class="simple-footer mt-5">
-    Copyright &copy; Garuda Cyber Indonesia 2025
+    &copy; 2025 PT. Garuda Cyber Indonesia™
 </div>

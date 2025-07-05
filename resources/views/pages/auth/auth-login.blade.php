@@ -60,14 +60,14 @@
                 @csrf
                 <!-- Email -->
                 <div class="mb-3 text-start">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                     <input id="email" type="email" name="email" value="{{ old('email') }}" class="form-control"
                         placeholder="Masukkan email aktif" required>
                 </div>
 
                 <!-- Password -->
                 <div class="mb-3 text-start position-relative">
-                    <label for="password" class="form-label">Kata Sandi</label>
+                    <label for="password" class="form-label">Kata Sandi <span class="text-danger">*</span></label>
                     <input type="password" name="password" id="password" class="form-control"
                         placeholder="Masukkan kata sandi" required>
                     <i class="bi bi-eye toggle-password" onclick="togglePassword()"></i>

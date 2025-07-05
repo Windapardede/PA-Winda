@@ -37,7 +37,7 @@
                 @csrf
                 <!-- Nama -->
                 <div class="mb-3 text-start">
-                    <label for="name" class="form-label">Nama</label>
+                    <label for="name" class="form-label">Nama <span class="text-danger">*</span></label>
                     <input type="text" id="name" name="name" class="form-control"
                         placeholder="Masukkan nama lengkap" required>
                     <div class="invalid-feedback d-block" id="error-name"></div>
@@ -45,7 +45,7 @@
 
                 <!-- Email -->
                 <div class="mb-3 text-start">
-                    <label for="email" class="form-label">Email</label>
+                    <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                     <input type="email" id="email" name="email" class="form-control"
                         placeholder="Masukkan email aktif" required>
                     <div class="invalid-feedback d-block" id="error-email"></div>
@@ -53,7 +53,7 @@
 
                 <!-- Password -->
                 <div class="mb-3 text-start">
-                    <label for="password" class="form-label">Kata Sandi</label>
+                    <label for="password" class="form-label">Kata Sandi <span class="text-danger">*</span></label>
                     <input type="password" id="password" name="password" class="form-control"
                         placeholder="Masukkan kata sandi" required>
                     <div class="invalid-feedback d-block" id="error-password"></div>
@@ -61,7 +61,8 @@
 
                 <!-- Konfirmasi Password -->
                 <div class="mb-3 text-start">
-                    <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi</label>
+                    <label for="password_confirmation" class="form-label">Konfirmasi Kata Sandi <span
+                            class="text-danger">*</span></label>
                     <input type="password" id="password_confirmation" name="password_confirmation" class="form-control"
                         placeholder="Ulangi kata sandi" required>
                     <div class="invalid-feedback d-block" id="error-password_confirmation"></div>
