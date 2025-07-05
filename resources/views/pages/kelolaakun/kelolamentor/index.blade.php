@@ -427,10 +427,10 @@
                     <table class="table table-striped table-rounded" id="mentor-table"> {{-- Added ID for easier targeting --}}
                         <thead>
                             <tr>
-                                <th class="text-center">>No</th>
-                                <th class="text-center">>Nama</th>
-                                <th class="text-center">>Email</th>
-                                <th class="text-center">>Posisi</th>
+                                <th class="text-center">No</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Email</th>
+                                <th class="text-center">Posisi</th>
                                 <th class="text-center">Total Mentee</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Aksi</th>
@@ -682,19 +682,23 @@
                                 _token: $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(response) {
-                                let mentorIndex = dummyMentors.findIndex(m => m.id === id);
-                                if (mentorIndex !== -1) {
-                                    // Update dummyMentors dengan nilai boolean 0 atau 1
-                                    dummyMentors[mentorIndex].is_active = newStatusBoolean;
-                                    renderTable(); // Re-render table to reflect changes
-                                }
+                                // Tambahkan mentor baru di paling atas (assumsi response adalah 1 mentor)
+                                response.total_mentee =
+                                    0; // Set default jika controller tidak mengirim
+                                dummyMentors.unshift(response);
+
+                                renderTable();
+                                $('#modalTambahMentor').modal('hide');
+                                $('#formTambahMentor')[0].reset();
+
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Berhasil!',
-                                    text: `Status mentor berhasil diubah menjadi ${newStatusString.toUpperCase()}.`,
+                                    title: 'Berhasil Ditambahkan!',
+                                    text: 'Mentor baru berhasil ditambahkan ke daftar.',
                                     showConfirmButton: false,
                                     timer: 2000
                                 });
+
                                 $('#modalKonfirmasiAksi').modal('hide');
                             },
                             error: function(xhr, status, error) {
