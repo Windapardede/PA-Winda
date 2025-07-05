@@ -9,14 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\TemplateSertifikat;
 use App\Models\Sertifikat;
+use App\Models\KriteriaPenilaian;
 use PhpOffice\PhpWord\TemplateProcessor;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 use PhpOffice\PhpWord\IOFactory;
 use PhpOffice\PhpWord\Settings;
-use App\Models\KriteriaPenilaian;
-use Illuminate\Support\Facades\Auth;
+
 use setasign\Fpdi\Fpdi;
 
 
@@ -33,7 +34,7 @@ class BeriSertifikatController extends Controller
             ->join('posisi', 'pengajuan.posisi_id', '=', 'posisi.id')
             ->join('penilaian', 'penilaian.pengajuan_id', '=', 'pengajuan.id')
             ->select('pengajuan.*', 'users.name as user_name', 'users.email', 'posisi.nama as nama_posisi', 'mentor.nama', 'posisi.nama as nama_posisi')
-            ->where('users.mentor_id', Auth::user()->mentor_id)
+            ->where('users.mentor_id', auth::user()->mentor_id)
             ->where('pengajuan.status', '!=', 'ditolak')
             ->orderBy('pengajuan.created_at', 'desc')
             ->groupBy('pengajuan.user_id')
@@ -77,14 +78,8 @@ class BeriSertifikatController extends Controller
                 $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
                 $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
 
-                $sofficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"';
-                $command = $sofficePath . ' --headless --convert-to pdf --outdir "' . dirname($pdfPath) . '" "' . $docxPath . '"';
-                exec($command, $output, $return_var);
-
-                if ($return_var !== 0) {
-                    dd("❌ Gagal convert", $command, $output, $return_var);
-                }
-
+                $command = 'soffice --headless --convert-to pdf --outdir ' . dirname($pdfPath) . ' ' . $docxPath;
+                exec($command);
 
 
                 $personalComponents = Penilaian::where('pengajuan_id', $request->item_id)
