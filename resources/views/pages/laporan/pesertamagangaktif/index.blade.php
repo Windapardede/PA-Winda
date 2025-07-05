@@ -440,52 +440,6 @@
 
             <div class="section-body">
                 @include('layouts.alert')
-                {{-- <div class="row mb-4 align-items-center">
-                    <form action="{{ route('administrasi.index') }}" style="width: 100%;display: flex;" method="GET">
-                        <div class="col-md-2 d-flex align-items-center">
-                            <label class="mr-2 mb-0">Show</label>
-                            <select class="form-control form-control-sm" name="show" style="width: 80px;"
-                                onchange="this.form.submit()">
-                                @foreach ($limit as $limitv)
-                                    <option value="{{ $limitv }}" {{ request('show') == $limitv ? 'selected' : '' }}>
-                                        {{ $limitv }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <label class="ml-2 mb-0">entries</label>
-                        </div>
-
-                        <div class="col-md-8">
-
-                            <div class="position-relative">
-                                <span class="position-absolute"
-                                    style="top: 50%; left: 15px; transform: translateY(-50%); color: #aaa;">
-                                    <i class="fas fa-search"></i>
-                                </span>
-                                <input type="text" name="search" value="{{ request('search') }}"
-                                    class="form-control pl-5 shadow-sm" placeholder="Search Nama Pendaftar..."
-                                    style="height: 45px;">
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-2">
-
-                            <select name="status" class="form-control form-control-sm shadow-sm" style="height: 45px;"
-                                onchange="this.form.submit()">
-                                <option value="">Semua</option>
-                                <option value="belumDiproses" {{ request('status') == 'belumDiproses' ? 'selected' : '' }}>
-                                    Proses</option>
-                                <option value="diterima" {{ request('status') == 'diterima' ? 'selected' : '' }}>Diterima
-                                </option>
-                                <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak
-                                </option>
-                            </select>
-
-                        </div>
-                    </form>
-                </div> --}}
-
                 <div class="row mb-4 align-items-center">
                     <form action="{{ route('pesertamagangaktif.index') }}" method="GET"
                         style="width: 100%;display: flex;">
