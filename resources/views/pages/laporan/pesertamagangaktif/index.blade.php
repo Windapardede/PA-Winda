@@ -530,8 +530,6 @@
                             </div>
                         </div>
 
-                        asdasdasd
-
                         <div class="col-md-2">
                             <button type="button"
                                 class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
