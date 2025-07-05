@@ -502,7 +502,7 @@
                             <label class="mb-0 ml-2">entries</label>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                             <div class="position-relative">
                                 <span class="position-absolute"
                                     style="top: 50%; left: 10px; transform: translateY(-50%); color: #aaa; font-size: 13px;">
@@ -532,13 +532,13 @@
 
                         asdasdasd
 
-                        {{-- <div class="col-md-2">
+                        <div class="col-md-2">
                             <button type="button"
                                 class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
                                 style="height: 45px; font-size: 13px;" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
                             </button>
-                        </div> --}}
+                        </div>
                     </form>
                 </div>
 
