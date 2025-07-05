@@ -12,6 +12,8 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Kalau kamu pakai Auth::user()
 use Illuminate\Support\Facades\Mail;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -158,6 +160,7 @@ class PendaftarMagangController extends Controller
         }
 
 
-        return redirect('kegiatanku')->with('success', 'Magang Sedang Diajukan');
+        Alert::success('Berhasil', 'Magang Sedang Diajukan');
+        return redirect('kegiatanku');
     }
 }

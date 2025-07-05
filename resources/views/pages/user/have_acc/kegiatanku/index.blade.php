@@ -92,8 +92,9 @@
                                             @elseif($value->status_tes_kemampuan == 'ditolak')
                                             @else
                                                 @if (!empty($value->jawaban_tes_kemampuan))
-                                                    <div class="button-wrapper"> <a href="#"
-                                                            class="btn btn-danger link-wawancara">Link Tes Kemampuan</a>
+                                                    <div class="button-wrapper">
+                                                        <button class="btn btn-danger link-wawancara" disabled>Link Tes
+                                                            Kemampuan</button>
                                                     </div>
                                                 @else
                                                     <div class="button-wrapper"> <a
