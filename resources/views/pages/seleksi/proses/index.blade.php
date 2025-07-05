@@ -193,10 +193,10 @@
                         <tbody>
                             @foreach ($proses as $i => $item)
                                 <tr>
-                                    <td>{{ $proses->firstItem() + $i }}</td>
-                                    <td>{{ $item->nama->name }}</td>
-                                    <td>{{ @$item->nama->posisi->nama }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $proses->firstItem() + $i }}</td>
+                                    <td class="text-center">{{ $item->nama->name }}</td>
+                                    <td class="text-center">{{ @$item->nama->posisi->nama }}</td>
+                                    <td class="text-center">
                                         @php $url = ''; @endphp
                                         @if ($item->status_administrasi == 'belumDiproses')
                                             Seleksi Administrasi
@@ -210,7 +210,7 @@
                                         @endif
 
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         <span class="badge-status badge-proses">Proses</span>
                                     </td>
                                     @if (Auth::user()->role === 'admin')
