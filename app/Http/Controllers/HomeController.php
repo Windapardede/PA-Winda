@@ -7,8 +7,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use DateTime;
-use Mail;
 use App\Models\Notifikasi;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+
 
 
 class HomeController extends Controller
@@ -19,9 +22,9 @@ class HomeController extends Controller
 
         $this->notifikasi();
 
-        if (\Auth::user()->role == 'admin') {
+        if (Auth::user()->role == 'admin') {
             return $this->homeAdmin();
-        } elseif (\Auth::user()->role == 'mentor') {
+        } elseif (Auth::user()->role == 'mentor') {
             return $this->homeMentor();
         } else {
             return $this->homeAdmin();
@@ -98,8 +101,8 @@ class HomeController extends Controller
 
     public function jumlahPendaftarBulan($bulan)
     {
-        $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
-            ->where(\DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
+        $query = Pengajuan::select('user_id', DB::raw('COUNT(*) as total'))
+            ->where(DB::raw("date_format(created_at, '%m/%Y')"), $bulan)
             ->whereHas('nama', function ($q) {
                 $q->where('role', '=', 'user');
             })
@@ -129,8 +132,8 @@ class HomeController extends Controller
                 // $q->whereDate('mulai_magang', '<=', $tanggalSekarang)
                 // ->whereDate('selesai_magang', '>=', $tanggalSekarang);
 
-                if (\Auth::check() && \Auth::user()->role === 'mentor') {
-                    $q->where('mentor_id', \Auth::user()->mentor_id);
+                if (Auth::check() && Auth::user()->role === 'mentor') {
+                    $q->where('mentor_id', Auth::user()->mentor_id);
                 }
             })
 
@@ -154,7 +157,7 @@ class HomeController extends Controller
 
     public function totalPendaftar()
     {
-        $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
+        $query = Pengajuan::select('user_id', DB::raw('COUNT(*) as total'))
             ->whereHas('nama', function ($q) {
                 $q->where('role', '=', 'user');
             })
@@ -165,7 +168,7 @@ class HomeController extends Controller
 
     public function totalProses()
     {
-        $query = Pengajuan::select('user_id', \DB::raw('COUNT(*) as total'))
+        $query = Pengajuan::select('user_id', DB::raw('COUNT(*) as total'))
             ->where('status', 'belumDiproses')
             ->whereHas('nama', function ($q) {
                 $q->where('role', '=', 'user');
@@ -185,8 +188,8 @@ class HomeController extends Controller
             ->whereHas('user', function ($q) use ($tanggalSekarang) {
                 $q->where('role', 'user');
 
-                if (\Auth::user()->role == 'mentor') {
-                    $q->where('mentor_id', \Auth::user()->mentor_id);
+                if (Auth::user()->role == 'mentor') {
+                    $q->where('mentor_id', Auth::user()->mentor_id);
                 }
             })
             ->whereHas('projects.detailProjects', function ($q) {
@@ -204,7 +207,7 @@ class HomeController extends Controller
         $tanggalSekarang    = date('Y-m-d');
         $project            = Project::join('users', 'project.user_id', '=', 'users.id')
             ->select('project.*', 'users.name as user_name')
-            ->where('users.mentor_id', auth()->user()->mentor_id)
+            ->where('users.mentor_id', auth::user()->mentor_id)
             ->whereDate('mulai_magang', '<=', $tanggalSekarang)
             ->whereDate('selesai_magang', '>=', $tanggalSekarang)
             ->orderBy('project.created_at', 'desc')

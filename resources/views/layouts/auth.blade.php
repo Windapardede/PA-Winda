@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@yield('title') &mdash; Playstation</title>
-    <link rel="icon" href="{{ asset('img/icon.png') }}">
+    <title>@yield('title') &mdash; Smart Internship</title>
+    <link rel="icon" href="{{ asset('img/logoicon.png') }}">
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('/library/bootstrap/dist/css/bootstrap.min.css') }}">
