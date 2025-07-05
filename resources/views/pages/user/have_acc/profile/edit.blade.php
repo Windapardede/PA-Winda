@@ -81,12 +81,12 @@
                             <input type="text" name="nim" id="nim" value="{{ old('nim', $user->nim ?? '') }}"
                                 class="form-control" required>
 
-                            <label for="agama" class="form-label mt-3"><strong>Agama :</strong><span
+                            <label for="religion" class="form-label mt-3"><strong>Agama :</strong><span
                                     class="text-danger">*</span></label>
-                            <select name="religion" id="agama" class="form-select" required>
+                            <select name="religion" id="religion" class="form-select" required>
                                 <option value="" disabled selected hidden style="color: #6c757d;">Pilih Agama</option>
                                 @php
-                                    $agamaOptions = [
+                                    $religionOptions = [
                                         'Islam',
                                         'Kristen',
                                         'Katolik',
@@ -96,10 +96,10 @@
                                         'Lainnya',
                                     ];
                                 @endphp
-                                @foreach ($agamaOptions as $agama)
-                                    <option value="{{ $agama }}"
-                                        {{ old('religion', $user->agama ?? '') == $agama ? 'selected' : '' }}>
-                                        {{ $agama }}</option>
+                                @foreach ($religionOptions as $religion)
+                                    <option value="{{ $religion }}"
+                                        {{ old('religion', $user->religion ?? '') == $religion ? 'selected' : '' }}>
+                                        {{ $religion }}</option>
                                 @endforeach
                             </select>
                         </div>
