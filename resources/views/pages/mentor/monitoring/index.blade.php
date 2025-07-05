@@ -278,7 +278,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($project as $key => $item)
+                            @forelse ($project as $key => $item)
                                 <tr>
                                     <td class="align-middle">{{ $key + 1 }}</td>
 
@@ -301,7 +301,11 @@
                                         </a>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center">Tidak ada data monitoring yang ditemukan.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class WawancaraController extends Controller
 {
@@ -52,7 +53,8 @@ class WawancaraController extends Controller
         $pengajuan->link_wawancara      = $request->link_wawancara;
 
         $pengajuan->save();
-        return redirect()->route('wawancara.index')->with('success', 'Wawancara baru saja ditambahkan.');
+        Alert::success('Berhasil', 'Jadwal Wawancara Berhasil Ditambahkan');
+        return redirect()->route('wawancara.index');
     }
 
     // Store
@@ -115,7 +117,8 @@ class WawancaraController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('wawancara.index')->with('success', 'Data wawancara berhasil diperbarui.');
+        Alert::success('Berhasil', 'Jadwal wawancara berhasil diperbarui.');
+        return redirect()->route('wawancara.index');
     }
 
     // Destroy

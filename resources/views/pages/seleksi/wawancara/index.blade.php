@@ -524,7 +524,7 @@
                                                     data-jam="{{ $item->jam_wawancara ? \Carbon\Carbon::parse($item->jam_wawancara)->format('H:i') : '' }}"
                                                     data-link="{{ $item->link_wawancara }}"
                                                     @if ($disableUnggah) disabled @endif>
-                                                    <i class="fas fa-upload"></i> Unggah Wawancara
+                                                    <i class="fas fa-upload"></i> Tambah Jadwal Wawancara
                                                 </button>
                                                 <hr class="dropdown-divider">
                                                 <button type="button" class="dropdown-item terima-btn" data-toggle="modal"

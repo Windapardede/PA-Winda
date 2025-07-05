@@ -441,8 +441,7 @@
             <div class="section-body">
                 @include('layouts.alert')
                 <div class="row mb-4 align-items-center">
-                    <form action="{{ route('pesertamagangaktif.index') }}" method="GET"
-                        style="width: 100%;display: flex;">
+                    <form action="{{ route('alumnimagang.index') }}" method="GET" style="width: 100%;display: flex;">
                         <div class="col-md-2 d-flex align-items-center">
                             <label class="mb-0 mr-2">Show</label>
                             <select class="form-control form-control-sm" name="show" style="width: 80px; height: 38px;"

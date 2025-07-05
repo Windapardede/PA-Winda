@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Notifikasi;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KemampuanController extends Controller
 {
@@ -167,7 +168,8 @@ class KemampuanController extends Controller
 
         $pengajuan->save();
 
-        return redirect()->route('kemampuan.index')->with('success', 'Soal Barusaja Ditambahkan.');
+        Alert::success('Berhasil', 'Profile Soal Berhasil Ditambahkan');
+        return redirect()->route('kemampuan.index');
     }
 
     // Show - Menampilkan detail soal kemampuan dengan data dummy

@@ -580,7 +580,7 @@
                     const statusText = mentor.is_active === 1 ? 'AKTIF' : 'TIDAK AKTIF';
                     const toggleIconClass = mentor.is_active === 1 ? 'fas fa-toggle-off text-secondary' :
                         'fas fa-toggle-on text-success';
-                    const toggleText = mentor.is_active === 1 ? 'Nonaktifkan' : 'Aktifkan';
+                    const toggleText = mentor.is_active === 1 ? 'Tidak Aktifkan' : 'Aktifkan';
 
                     const row = `
                     <tr data-id="${mentor.id}">
@@ -630,8 +630,8 @@
                     var id = $(this).data('id');
                     var statusSaatIni = $(this).data('status'); // 0 atau 1
                     var nama = $(this).closest('tr').find('td:nth-child(2)').text();
-                    var teksKonfirmasi = statusSaatIni === 1 ? 'nonaktifkan' :
-                    'aktifkan'; // If active, offer to deactivate
+                    var teksKonfirmasi = statusSaatIni === 1 ? 'tidak aktifkan' :
+                        'aktifkan'; // If active, offer to deactivate
 
                     // Tentukan nilai string 'status' yang akan dikirim ke backend
                     var statusUntukBackend = statusSaatIni === 1 ? 'tidak aktif' : 'aktif';
@@ -730,12 +730,12 @@
                         success: function(response) {
                             // Perbarui dummyMentors setelah penghapusan
                             var deletedId = form.attr('action').split('/')
-                        .pop(); // Get ID from URL
+                                .pop(); // Get ID from URL
                             dummyMentors = dummyMentors.filter(mentor => mentor.id !=
-                            deletedId);
+                                deletedId);
                             renderTable(); // Render ulang tabel
                             $('#modalKonfirmasiHapusGlobal').modal(
-                            'hide'); // Tutup modal konfirmasi
+                                'hide'); // Tutup modal konfirmasi
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Berhasil Dihapus!',
@@ -790,7 +790,7 @@
                         },
                         success: function(response) {
                             dummyMentors =
-                            response; // Asumsi response adalah data mentor terbaru
+                                response; // Asumsi response adalah data mentor terbaru
                             renderTable();
                             $('#modalTambahMentor').modal('hide');
                             $('#formTambahMentor')[0].reset();
@@ -818,7 +818,7 @@
                                 icon: 'error',
                                 title: 'Gagal!',
                                 html: errorMessage.replace(/\n/g,
-                                '<br>'), // Untuk menampilkan newline di SweetAlert
+                                    '<br>'), // Untuk menampilkan newline di SweetAlert
                             });
                         }
                     });
