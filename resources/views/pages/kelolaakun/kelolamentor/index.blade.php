@@ -584,10 +584,10 @@
 
                     const row = `
                     <tr data-id="${mentor.id}">
-                        <td class="align-middle">${index + 1}</td>
-                        <td class="align-middle">${mentor.nama}</td>
-                        <td class="align-middle">${mentor.email}</td>
-                        <td class="align-middle">${mentor.posisi_mentor ?? 'N/A'}</td>
+                        <td class="text-center align-middle">${index + 1}</td>
+                        <td class="text-center align-middle">${mentor.nama}</td>
+                        <td class="text-center align-middle">${mentor.email}</td>
+                        <td class="text-center align-middle">${mentor.posisi_mentor ?? 'N/A'}</td>
                         <td class="text-center align-middle">${mentor.total_mentee}</td>
                         <td class="text-center align-middle">
                             <span class="badge-status ${statusBadgeClass}">${statusText}</span>
