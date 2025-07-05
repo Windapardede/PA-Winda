@@ -440,7 +440,7 @@
 
             <div class="section-body">
                 @include('layouts.alert')
-                <div class="row mb-4 align-items-center">
+                {{-- <div class="row mb-4 align-items-center">
                     <form action="{{ route('administrasi.index') }}" style="width: 100%;display: flex;" method="GET">
                         <div class="col-md-2 d-flex align-items-center">
                             <label class="mr-2 mb-0">Show</label>
@@ -484,12 +484,12 @@
 
                         </div>
                     </form>
-                </div>
+                </div> --}}
 
-                {{-- <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
-                    <form action="{{ route('pesertamagangaktif.index') }}" method="GET" class="mr-2 mb-2"
-                        style="width: 100%;display: flex;flex-direction: row;">
-                        <div class="d-flex align-items-center mr-2 mb-2 me-2">
+                <div class="row mb-4 align-items-center">
+                    <form action="{{ route('pesertamagangaktif.index') }}" method="GET"
+                        style="width: 100%;display: flex;">
+                        <div class="col-md-2 d-flex align-items-center">
                             <label class="mb-0 mr-2">Show</label>
                             <select class="form-control form-control-sm" name="show" style="width: 80px; height: 38px;"
                                 onchange="this.form.submit()">
@@ -502,7 +502,7 @@
                             <label class="mb-0 ml-2">entries</label>
                         </div>
 
-                        <div style="flex-grow: 1; max-width: 730px; margin-right:50px">
+                        <div class="col-md-2">
                             <div class="position-relative">
                                 <span class="position-absolute"
                                     style="top: 50%; left: 10px; transform: translateY(-50%); color: #aaa; font-size: 13px;">
@@ -515,27 +515,31 @@
                         </div>
 
 
-                        <div style="flex-grow: 1; max-width: 730px;">
-                            <select name="position" class="form-control form-control-sm" style="height: 45px;"
-                                onchange="this.form.submit()">
-                                <option value="">Semua Posisi</option>
-                                @foreach ($uniquePositions as $position)
-                                    <option value="{{ $position->id }}"
-                                        {{ request('position') == $position->id ? 'selected' : '' }}>
-                                        {{ $position->nama }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <div class="col-md-2">
+                            <div style="flex-grow: 1; max-width: 730px;">
+                                <select name="position" class="form-control form-control-sm" style="height: 45px;"
+                                    onchange="this.form.submit()">
+                                    <option value="">Semua Posisi</option>
+                                    @foreach ($uniquePositions as $position)
+                                        <option value="{{ $position->id }}"
+                                            {{ request('position') == $position->id ? 'selected' : '' }}>
+                                            {{ $position->nama }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
 
-                        <button type="button"
-                            class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
-                            style="height: 45px; font-size: 13px; width: 120px;" data-toggle="modal"
-                            data-target="#exportModal">
-                            <i class="fas fa-file-pdf mr-2"></i> Export PDF
-                        </button>
-                    </form> --}}
-                {{-- </div> --}}
+                        <div class="col-md-2">
+                            <button type="button"
+                                class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
+                                style="height: 45px; font-size: 13px; width: 120px;" data-toggle="modal"
+                                data-target="#exportModal">
+                                <i class="fas fa-file-pdf mr-2"></i> Export PDF
+                            </button>
+                        </div>
+                    </form>
+                </div>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-rounded">
