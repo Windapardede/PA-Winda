@@ -429,7 +429,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($wawancara as $item)
+                            @forelse ($wawancara as $item)
                                 <tr id="row-{{ $item->id }}">
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->nama->name }}</td>
@@ -543,8 +543,11 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
-
+                            @empty
+                                <tr>
+                                    <td colspan="11" class="text-center">Tidak ada data wawancara yang ditemukan.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
