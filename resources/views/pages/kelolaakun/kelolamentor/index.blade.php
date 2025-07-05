@@ -427,10 +427,10 @@
                     <table class="table table-striped table-rounded" id="mentor-table"> {{-- Added ID for easier targeting --}}
                         <thead>
                             <tr>
-                                <th class="text-center">No</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Email</th>
-                                <th class="text-center">Posisi</th>
+                                <th class="text-center">>No</th>
+                                <th class="text-center">>Nama</th>
+                                <th class="text-center">>Email</th>
+                                <th class="text-center">>Posisi</th>
                                 <th class="text-center">Total Mentee</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Aksi</th>
@@ -468,7 +468,7 @@
                             <input type="text" class="form-control" id="nama" name="nama" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email<span class="text-danger">*</span></label>
+                            <label for="email">Email <span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="form-group">
@@ -580,7 +580,7 @@
                     const statusText = mentor.is_active === 1 ? 'AKTIF' : 'TIDAK AKTIF';
                     const toggleIconClass = mentor.is_active === 1 ? 'fas fa-toggle-off text-secondary' :
                         'fas fa-toggle-on text-success';
-                    const toggleText = mentor.is_active === 1 ? 'Tidak Aktifkan' : 'Aktifkan';
+                    const toggleText = mentor.is_active === 1 ? 'Nonaktifkan' : 'Aktifkan';
 
                     const row = `
                     <tr data-id="${mentor.id}">
@@ -630,7 +630,7 @@
                     var id = $(this).data('id');
                     var statusSaatIni = $(this).data('status'); // 0 atau 1
                     var nama = $(this).closest('tr').find('td:nth-child(2)').text();
-                    var teksKonfirmasi = statusSaatIni === 1 ? 'tidak aktifkan' :
+                    var teksKonfirmasi = statusSaatIni === 1 ? 'nonaktifkan' :
                         'aktifkan'; // If active, offer to deactivate
 
                     // Tentukan nilai string 'status' yang akan dikirim ke backend
@@ -682,19 +682,16 @@
                                 _token: $('meta[name="csrf-token"]').attr('content')
                             },
                             success: function(response) {
-                                // Tambahkan mentor baru di paling atas (assumsi response adalah 1 mentor)
-                                response.total_mentee =
-                                0; // Set default jika controller tidak mengirim
-                                dummyMentors.unshift(response);
-
-                                renderTable();
-                                $('#modalTambahMentor').modal('hide');
-                                $('#formTambahMentor')[0].reset();
-
+                                let mentorIndex = dummyMentors.findIndex(m => m.id === id);
+                                if (mentorIndex !== -1) {
+                                    // Update dummyMentors dengan nilai boolean 0 atau 1
+                                    dummyMentors[mentorIndex].is_active = newStatusBoolean;
+                                    renderTable(); // Re-render table to reflect changes
+                                }
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Berhasil Ditambahkan!',
-                                    text: 'Mentor baru berhasil ditambahkan ke daftar.',
+                                    title: 'Berhasil!',
+                                    text: `Status mentor berhasil diubah menjadi ${newStatusString.toUpperCase()}.`,
                                     showConfirmButton: false,
                                     timer: 2000
                                 });
