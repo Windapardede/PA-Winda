@@ -185,7 +185,9 @@
                                 <th>Posisi</th>
                                 <th>Seleksi</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                @if (Auth::user()->role === 'admin')
+                                    <th>Aksi</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
