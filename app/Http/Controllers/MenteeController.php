@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-use App\Models\Mentor;
 
 class MenteeController extends Controller
 {
@@ -19,8 +18,9 @@ class MenteeController extends Controller
      */
     public function store(Request $request, $mentorId)
     {
+        // Validasi data yang masuk
         $validator = Validator::make($request->all(), [
-            'mentee_id' => 'required|integer|exists:users,id',
+            'mentee_id' => 'required|integer|exists:users,id', // Pastikan mentee_user_id ada di tabel users
         ]);
 
         if ($validator->fails()) {
@@ -29,12 +29,10 @@ class MenteeController extends Controller
 
         User::where('id', $request->mentee_id)->update(['mentor_id' => $mentorId]);
 
-        // 2. Cari data mentor berdasarkan ID
-        $mentor = Mentor::find($mentorId);
-        $namaMentor = $mentor ? $mentor->nama : 'ID ' . $mentorId; // Gunakan nama jika ditemukan, jika tidak gunakan ID
 
-        // 3. Gunakan nama mentor di dalam pesan response
-        return response()->json(['message' => 'Mentee berhasil ditambahkan ke Mentor ' . $namaMentor . '!'], 200);
+
+        // Untuk tujuan dummy, kita bisa mengembalikan pesan sukses
+        return response()->json(['message' => 'Mentee berhasil ditambahkan ke mentor ID ' . $mentorId . '!'], 200);
     }
 
     /**
