@@ -507,7 +507,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($magangaktif as $i => $item)
+                            @forelse ($magangaktif as $i => $item)
                                 <tr>
                                     <td>{{ $magangaktif->firstItem() + $i }}</td>
                                     <td>{{ $item->nama->name }}</td>
@@ -518,7 +518,12 @@
                                         {{ \Carbon\Carbon::parse($item->nama->selesai_magang)->translatedFormat('d M Y') }}
                                     </td>
                                 </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">Tidak ada data peserta magang yang ditemukan.
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                     <div class="mt-3">

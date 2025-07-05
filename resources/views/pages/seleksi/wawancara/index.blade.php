@@ -545,7 +545,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="11" class="text-center">Tidak ada data wawancara yang ditemukan.</td>
+                                    <td colspan="12" class="text-center">Tidak ada data wawancara yang ditemukan.</td>
                                 </tr>
                             @endforelse
                         </tbody>
