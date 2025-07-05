@@ -516,7 +516,7 @@
 
 
                         <div class="col-md-2">
-                            <div style="flex-grow: 1; max-width: 730px;">
+                            <div style="flex-grow: 1;">
                                 <select name="position" class="form-control form-control-sm" style="height: 45px;"
                                     onchange="this.form.submit()">
                                     <option value="">Semua Posisi</option>
@@ -533,8 +533,7 @@
                         <div class="col-md-2">
                             <button type="button"
                                 class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
-                                style="height: 45px; font-size: 13px; width: 120px;" data-toggle="modal"
-                                data-target="#exportModal">
+                                style="height: 45px; font-size: 13px;" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
                             </button>
                         </div>
