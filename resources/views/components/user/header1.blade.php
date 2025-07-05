@@ -66,6 +66,7 @@ $cekNotifikasi = \DB::table('notification')
 ?>
 
 <body>
+    @include('sweetalert::alert')
     <nav class="navbar navbar-expand-lg navbar-light navbar-custom w-100">
         <div class="container-fluid px-4">
             <a class="navbar-brand d-flex align-items-center text-decoration-none">

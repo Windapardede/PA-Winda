@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class ProfileUserController extends Controller
 {
@@ -51,7 +53,8 @@ class ProfileUserController extends Controller
         // Simulasi penyimpanan (dummy)
         // Dalam implementasi asli, kamu bisa simpan ke database dan handle file upload
 
-        return redirect()->route('profileuser.index')->with('success', 'Profil berhasil dibuat!');
+        Alert::success('Berhasil', 'Profile Berhasil Ditambahkan');
+        return redirect()->route('profileuser.index');
     }
 
 
@@ -116,9 +119,9 @@ class ProfileUserController extends Controller
         }
 
         $user->where('id', auth::user()->id)->update($request->except(['_token', '_method', 'photo', 'cv', 'surat']));
-
+        Alert::success('Berhasil', 'Profile Berhasil Diperbaharui');
         // Karena dummy, kita tidak simpan ke DB, cukup redirect dengan pesan sukses
-        return redirect()->route('profileuser.index')->with('success', 'Profile berhasil diperbarui!');
+        return redirect()->route('profileuser.index');
     }
 
     public function changepassword()
