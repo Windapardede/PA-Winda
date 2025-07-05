@@ -303,7 +303,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data monitoring yang ditemukan.</td>
+                                    <td colspan="6" class="text-center">Tidak ada data monitoring yang ditemukan.</td>
                                 </tr>
                             @endforelse
                         </tbody>
