@@ -1,8 +1,5 @@
 <footer class="main-footer">
     <div class="footer-left">
-        Copyright &copy; 2025 <div class="bullet"></div>
-    </div>
-    <div class="footer-right">
-        2.3.0
+        &copy; 2025 PT. Garuda Cyber Indonesia™></div>
     </div>
 </footer>

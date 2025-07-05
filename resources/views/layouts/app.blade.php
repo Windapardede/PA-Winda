@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
     <title>@yield('title') &mdash; Smart Internship</title>
-    <link rel="icon" href="{{ asset('img/icon.png') }}">
+    <link rel="icon" href="{{ asset('img/logoicon.png') }}">
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="{{ asset('library/bootstrap/dist/css/bootstrap.min.css') }}">
@@ -42,7 +42,7 @@
 
             <!-- Header -->
             @include('components.header')
-            @if(auth()->user()->role == 'admin')
+            @if (auth()->user()->role == 'admin')
                 @include('components.sidebar')
             @elseif(auth()->user()->role == 'mentor')
                 @include('components.mentor.sidebar')
