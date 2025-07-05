@@ -530,13 +530,15 @@
                             </div>
                         </div>
 
-                        <div class="col-md-2">
+                        asdasdasd
+
+                        {{-- <div class="col-md-2">
                             <button type="button"
                                 class="btn btn-primary btn-sm d-flex align-items-center justify-content-center mb-2 rounded"
                                 style="height: 45px; font-size: 13px;" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-pdf mr-2"></i> Export PDF
                             </button>
-                        </div>
+                        </div> --}}
                     </form>
                 </div>
 
