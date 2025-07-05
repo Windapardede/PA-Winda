@@ -20,7 +20,7 @@ class KelolaMentorController extends Controller
     public function index()
     {
         // Mengambil semua data mentor dan mengurutkannya dari yang paling BARU
-        $mentors = Mentor::latest()->get();
+        $mentors = Mentor::orderByDesc('id')->get();
 
         // Kode lainnya tetap sama
         foreach ($mentors as $items) {

@@ -464,24 +464,24 @@
                     <form id="formTambahMentor" action="{{ route('kelolamentor.store') }}" method="POST">
                         @csrf
                         <div class="form-group">
-                            <label for="nama">Nama Lengkap</label>
+                            <label for="nama">Nama Lengkap <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="nama" name="nama" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email</label>
+                            <label for="email">Email<span class="text-danger">*</span></label>
                             <input type="email" class="form-control" id="email" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
+                            <label for="password">Password <span class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="password" name="password" required>
                         </div>
                         <div class="form-group">
-                            <label for="konfirmasi_password">Konfirmasi Password</label>
+                            <label for="konfirmasi_password">Konfirmasi Password <span class="text-danger">*</span></label>
                             <input type="password" class="form-control" id="konfirmasi_password" name="konfirmasi_password"
                                 required>
                         </div>
                         <div class="form-group">
-                            <label for="posisi">Posisi</label>
+                            <label for="posisi">Posisi <span class="text-danger">*</span></label>
                             <input type="text" class="form-control" id="posisi" name="posisi" required>
                         </div>
                     </form>

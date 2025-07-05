@@ -45,7 +45,7 @@
                                         <h5 class="fw-bold mb-1">{{ $value->posisi->nama ?? 'N/A' }}</h5>
                                         <p class="mb-2">
                                             @if ($value->status_administrasi == 'diterima')
-                                                Selamat, Anda lolos ke tahap selanjutnya.
+                                                Luar biasa! Anda telah lolos dan siap melangkah ke tahap selanjutnya.
                                             @elseif($value->status_administrasi == 'ditolak')
                                                 Maaf, Anda tidak lolos ke tahap selanjutnya.
                                             @else
@@ -497,7 +497,8 @@
                     // Sembunyikan modal tambah laporan
                     tambahLaporanModalElement.addEventListener('hidden.bs.modal', function handler() {
                         showSuccessConfirmationModal(
-                        'Berhasil Menambahkan Laporan Project!'); // Tampilkan modal konfirmasi setelah modal input tersembunyi
+                            'Berhasil Menambahkan Laporan Project!'
+                            ); // Tampilkan modal konfirmasi setelah modal input tersembunyi
                         // Setelah modal konfirmasi tertutup, baru reload halaman
                         successConfirmationModalElement.addEventListener('hidden.bs.modal',
                             function reloadHandler() {
@@ -506,7 +507,7 @@
                                     'hidden.bs.modal', reloadHandler);
                             });
                         tambahLaporanModalElement.removeEventListener('hidden.bs.modal',
-                        handler); // Hapus listener setelah dijalankan
+                            handler); // Hapus listener setelah dijalankan
                     });
                     tambahLaporanModal.hide(); // Panggil hide() untuk menutup modal
                 })
@@ -561,7 +562,7 @@
                     // Sembunyikan modal edit laporan
                     editLaporanModalElement.addEventListener('hidden.bs.modal', function handler() {
                         showSuccessConfirmationModal(
-                        'Berhasil Memperbarui Laporan Project!'); // Tampilkan modal konfirmasi
+                            'Berhasil Memperbarui Laporan Project!'); // Tampilkan modal konfirmasi
                         // Setelah modal konfirmasi tertutup, baru reload halaman
                         successConfirmationModalElement.addEventListener('hidden.bs.modal',
                             function reloadHandler() {

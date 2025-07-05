@@ -168,7 +168,7 @@ class KemampuanController extends Controller
 
         $pengajuan->save();
 
-        Alert::success('Berhasil', 'Profile Soal Berhasil Ditambahkan');
+        Alert::success('Berhasil', 'Soal Berhasil Ditambahkan');
         return redirect()->route('kemampuan.index');
     }
 
