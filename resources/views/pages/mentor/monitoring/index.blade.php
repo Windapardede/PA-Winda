@@ -284,7 +284,7 @@
 
                                     <td class="text-center align-middle">{{ $item->nama->name ?? '-' }}</td>
                                     <td class="text-center align-middle">{{ $item->nama->posisi->nama ?? '-' }}</td>
-                                    <td class="text-center align-middle">{{ $item->persentase ?? '0%' }}%</td>
+                                    <td class="text-center align-middle">{{ $item->persentase ?? '-' }}%</td>
                                     <td class="text-center align-middle">
                                         @if ($item->status == 'proses')
                                             <span class="badge bg-warning text-dark">{{ $item->status }}</span>
