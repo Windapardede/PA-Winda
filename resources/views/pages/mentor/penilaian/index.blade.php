@@ -301,10 +301,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Email</th>
-                                <th>Posisi</th>
-                                <th>Mentor</th>
+                                <th class="text-center align-middle">Nama</th>
+                                <th class="text-center align-middle">Email</th>
+                                <th class="text-center align-middle">Posisi</th>
+                                <th class="text-center align-middle">Mentor</th>
                                 <th class="text-center align-middle">Aksi</th>
                             </tr>
                         </thead>

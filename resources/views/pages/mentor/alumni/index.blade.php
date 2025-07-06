@@ -500,19 +500,19 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama</th>
-                                <th>Instansi</th>
-                                <th>Posisi</th>
-                                <th>Periode</th>
+                                <th class="text-center align-middle">Nama</th>
+                                <th class="text-center align-middle">Instansi</th>
+                                <th class="text-center align-middle">Posisi</th>
+                                <th class="text-center align-middle">Periode</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($alumnimagang as $i => $item)
                                 <tr>
-                                    <td>{{ $alumnimagang->firstItem() + $i }}</td>
-                                    <td>{{ $item->nama->name }}</td>
-                                    <td>{{ @$item->nama->instansi->nama }}</td>
-                                    <td>{{ @$item->nama->posisi->nama }}</td>
+                                    <td class="align-middle">{{ $alumnimagang->firstItem() + $i }}</td>
+                                    <td class="text-center align-middle">{{ $item->nama->name }}</td>
+                                    <td class="text-center align-middle">{{ @$item->nama->instansi->nama }}</td>
+                                    <td class="text-center align-middle">{{ @$item->nama->posisi->nama }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($item->nama->mulai_magang)->translatedFormat('d M Y') }} -
                                         {{ \Carbon\Carbon::parse($item->nama->selesai_magang)->translatedFormat('d M Y') }}
