@@ -503,7 +503,7 @@
                                 <th class="text-center align-middle">Nama</th>
                                 <th class="text-center align-middle">Instansi</th>
                                 <th class="text-center align-middle">Posisi</th>
-                                <th>Periode</th>
+                                <th class="text-center align-middle">Periode</th>
                             </tr>
                         </thead>
                         <tbody>

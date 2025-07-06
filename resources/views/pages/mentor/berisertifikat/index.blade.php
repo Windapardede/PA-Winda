@@ -382,7 +382,7 @@
                             <th>No</th>
                             <th class="text-center align-middle">Nama</th>
                             <th class="text-center align-middle">Email</th>
-                            <th class="text-center align-middle"> Posisi</th>
+                            <th class="text-center align-middle">Posisi</th>
                             <th class="text-center align-middle">Aksi</th>
                         </tr>
                     </thead>
