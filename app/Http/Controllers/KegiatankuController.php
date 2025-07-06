@@ -284,7 +284,7 @@ class KegiatankuController extends Controller
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $userMentor->id;
         $sipanNotif['title']        = "Review Project";
-        $sipanNotif['subtitle']     = Auth::user()->name . ' Telah Menambahkan progres project : ' . $request->deskripsi . ', Segera review untuk pekerjaan ini.';
+        $sipanNotif['subtitle']     = Auth::user()->name . ' Telah Menambahkan progres project : ' . $request->project->title . ', Segera review untuk pekerjaan ini.';
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
@@ -294,7 +294,7 @@ class KegiatankuController extends Controller
         try {
             Mail::send('email.review-project', [
                 'nama' => Auth::user()->name,
-                'project' => $request->deskripsi,
+                'project' => $request->project->tittle,
                 'halo' => 'Mentor',
             ], function ($message) use ($email) {
                 $message->to($email)
