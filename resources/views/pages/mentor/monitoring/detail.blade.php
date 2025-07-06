@@ -426,14 +426,13 @@
 @push('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {{-- Tambahkan ini --}}
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Mendapatkan semua tombol revisi di dropdown
             const revisiLinks = document.querySelectorAll('.tolak-btn');
-
-            // Mendapatkan elemen modal dan input
-            const revisiModalElement = $('#revisiModal'); // Menggunakan jQuery untuk modal Bootstrap 4
-            const revisiDetailIdInput = document.getElementById('revisiDetailId'); // Mengubah ID input
+            const revisiModalElement = $('#revisiModal');
+            const revisiDetailIdInput = document.getElementById('revisiDetailId');
             const catatanRevisiTextarea = document.getElementById('catatanRevisi');
             const simpanRevisiBtn = document.getElementById('simpanRevisiBtn');
             const simpanTerimaBtn = document.getElementById('confirmTerimaBtn');
@@ -442,16 +441,14 @@
                 link.addEventListener('click', function() {
                     const detailId = this.dataset.detailId;
                     revisiDetailIdInput.value = detailId;
-                    catatanRevisiTextarea.value = this.dataset
-                        .detailCatatan; // Kosongkan textarea setiap kali modal dibuka
-                    revisiModalElement.modal('show'); // Tampilkan modal menggunakan jQuery
+                    catatanRevisiTextarea.value = this.dataset.detailCatatan;
+                    revisiModalElement.modal('show');
                 });
             });
 
             const terimaLinks = document.querySelectorAll('.terima-btn');
             terimaLinks.forEach(link => {
                 link.addEventListener('click', function() {
-                    console.log(this.dataset.nama);
                     const modal = $('#terimaModal');
                     const detailId = this.dataset.id;
                     document.getElementById('terimaId').value = detailId;
@@ -464,15 +461,8 @@
                 const detailId = revisiDetailIdInput.value;
                 const catatanRevisi = catatanRevisiTextarea.value;
 
-                // Di sini Anda akan mengirim data catatan revisi ke backend
-                // Anda bisa menggunakan Fetch API atau Axios untuk mengirim data
-                console.log('Mengirim catatan revisi untuk Detail ID:', detailId);
-                console.log('Catatan Revisi:', catatanRevisi);
-
-                // Contoh penggunaan Fetch API (Anda perlu menyesuaikan URL dan method)
-
-                fetch('/detailproject', { // Sesuaikan URL API Anda
-                        method: 'POST', // Atau PUT, tergantung API Anda
+                fetch('/detailproject', {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -486,38 +476,29 @@
                     .then(response => response.json())
                     .then(data => {
                         revisiModalElement.modal('hide');
-
                         Swal.fire({
                             icon: 'success',
                             title: 'Berhasil',
-                            text: 'Catatan revisi berhasil disimpan',
-                            confirmButtonText: 'OK'
+                            text: 'Catatan revisi berhasil disimpan!',
                         }).then(() => {
                             location.reload();
                         });
                     })
-
                     .catch((error) => {
                         console.error('Error:', error);
-                        // Tampilkan pesan error kepada pengguna
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan saat menyimpan revisi.',
+                        });
                     });
-
-
-
             });
 
             simpanTerimaBtn.addEventListener('click', function() {
                 const detailId = document.getElementById('terimaId').value;
 
-                // Di sini Anda akan mengirim data catatan revisi ke backend
-                // Anda bisa menggunakan Fetch API atau Axios untuk mengirim data
-                console.log('Mengirim catatan revisi untuk Detail ID:', detailId);
-                console.log('Catatan Revisi:', catatanRevisi);
-
-                // Contoh penggunaan Fetch API (Anda perlu menyesuaikan URL dan method)
-
-                fetch('/detailproject', { // Sesuaikan URL API Anda
-                        method: 'POST', // Atau PUT, tergantung API Anda
+                fetch('/detailproject', {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -529,18 +510,26 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-                        revisiModalElement.modal('hide');
-                        alert('Project berhasil diterima!');
-                        location.reload();
+                        $('#terimaModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Project berhasil diterima!',
+                        }).then(() => {
+                            location.reload();
+                        });
                     })
                     .catch((error) => {
                         console.error('Error:', error);
-                        // Tampilkan pesan error kepada pengguna
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: 'Terjadi kesalahan saat menerima project.',
+                        });
                     });
-
-
-
             });
         });
     </script>
 @endpush
+
+@

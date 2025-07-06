@@ -110,6 +110,11 @@ class DetailProjekController extends Controller
 
         $detailmonitoring->save();
 
-        return true;
+        return response()->json([
+            'success' => true,
+            'message' => $request->jenis === 'revisi'
+                ? 'Revisi berhasil disimpan.'
+                : 'Project berhasil diterima.'
+        ]);
     }
 }
