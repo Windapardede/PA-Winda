@@ -486,9 +486,17 @@
                     .then(response => response.json())
                     .then(data => {
                         revisiModalElement.modal('hide');
-                        alert('Catatan revisi berhasil disimpan (simulasi)!');
-                        location.reload();
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Catatan revisi berhasil disimpan',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload();
+                        });
                     })
+
                     .catch((error) => {
                         console.error('Error:', error);
                         // Tampilkan pesan error kepada pengguna
