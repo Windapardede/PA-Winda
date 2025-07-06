@@ -441,6 +441,7 @@
 
     @include('components.user.footer')
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @section('scripts')
     <script>
@@ -689,7 +690,12 @@
         });
 
         function alertBeluBeri() {
-            alert('Harap hubungi mentor atau admin untuk memberikan sertifikat');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Akses Ditolak',
+                text: 'Harap hubungi mentor untuk memberikan sertifikat',
+                confirmButtonText: 'Oke'
+            });
         }
     </script>
 @endsection
