@@ -226,15 +226,16 @@
                                                                 @endif
                                                             </td>
                                                             <td style="overflow: visible;">
-                                                                {{-- Tombol langsung memicu modal Revisi --}}
-                                                                <button {{ $item->status == 'diterima' ? 'disabled' : '' }}
+                                                                {{-- Tombol akan disabled jika statusnya 'proses' atau 'diterima' --}}
+                                                                <button
                                                                     class="btn btn-sm btn-outline-secondary btn-revisi-laporan"
                                                                     type="button" data-bs-toggle="modal"
                                                                     data-id="{{ $item->id }}"
                                                                     data-status="{{ $item->status }}"
                                                                     data-deskripsi="{{ $item->deskripsi }}"
                                                                     data-persentase="{{ $item->persentasi }}"
-                                                                    data-catatan-revisi="{{ $item->revisi }}">
+                                                                    data-catatan-revisi="{{ $item->revisi }}"
+                                                                    {{ $item->status == 'proses' || $item->status == 'diterima' ? 'disabled' : '' }}>
                                                                     <i class="fas fa-edit"></i>
                                                                 </button>
                                                             </td>
@@ -374,7 +375,6 @@
         </div>
     </div>
 
-    <!-- Loading Overlay -->
     <div id="loadingOverlay"
         style="
     position: fixed;
@@ -498,7 +498,7 @@
                     tambahLaporanModalElement.addEventListener('hidden.bs.modal', function handler() {
                         showSuccessConfirmationModal(
                             'Berhasil Menambahkan Laporan Project!'
-                            ); // Tampilkan modal konfirmasi setelah modal input tersembunyi
+                        ); // Tampilkan modal konfirmasi setelah modal input tersembunyi
                         // Setelah modal konfirmasi tertutup, baru reload halaman
                         successConfirmationModalElement.addEventListener('hidden.bs.modal',
                             function reloadHandler() {
@@ -519,9 +519,9 @@
 
         // Logika untuk menyimpan perubahan laporan project
         simpanEditBtn.addEventListener('click', function() {
+            const projectId = editProjectIdInput.value;
             const deskripsi = editDeskripsiLaporanInput.value.trim();
             const persentase = editPersentaseLaporanInput.value;
-            const id = editProjectIdInput.value;
 
             if (deskripsi === '') {
                 showToastError('Deskripsi tidak boleh kosong!');
@@ -537,12 +537,11 @@
             const data = {
                 deskripsi: deskripsi,
                 persentase: persentase,
-                id: id,
-                _method: 'PUT'
+                _method: 'PUT' // Penting untuk Laravel agar mengenali ini sebagai PUT request
             };
 
-            fetch('/kegiatanku/project-detail/{{ $id }}', {
-                    method: 'POST',
+            fetch(`/kegiatanku/project-detail/${projectId}`, {
+                    method: 'POST', // Menggunakan POST karena _method override
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -550,20 +549,14 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Gagal menyimpan project');
+                    if (!response.ok) throw new Error('Gagal memperbarui laporan project.');
                     return response.json();
                 })
                 .then(result => {
-                    console.log('Deskripsi yang akan disimpan:', deskripsi);
-                    console.log('Persentase yang akan disimpan:', persentase);
-
                     document.getElementById('loadingOverlay').style.display = 'none';
 
-                    // Sembunyikan modal edit laporan
                     editLaporanModalElement.addEventListener('hidden.bs.modal', function handler() {
-                        showSuccessConfirmationModal(
-                            'Berhasil Memperbarui Laporan Project!'); // Tampilkan modal konfirmasi
-                        // Setelah modal konfirmasi tertutup, baru reload halaman
+                        showSuccessConfirmationModal('Berhasil Mengubah Laporan Project!');
                         successConfirmationModalElement.addEventListener('hidden.bs.modal',
                             function reloadHandler() {
                                 location.reload();
@@ -572,68 +565,70 @@
                             });
                         editLaporanModalElement.removeEventListener('hidden.bs.modal', handler);
                     });
-                    editLaporanModal.hide(); // Panggil hide() untuk menutup modal
+                    editLaporanModal.hide();
                 })
                 .catch(error => {
-                    console.error('Error saat menyimpan laporan:', error);
-                    showToastError('Terjadi kesalahan saat menyimpan laporan.');
+                    console.error('Error saat memperbarui laporan:', error);
+                    showToastError('Terjadi kesalahan saat memperbarui laporan.');
                 });
         });
 
-        // Logika untuk menampilkan modal edit atau revisi
-        document.addEventListener('click', function(event) {
-            const targetElement = event.target.closest('.btn-revisi-laporan');
-            if (targetElement) {
-                event.preventDefault();
+        // Event listener untuk tombol edit/revisi
+        document.querySelectorAll('.btn-revisi-laporan').forEach(button => {
+            button.addEventListener('click', function() {
+                const id = this.dataset.id;
+                const status = this.dataset.status;
+                const deskripsi = this.dataset.deskripsi;
+                const persentase = this.dataset.persentase;
+                const catatanRevisi = this.dataset.catatanRevisi;
 
-                const projectId = targetElement.dataset.id;
-                const projectDeskripsi = targetElement.dataset.deskripsi;
-                const projectPersentase = targetElement.dataset.persentase;
-                const catatanRevisi = targetElement.dataset.catatanRevisi;
-                const projectStatus = targetElement.dataset.status;
-
-                if (projectStatus === 'revisi') {
-                    revisiProjectIdInput.value = projectId;
+                if (status === 'revisi') {
+                    // Tampilkan modal revisi
+                    revisiProjectIdInput.value = id;
                     catatanRevisiText.textContent = catatanRevisi;
-                    revisiPersentaseInput.value = projectPersentase;
-                    revisiKeteranganInput.value = projectDeskripsi;
+                    revisiPersentaseInput.value = persentase; // Mengisi persentase saat ini
+                    revisiKeteranganInput.value = deskripsi; // Mengisi deskripsi saat ini
                     modalRevisi.show();
-                } else {
-                    editProjectIdInput.value = projectId;
-                    editDeskripsiLaporanInput.value = projectDeskripsi;
-                    editPersentaseLaporanInput.value = projectPersentase;
+                } else if (status === 'proses') {
+                    // Tampilkan modal edit jika statusnya 'proses'
+                    editProjectIdInput.value = id;
+                    editDeskripsiLaporanInput.value = deskripsi;
+                    editPersentaseLaporanInput.value = persentase;
                     editLaporanModal.show();
+                } else if (status === 'diterima') {
+                    // Tidak melakukan apa-apa karena tombol disabled
+                    console.log('Project sudah diterima, tombol disabled.');
                 }
-            }
+            });
         });
 
-        // Logika untuk menyimpan revisi laporan project
-        simpanRevisiBtn.addEventListener('click', function() {
-            const idToEdit = revisiProjectIdInput.value;
-            const newPersentase = revisiPersentaseInput.value;
-            const newKeterangan = revisiKeteranganInput.value.trim();
 
-            if (newPersentase === '' || isNaN(newPersentase) || newPersentase < 0 || newPersentase > 100) {
+        // Logika untuk menyimpan revisi project
+        simpanRevisiBtn.addEventListener('click', function() {
+            const projectId = revisiProjectIdInput.value;
+            const persentase = revisiPersentaseInput.value;
+            const keterangan = revisiKeteranganInput.value.trim();
+
+            if (persentase === '' || isNaN(persentase) || persentase < 0 || persentase > 100) {
                 showToastError('Persentase harus berupa angka antara 0 dan 100!');
                 return;
             }
-            if (newKeterangan === '') {
-                showToastError('Keterangan tidak boleh kosong!');
+            if (keterangan === '') {
+                showToastError('Keterangan revisi tidak boleh kosong!');
                 return;
             }
 
             document.getElementById('loadingOverlay').style.display = 'flex';
 
             const data = {
-                deskripsi: newKeterangan,
-                persentase: newPersentase,
-                revisi: 'ya',
-                id: idToEdit,
-                _method: 'PUT'
+                deskripsi: keterangan, // Menggunakan keterangan sebagai deskripsi yang diperbarui
+                persentase: persentase,
+                status: 'proses', // Setelah direvisi, status kembali ke 'proses'
+                _method: 'PUT' // Penting untuk Laravel agar mengenali ini sebagai PUT request
             };
 
-            fetch('/kegiatanku/project-detail/{{ $id }}', {
-                    method: 'POST',
+            fetch(`/kegiatanku/project-detail/${projectId}`, {
+                    method: 'POST', // Menggunakan POST karena _method override
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -641,15 +636,14 @@
                     body: JSON.stringify(data)
                 })
                 .then(response => {
-                    if (!response.ok) throw new Error('Gagal menyimpan project');
+                    if (!response.ok) throw new Error('Gagal menyimpan revisi laporan.');
                     return response.json();
                 })
                 .then(result => {
-
                     document.getElementById('loadingOverlay').style.display = 'none';
 
                     modalRevisiElement.addEventListener('hidden.bs.modal', function handler() {
-                        showSuccessConfirmationModal('Revisi laporan proyek berhasil disimpan!');
+                        showSuccessConfirmationModal('Revisi Laporan Berhasil Disimpan!');
                         successConfirmationModalElement.addEventListener('hidden.bs.modal',
                             function reloadHandler() {
                                 location.reload();
@@ -658,46 +652,12 @@
                             });
                         modalRevisiElement.removeEventListener('hidden.bs.modal', handler);
                     });
-                    modalRevisi.hide(); // Panggil hide() untuk menutup modal
+                    modalRevisi.hide();
                 })
                 .catch(error => {
-                    console.error('Error saat menyimpan laporan:', error);
-                    showToastError('Terjadi kesalahan saat menyimpan laporan revisi.');
+                    console.error('Error saat menyimpan revisi:', error);
+                    showToastError('Terjadi kesalahan saat menyimpan revisi.');
                 });
-        });
-
-        // Penanganan penutupan modal revisi agar tidak freeze (ini sudah ada dan sudah baik)
-        modalRevisiElement.addEventListener('hidden.bs.modal', function() {
-            if (document.body.classList.contains('modal-open')) {
-                document.body.classList.remove('modal-open');
-            }
-            document.body.style.overflow = '';
-            const modalBackdrop = document.querySelector('.modal-backdrop');
-            if (modalBackdrop) {
-                modalBackdrop.remove();
-            }
-        });
-
-        // Logika untuk menutup dropdown saat modal tampil (ini sudah ada dan sudah baik)
-        function closeAllOpenDropdowns() {
-            const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
-            openDropdowns.forEach(dropdown => {
-                const dropdownInstance = bootstrap.Dropdown.getInstance(dropdown.previousElementSibling);
-                if (dropdownInstance) {
-                    dropdownInstance.hide();
-                }
-            });
-        }
-
-        const allModals = [tambahLaporanModalElement, editLaporanModalElement, modalRevisiElement,
-            successConfirmationModalElement
-        ];
-        allModals.forEach(modal => {
-            if (modal) {
-                modal.addEventListener('show.bs.modal', function() {
-                    closeAllOpenDropdowns();
-                });
-            }
         });
     </script>
 @endsection
