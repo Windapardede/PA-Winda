@@ -305,7 +305,7 @@
                                 <th class="text-center align-middle">Email</th>
                                 <th class="text-center align-middle">Posisi</th>
                                 <th class="text-center align-middle">Mentor</th>
-                                <th class="text-center align-middle">Aksi</th>
+                                <th class="align-middle">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -313,19 +313,19 @@
                             @forelse ($penilaianmentor as $item)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td class="align-middle">
+                                    <td class="text-center align-middle">
                                         {{ $item['user_name'] }}
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="text-center align-middle">
                                         {{ $item['email'] }}
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="text-center align-middle">
                                         {{ $item['nama_posisi'] }}
                                     </td>
-                                    <td class="align-middle">
+                                    <td class="text-center align-middle">
                                         {{ $item['nama'] }}
                                     </td>
-                                    <td class="text-center align-middle">
+                                    <td class="align-middle">
                                         <div class="dropdown">
                                             {{-- Menggunakan kelas icon-dropdown-action untuk meniru gaya icon-button dari posisi.blade.php --}}
                                             <button class="dropdown-toggle icon-dropdown-action" type="button"

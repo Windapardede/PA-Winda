@@ -503,7 +503,7 @@
                                 <th class="text-center align-middle">Nama</th>
                                 <th class="text-center align-middle">Instansi</th>
                                 <th class="text-center align-middle">Posisi</th>
-                                <th class="text-center align-middle">Periode</th>
+                                <th>Periode</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -513,7 +513,7 @@
                                     <td class="text-center align-middle">{{ $item->nama->name }}</td>
                                     <td class="text-center align-middle">{{ @$item->nama->instansi->nama }}</td>
                                     <td class="text-center align-middle">{{ @$item->nama->posisi->nama }}</td>
-                                    <td>
+                                    <td class="text-center align-middle">
                                         {{ \Carbon\Carbon::parse($item->nama->mulai_magang)->translatedFormat('d M Y') }} -
                                         {{ \Carbon\Carbon::parse($item->nama->selesai_magang)->translatedFormat('d M Y') }}
                                     </td>

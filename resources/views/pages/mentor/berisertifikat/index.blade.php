@@ -390,9 +390,9 @@
                         @forelse ($beri as $item)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td class="align-middle">{{ $item->user_name }}</td>
-                                <td class="align-middle">{{ $item->email }}</td>
-                                <td class="align-middle">{{ $item->nama_posisi }}</td>
+                                <td class="text-center align-middle">{{ $item->user_name }}</td>
+                                <td class="text-center align-middle">{{ $item->email }}</td>
+                                <td class="text-center align-middle">{{ $item->nama_posisi }}</td>
                                 <td class="text-center align-middle">
                                     <div class="dropdown">
                                         <button class="icon-button dropdown-toggle" type="button"
