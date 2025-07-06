@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Posisi;
 use App\Models\KriteriaPenilaian;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class KriteriaPenilaianController extends Controller
 {
@@ -20,7 +21,7 @@ class KriteriaPenilaianController extends Controller
         // misalnya: $kriteria_penilaian = KriteriaPenilaian::all();
 
         $posisi = Posisi::all();
-        foreach($posisi as $p){
+        foreach ($posisi as $p) {
             $p->total_kriteria = $p->kriteriaPenilaian->count();
         }
         // Mengirim data dummy ke view index.blade.php
@@ -57,17 +58,17 @@ class KriteriaPenilaianController extends Controller
     {
 
         // dd($id);
-        if(empty($request->personal)){
+        if (empty($request->personal)) {
             return redirect()->back()->with('error', 'Harap isi personal');
         }
 
-        if(empty($request->kompetensi)){
+        if (empty($request->kompetensi)) {
             return redirect()->back()->with('error', 'Harap isi kompetensi');
         }
 
         KriteriaPenilaian::where('posisi_id', $id)->delete();
 
-        foreach($request->personal as $personal){
+        foreach ($request->personal as $personal) {
             KriteriaPenilaian::create([
                 'posisi_id'         => $id,
                 'evaluation_name'   => $personal,
@@ -75,7 +76,7 @@ class KriteriaPenilaianController extends Controller
             ]);
         }
 
-        foreach($request->kompetensi as $kompetensi){
+        foreach ($request->kompetensi as $kompetensi) {
             KriteriaPenilaian::create([
                 'posisi_id'         => $id,
                 'evaluation_name'   => $kompetensi,
@@ -83,8 +84,8 @@ class KriteriaPenilaianController extends Controller
             ]);
         }
 
-
-        return redirect()->route('kriteriapenilaian.index')->with('success', 'Kriteria Penilaian berhasil ditambahkan!');
+        Alert::success('Berhasil', 'Kriteria penilaian berhasil ditambahkan!');
+        return redirect()->route('kriteriapenilaian.index');
     }
 
     /**

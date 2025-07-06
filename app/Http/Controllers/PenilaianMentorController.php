@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\KriteriaPenilaian;
 use Illuminate\Support\Facades\Auth; // Kalau kamu pakai Auth::user()
+use RealRashid\SweetAlert\Facades\Alert;
 
 
 class PenilaianMentorController extends Controller
@@ -93,7 +94,8 @@ class PenilaianMentorController extends Controller
                 'evaluation_type'   => 'competence',
             ]);
         }
-        return redirect()->route('penilaianmentor.index')->with('success', 'Penilaian berhasil ditambahkan!');
+        Alert::success('Berhasil', 'Penilaian berhasil ditambahkan!');
+        return redirect()->route('penilaianmentor.index');
     }
 
     // Menampilkan detail penilaianmentor berdasarkan id

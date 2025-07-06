@@ -8,6 +8,7 @@ use App\Models\Pengajuan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use App\Models\KriteriaPenilaian;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PenilaianController extends Controller
 {
@@ -19,13 +20,13 @@ class PenilaianController extends Controller
     public function index()
     {
         $Mentees = Pengajuan::join('users', 'pengajuan.user_id', '=', 'users.id')
-        ->join('mentor', 'users.mentor_id', '=', 'mentor.id')
-        ->join('posisi', 'pengajuan.posisi_id', '=', 'posisi.id')
-        ->select('pengajuan.*', 'users.name as user_name', 'users.email', 'mentor.nama','posisi.nama as nama_posisi')
-        // ->where('users.mentor_id', auth()->user()->mentor_id)
-        ->where('pengajuan.status', '!=', 'ditolak')
-        ->orderBy('pengajuan.created_at', 'desc')
-        ->get();
+            ->join('mentor', 'users.mentor_id', '=', 'mentor.id')
+            ->join('posisi', 'pengajuan.posisi_id', '=', 'posisi.id')
+            ->select('pengajuan.*', 'users.name as user_name', 'users.email', 'mentor.nama', 'posisi.nama as nama_posisi')
+            // ->where('users.mentor_id', auth()->user()->mentor_id)
+            ->where('pengajuan.status', '!=', 'ditolak')
+            ->orderBy('pengajuan.created_at', 'desc')
+            ->get();
 
         // dd($Mentees);
 
@@ -44,15 +45,15 @@ class PenilaianController extends Controller
 
         $pengajuan = Pengajuan::where('pengajuan.id', $id)->first();
         $personalComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'personal')->get();
-        if($personalComponents->count() > 0){
-            foreach($personalComponents as $kc){
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'personal')->get();
+        if ($personalComponents->count() > 0) {
+            foreach ($personalComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $personalComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'personal')->get();
-            foreach($personalComponents as $pc){
+            foreach ($personalComponents as $pc) {
                 $pc->nilai = null;
             }
         }
@@ -60,21 +61,21 @@ class PenilaianController extends Controller
 
 
         $kompetensiComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'competence')->get();
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'competence')->get();
 
-        if($kompetensiComponents->count() > 0){
-            foreach($kompetensiComponents as $kc){
+        if ($kompetensiComponents->count() > 0) {
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $kompetensiComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'competence')->get();
-            foreach($kompetensiComponents as $kc){
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = null;
             }
         }
         $penilaianId = $id;
-        return view('pages.penilaian.create', compact('penilaianId','personalComponents', 'kompetensiComponents', 'pengajuan', 'id')); // Tambahkan variabel yang dibutuhkan
+        return view('pages.penilaian.create', compact('penilaianId', 'personalComponents', 'kompetensiComponents', 'pengajuan', 'id')); // Tambahkan variabel yang dibutuhkan
     }
 
     /**
@@ -89,7 +90,7 @@ class PenilaianController extends Controller
         $id             = $request->query('id');
         $cekpengajuan   = pengajuan::where('pengajuan.id', $id)->join('users', 'pengajuan.user_id', '=', 'users.id')->first();
         Penilaian::where('pengajuan_id', $id)->delete();
-        foreach($request->kompetensi_komponen as $key => $kompetensi){
+        foreach ($request->kompetensi_komponen as $key => $kompetensi) {
             Penilaian::create([
                 'pengajuan_id'      => $id,
                 'mentor_id'         => $cekpengajuan->mentor_id,
@@ -99,7 +100,7 @@ class PenilaianController extends Controller
             ]);
         }
 
-        foreach($request->personal_komponen as $key => $kompetensi){
+        foreach ($request->personal_komponen as $key => $kompetensi) {
             Penilaian::create([
                 'pengajuan_id'      => $id,
                 'mentor_id'         => $cekpengajuan->mentor_id,
@@ -109,38 +110,38 @@ class PenilaianController extends Controller
             ]);
         }
 
-        Session::flash('success', 'Penilaian berhasil ditambahkan!');
+        Alert::success('Berhasil', 'Penilaian berhasil ditambahkan!');
         return redirect()->route('penilaian.index');
     }
 
     public function show($id)
     {
-       $pengajuan = Pengajuan::where('pengajuan.id', $id)->first();
+        $pengajuan = Pengajuan::where('pengajuan.id', $id)->first();
 
         $personalComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'personal')->get();
-        if($personalComponents->count() > 0){
-            foreach($personalComponents as $kc){
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'personal')->get();
+        if ($personalComponents->count() > 0) {
+            foreach ($personalComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $personalComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'personal')->get();
-            foreach($personalComponents as $pc){
+            foreach ($personalComponents as $pc) {
                 $pc->nilai = null;
             }
         }
 
         $kompetensiComponents = Penilaian::where('pengajuan_id', $id)
-        ->select('evaluation_name as komponen', 'value')
-        ->where('evaluation_type', 'competence')->get();
-        if($kompetensiComponents->count() > 0){
-            foreach($kompetensiComponents as $kc){
+            ->select('evaluation_name as komponen', 'value')
+            ->where('evaluation_type', 'competence')->get();
+        if ($kompetensiComponents->count() > 0) {
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = intval($kc->value);
             }
-        }else{
+        } else {
             $kompetensiComponents = KriteriaPenilaian::where('posisi_id', $pengajuan->posisi_id)->select('evaluation_name as komponen')->where('evaluation_type', 'competence')->get();
-            foreach($kompetensiComponents as $kc){
+            foreach ($kompetensiComponents as $kc) {
                 $kc->nilai = null;
             }
         }
