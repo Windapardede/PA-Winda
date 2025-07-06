@@ -37,7 +37,7 @@ class DetailProjekController extends Controller
                     $sipanNotif                 = array();
                     $sipanNotif['user_id']      = $itemUser->id;
                     $sipanNotif['title']        = "Project Selesai";
-                    $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->deskripsi . ', Segera berikan nilai untuk pekerjaan ini.';
+                    $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->project->title . ', Segera berikan nilai untuk pekerjaan ini.';
                     $sipanNotif['is_viewed']    = 0;
 
                     Notifikasi::create($sipanNotif);
@@ -47,7 +47,7 @@ class DetailProjekController extends Controller
                     try {
                         Mail::send('email.project-selesai', [
                             'nama' => $detailmonitoring->project->nama->name,
-                            'project' => $detailmonitoring->deskripsi,
+                            'project' => $detailmonitoring->project->title,
                             'halo' => 'Admin',
                         ], function ($message) use ($email) {
                             $message->to($email)
@@ -62,7 +62,7 @@ class DetailProjekController extends Controller
                 $sipanNotif                 = array();
                 $sipanNotif['user_id'] = Auth::user()->id;
                 $sipanNotif['title']        = "Project Selesai";
-                $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->deskripsi . ', Segera berikan nilai untuk pekerjaan ini.';
+                $sipanNotif['subtitle']     = $detailmonitoring->project->nama->name . ' Telah Menyelesaikan Project : ' . $detailmonitoring->project->title . ', Segera berikan nilai untuk pekerjaan ini.';
                 $sipanNotif['is_viewed']    = 0;
 
                 Notifikasi::create($sipanNotif);
@@ -72,7 +72,7 @@ class DetailProjekController extends Controller
                 try {
                     Mail::send('email.project-selesai', [
                         'nama' => $detailmonitoring->project->nama->name,
-                        'project' => $detailmonitoring->deskripsi,
+                        'project' => $detailmonitoring->project->title,
                         'halo' => 'Mentor',
                     ], function ($message) use ($email) {
                         $message->to($email)
@@ -88,7 +88,7 @@ class DetailProjekController extends Controller
         $sipanNotif                 = array();
         $sipanNotif['user_id']      = $detailmonitoring->project->nama->id;
         $sipanNotif['title']        = "Review Mentor";
-        $sipanNotif['subtitle']     = 'Mentor telah mereview project : ' . $detailmonitoring->deskripsi . ', Segera cek hasil review.';
+        $sipanNotif['subtitle']     = 'Mentor telah mereview project : ' . $detailmonitoring->project->title . ', Segera cek hasil review.';
         $sipanNotif['is_viewed']    = 0;
 
         Notifikasi::create($sipanNotif);
@@ -98,7 +98,7 @@ class DetailProjekController extends Controller
         try {
             Mail::send('email.review-selesai', [
                 'nama' => '',
-                'project' => $detailmonitoring->deskripsi,
+                'project' => $detailmonitoring->project->title,
                 'halo' => $detailmonitoring->project->nama->name,
             ], function ($message) use ($email) {
                 $message->to($email)
