@@ -7,11 +7,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\Project;
 use DateTime;
-use App\Models\Notifikasi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
+use App\Models\Notifikasi;
 
 
 class HomeController extends Controller
