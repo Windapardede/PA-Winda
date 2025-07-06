@@ -270,9 +270,8 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th> Nama</th>
+                                <th class="text-center align-middle"> Nama</th>
                                 <th class="text-center align-middle">Posisi</th>
-                                <th class="text-center align-middle">Presentasi</th>
                                 <th class="text-center align-middle">Status</th>
                                 <th class="text-center align-middle">Detail</th>
                             </tr>
@@ -284,7 +283,6 @@
 
                                     <td class="text-center align-middle">{{ $item->nama->name ?? '-' }}</td>
                                     <td class="text-center align-middle">{{ $item->nama->posisi->nama ?? '-' }}</td>
-                                    <td class="text-center align-middle">{{ $item->persentase ?? '-' }}%</td>
                                     <td class="text-center align-middle">
                                         @if ($item->status == 'proses')
                                             <span class="badge bg-warning text-dark">{{ $item->status }}</span>
