@@ -78,9 +78,6 @@ class BeriSertifikatController extends Controller
                 $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
                 $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
 
-                $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
-                $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
-
                 $sofficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"'; // Path ke LibreOffice di Windows
                 $command = $sofficePath . ' --headless --convert-to pdf --outdir "' . dirname($pdfPath) . '" "' . $docxPath . '"';
 
