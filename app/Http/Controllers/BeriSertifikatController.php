@@ -78,9 +78,22 @@ class BeriSertifikatController extends Controller
                 $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
                 $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
 
-                $command = 'soffice --headless --convert-to pdf --outdir ' . dirname($pdfPath) . ' ' . $docxPath;
-                exec($command);
+                $docxPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.docx");
+                $pdfPath = storage_path("app/public/sertifikat/sertifikat_{$filename}.pdf");
 
+                $sofficePath = '"C:\Program Files\LibreOffice\program\soffice.exe"'; // Path ke LibreOffice di Windows
+                $command = $sofficePath . ' --headless --convert-to pdf --outdir "' . dirname($pdfPath) . '" "' . $docxPath . '"';
+
+                exec($command, $output, $return_var);
+
+                if ($return_var !== 0) {
+                    dd("❌ Gagal mengonversi dokumen ke PDF", [
+                        'Command' => $command,
+                        'Output' => $output,
+                        'Return Code' => $return_var,
+                        'DOCX Path' => $docxPath,
+                    ]);
+                }
 
                 $personalComponents = Penilaian::where('pengajuan_id', $request->item_id)
                     ->select('evaluation_name as komponen', 'value')
