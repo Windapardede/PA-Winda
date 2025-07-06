@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pengajuan;
+use RealRashid\SweetAlert\Facades\Alert;
+
 
 class KelolaMentorController extends Controller
 {
@@ -148,7 +150,8 @@ class KelolaMentorController extends Controller
         User::where('mentor_id', $id)->where('role', 'mentor')->delete();
         User::where('mentor_id', $id)->update(['mentor_id' => null]);
 
-        return redirect()->route('kelolamentor.index')->with('success', 'Mentor berhasil dihapus!');
+        Alert::success('Berhasil', 'Mentor berhasil dihapus!.');
+        return redirect()->route('kelolamentor.index');
     }
 
     /**
@@ -206,20 +209,8 @@ class KelolaMentorController extends Controller
 
         $menteeId = $request->input('mentee_id');
 
-        // Simulasi logika untuk "mengikat" mentee ke mentor:
-        // Di aplikasi nyata, Anda akan mencari mentee berdasarkan $menteeId
-        // dan memperbarui kolom mentor_id-nya di database.
-        // Contoh:
-        // $mentee = User::findOrFail($menteeId); // Asumsi mentee adalah User
-        // $mentee->mentor_id = $mentorId;
-        // $mentee->save();
-
-        // Juga, di aplikasi nyata, Anda mungkin ingin memperbarui 'total_mentee' di model Mentor
-        // $mentor = Mentor::findOrFail($mentorId);
-        // $mentor->increment('total_mentee');
-
-        // Untuk dummy data, kita hanya akan merespons sukses
-        return response()->json(['message' => 'Mentee berhasil ditambahkan ke mentor ini!'], 200);
+        Alert::success('Berhasil', 'Mentee berhasil ditambahkan ke mentor ini!');
+        // return response()->json(['message' => 'Mentee berhasil ditambahkan ke mentor ini!'], 200);
     }
 
     /**
@@ -231,19 +222,8 @@ class KelolaMentorController extends Controller
      */
     public function destroyMentee($mentorId, $menteeId)
     {
-        // Simulasi logika untuk "melepaskan" mentee dari mentor:
-        // Di aplikasi nyata, Anda akan mencari mentee berdasarkan $menteeId
-        // dan mengatur kolom mentor_id-nya menjadi null atau menghapusnya.
-        // Contoh:
-        // $mentee = User::where('id', $menteeId)->where('mentor_id', $mentorId)->firstOrFail();
-        // $mentee->mentor_id = null; // Atau hapus mentee jika itu kasusnya
-        // $mentee->save();
 
-        // Juga, di aplikasi nyata, Anda mungkin ingin memperbarui 'total_mentee' di model Mentor
-        // $mentor = Mentor::findOrFail($mentorId);
-        // $mentor->decrement('total_mentee');
-
-        // Untuk dummy data, kita hanya akan merespons sukses
-        return response()->json(['message' => 'Mentee berhasil dihapus dari mentor ini!'], 200);
+        Alert::success('Berhasil', 'Mentee berhasil dihapus dari mentor ini!');
+        // return response()->json(['message' => 'Mentee berhasil dihapus dari mentor ini!'], 200);
     }
 }

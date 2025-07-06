@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class MenteeController extends Controller
 {
@@ -32,7 +33,8 @@ class MenteeController extends Controller
 
 
         // Untuk tujuan dummy, kita bisa mengembalikan pesan sukses
-        return response()->json(['message' => 'Mentee berhasil ditambahkan ke mentor ID ' . $mentorId . '!'], 200);
+
+        // return response()->json(['message' => 'Mentee berhasil ditambahkan ke mentor ID ' . $mentorId . '!'], 200);
     }
 
     /**
@@ -55,6 +57,8 @@ class MenteeController extends Controller
         User::where('id', $menteeId)->update(['mentor_id' => null]);
 
         // Untuk tujuan dummy, kita bisa mengembalikan pesan sukses
-        return response()->json(['message' => 'Mentee ID ' . $menteeId . ' berhasil dihapus dari mentor ID ' . $mentorId . '!'], 200);
+        Alert::success('Berhasil', 'Mentee berhasil dihapus dari mentor ini!');
+
+        // return response()->json(['message' => 'Mentee ID ' . $menteeId . ' berhasil dihapus dari mentor ID ' . $mentorId . '!'], 200);
     }
 }
