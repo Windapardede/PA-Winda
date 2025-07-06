@@ -309,7 +309,6 @@
                 <div class="section-header-breadcrumb">
                     <div class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></div>
                     <div class="breadcrumb-item"><a href="{{ route('monitoring.index') }}">Monitoring</a></div>
-                    <div class="breadcrumb-item"><a href="{{ route('detailmonitoring.show') }}">Judul Projek</a></div>
                     <div class="breadcrumb-item">Detail Projek</div>
                 </div>
             </div>
